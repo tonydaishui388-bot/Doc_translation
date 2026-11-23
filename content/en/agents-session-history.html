@@ -1,0 +1,50 @@
+<h1>Agent session history</h1>
+<p>Browse and resume past Claude, Codex, Muse Code, Cursor, Gemini, and other agent sessions from Orca&#x27;s right sidebar.</p>
+<p>Orca scans the on-disk session transcripts that supported agent CLIs leave behind and lists them in a right-sidebar panel called <strong>Agent Session History</strong>. Pick a past session, click <strong>Resume</strong>, and Orca runs the agent&#x27;s resume command in a fresh terminal — same <code>cwd</code>, same session ID, no manual <code>--resume</code> flag wrangling.</p>
+<h2 id="agents-session-history-open-the-panel">Open the panel</h2>
+<p>Open the right sidebar and switch to the <strong>Agents</strong> tab. The panel header reads &quot;Agent Session History&quot;.</p>
+<p>The header shows a count like <code>12 shown · 47 recent</code> and a search box. Type to filter by session title, working directory, branch, model, or preview text from the conversation.</p>
+<p>Session History can also search indexed transcripts from other connected computers and paired Orca Servers. Turn on <strong>Search inside sessions</strong> for the computers you want under <strong>Settings → Session History</strong> (or use <strong>Enable on all computers</strong>). Orca shows a host-scope notice when a computer is offline or has not granted indexing access. Searchable data stays on each computer; the local panel still lets you browse sessions that have not been added to the index.</p>
+<p>For scripts and terminal workflows, use <a href="#cli-reference-session-search"><code>orca search</code></a> to query the same index without opening the panel.</p>
+<h2 id="agents-session-history-scope">Scope</h2>
+<p>The scope toggle at the top of the panel decides which sessions appear:</p>
+<ul>
+<li><strong>Workspace</strong> — sessions from the current workspace or worktree, depending on the active workspace context.</li>
+<li><strong>Project</strong> — sessions that resolve to the active Orca project.</li>
+<li><strong>All</strong> — every session Orca found across every agent on this machine.</li>
+</ul>
+<p>Remote workspaces can browse local history, but resume actions only run from local workspaces — Orca tells you so in the panel when the active worktree is remote.</p>
+<h2 id="agents-session-history-view-options">View options</h2>
+<p>The view-options menu (next to the search box) controls which agents are scanned and how sessions are grouped:</p>
+<ul>
+<li><strong>Agents</strong> — toggle individual CLIs on or off (Claude, Codex, Muse Code, Hermes, Pi, OMP, Prime Agent, Cursor, Gemini, Antigravity, Rovo Dev, Copilot, OpenCode, Grok, OpenClaw, Devin, Droid, Kimi, Kiro, CodeBuddy, ZCode, Qoder). Disabled agents are skipped during the scan. Use <strong>Select all</strong> / <strong>Clear</strong> in the Agents header to flip every agent at once — <strong>Clear</strong> leaves none selected so you can turn on only the CLI you care about without unchecking a long list. An empty selection shows <strong>No agents selected</strong> instead of the usual empty-filter message.</li>
+<li><strong>Group</strong> — <code>Project</code>, <code>Folder</code> (one heading per <code>cwd</code>), or <code>Agent</code> (one heading per CLI).</li>
+<li><strong>Hide empty sessions</strong> — drop sessions with zero recorded messages.</li>
+</ul>
+<p>Use the sort control above the session list to order browsing by <strong>Last updated</strong> or <strong>Created</strong>. When you search, that control offers <strong>Most relevant</strong> or <strong>Newest</strong> instead. Equally relevant matches show the newer session first. Your search sort is remembered separately from the browsing sort. If a search reaches its scan limit, choose <strong>Show more</strong> below the results to search further back.</p>
+<h2 id="agents-session-history-resume-a-session">Resume a session</h2>
+<p>Click a session row to open its details: working directory, branch, model, message count, <strong>First prompt</strong>, and the latest conversation turns. <strong>First prompt</strong> loads the untruncated first user message from the transcript when you expand details (list rows only keep a short preview for search). Use <strong>Copy</strong> on that card to put the full ask on the clipboard — useful for reusing a long prompt without reopening the log. You can also drag an enabled session row into the workspace to resume it. From the row&#x27;s actions you can:</p>
+<ul>
+<li>
+<p><strong>Resume</strong> — opens a new terminal in the session&#x27;s <code>cwd</code> and runs the agent&#x27;s resume command (e.g. <code>claude --resume &lt;id&gt;</code>, <code>codex resume &lt;id&gt;</code>, <code>muse resume &lt;session-id&gt;</code>, <code>pi --session &lt;session_file&gt;</code>, <code>prime-agent --resume &lt;path&gt;</code>, <code>cursor-agent --resume &lt;id&gt;</code>, <code>acli rovodev run --restore &lt;id&gt;</code>). Codex sessions also re-export <code>CODEX_HOME</code> when the original session set one.</p>
+</li>
+<li>
+<p><strong>Resume in New Native Chat</strong> — opens a new structured chat tab with the previous conversation visible, for eligible sessions (Claude must resume in its original workspace; Codex can resume in another workspace; a chat that started in a folder workspace resumes in that same folder). <strong>Resume in New CLI</strong> does the reverse, forking a structured chat&#x27;s conversation into a terminal. Both are also on the tab&#x27;s right-click menu. Once a conversation is reserved for structured chat, terminal <strong>Resume</strong> is no longer available for it. See <a href="#agents-native-chat">Chat UI</a> for availability.</p>
+</li>
+</ul>
+<p>Hermes terminal sessions can use <strong>Resume in New Chat</strong> in their original workspace and profile. See <a href="#agents-native-chat-structured-chat">Hermes Chat requirements</a>.</p>
+<p>Pi resumes from the on-disk session file reported by its hooks (<code>--session &lt;path&gt;</code>), not from a bare session id. If that file is missing, Resume is unavailable for that row even when a session id exists.</p>
+<ul>
+<li><strong>Copy resume command</strong> — copies the same shell command to the clipboard for use in an external terminal.</li>
+<li><strong>Copy session ID</strong> / <strong>Copy log path</strong> — for scripting or attaching transcripts to bug reports.</li>
+<li><strong>Open log</strong> / <strong>Reveal log</strong> — open the raw transcript file in Orca, or jump to it in your OS file manager.</li>
+<li><strong>Open cwd</strong> — open the session&#x27;s working directory as a workspace.</li>
+</ul>
+<aside>Resume needs a local workspace<p>Resume runs the agent CLI on the machine where Orca is rendering. If you&#x27;re connected to a remote workspace, switch back to a local one (or use <strong>Copy resume command</strong> and run it on the remote yourself) before clicking <strong>Resume</strong>.</p></aside>
+<h2 id="agents-session-history-where-the-transcripts-come-from">Where the transcripts come from</h2>
+<p>Orca reads each agent&#x27;s own on-disk session store — Codex&#x27;s <code>~/.codex/sessions</code>, Claude&#x27;s <code>~/.claude</code> history, Muse Code&#x27;s <code>~/.local/share/muse/sessions</code>, Cursor&#x27;s session log, OpenCode&#x27;s legacy session files or <code>~/.local/share/opencode/opencode.db</code>, CodeBuddy&#x27;s project transcripts under <code>.codebuddy/projects</code>, ZCode&#x27;s stored transcripts, Qoder&#x27;s <code>~/.qoder/projects</code> transcripts, and so on. There&#x27;s nothing extra to enable; if the CLI writes a transcript, it shows up in the panel after the next scan. Use the <strong>Refresh Session History</strong> button in the header to rescan on demand.</p>
+<h2 id="agents-session-history-next-steps">Next steps</h2>
+<ul>
+<li><a href="#agents-codex-hot-swap">Hot-swap Codex accounts</a> — switch the Codex login behind an active session without restarting it.</li>
+<li><a href="#agents-hooks-memory">Hooks &amp; memory</a> — control what context an agent picks up on every launch (including resumed sessions).</li>
+</ul>

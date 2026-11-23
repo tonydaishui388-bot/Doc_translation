@@ -1,6 +1,6 @@
 # ORCA 说明文档
 
-中文说明文档。左侧目录对应 [英文文档](https://orca.dev/docs) 的栏目，正文是已经译好的章节。
+说明文档。左侧目录用 [英文文档](https://orca.dev/docs) 的英文栏目名，两种语言下都不改。顶栏右上角可以在「中文」和 English 之间切换当前章的正文。中文是已有译文，English 是官网对应页的正文。选择记在浏览器本地，默认中文。
 
 ## 本地打开
 
@@ -16,7 +16,7 @@ python3 -m http.server 8765
 
 ## 重新生成页面
 
-栏目和译文读取写在 `scripts/build_skeleton.py`。改完后运行：
+栏目、中文译文和 `content/en/` 里的英文正文由 `scripts/build_skeleton.py` 生成页面。英文片段可以用 `scripts/fetch_english.py` 从官网重新抓取。改完后运行：
 
 ```bash
 python3 scripts/build_skeleton.py

@@ -1,0 +1,14 @@
+<h1>Race three agents on the same task</h1>
+<p>Running the same task across multiple agents in parallel is Orca&#x27;s killer move. Same prompt, three branches, pick the winner.</p>
+<h2 id="recipes-parallel-agents-steps">Steps</h2>
+<ol>
+<li>Create three worktrees from the same start-from ref. Name them <code>fix-bug</code>, <code>fix-bug-2</code>, <code>fix-bug-3</code>.</li>
+<li>Launch a different agent in each — Claude Code, Codex, Cursor CLI.</li>
+<li>Paste the same prompt into all three.</li>
+<li>Split the panes so you can see them work — drag tabs to edges.</li>
+<li>When they finish, review each diff. Use <a href="#review-annotate-ai-diff">Annotate AI Diff</a> on the winner.</li>
+<li>Commit, push, open PR from the winning worktree.</li>
+<li>Delete the two losers — one click removes the worktree and branch.</li>
+</ol>
+<h2 id="recipes-parallel-agents-why-it-works">Why it works</h2>
+<p>Different agents make different mistakes. Running the same task in parallel is cheaper than sequential retries and surfaces disagreement as a signal. Where three agents agree, the answer is probably right. Where they split, you&#x27;ve found the hard part.</p>

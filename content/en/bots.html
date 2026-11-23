@@ -1,0 +1,71 @@
+<h1>Bots quickstart</h1>
+<p>Create a bot, give it a job, put it on a schedule, and decide who can ask it.</p>
+<p>A bot takes jobs from its chat, Slack, Linear, GitHub or a schedule. It works on your computer with your own Claude Code or Codex, or another supported agent, and reports back where you asked. When it needs a decision, it waits for you in Orca.</p>
+<p>This page gets you from no bot to one with a first job, a schedule and a way for teammates to reach it. For ideas, see <a href="#bots-use-cases">Use cases</a>.</p>
+<p>Each bot has a name, a purpose, a memory and automations, and lives in a folder on one computer.</p>
+<h2 id="bots-before-you-start">Before you start</h2>
+<ul>
+<li>Orca on your computer, on the latest version.</li>
+<li>Claude Code, Codex or another supported agent, installed and signed in on that computer. The bot runs on it, so its work counts against that plan.</li>
+<li>To reach the bot from Slack, GitHub or Linear: sign in to Orca. Chat, schedules and Google work without it.</li>
+</ul>
+<h2 id="bots-create-a-bot">Create a bot</h2>
+<ol>
+<li>In the sidebar&#x27;s <strong>Bots</strong> section, select <strong>+</strong> (<strong>New bot or group</strong>), then <strong>New bot</strong> → <strong>Start from scratch</strong>. To start from one of the 24 templates instead, pick <strong>Browse templates</strong>.</li>
+<li>Give it a name and a picture.</li>
+<li>In the box that says <em>Who it is and what it does</em>, describe its job in a sentence. This is optional; you can also tell it in its first chat.</li>
+<li>Check the line that says where it runs: which computer and which agent. Select <strong>Change</strong> to pick another. A bot stays on the computer you pick.</li>
+<li>Select <strong>Create</strong>. Nothing is created until you do.</li>
+</ol>
+<aside>Don&#x27;t see Bots?<p>Bots are on by default. If the sidebar has no <strong>Bots</strong> section, turn on <strong>Settings → Bots → Enable bots</strong>. Turning bots off hides them and stops new messages and automation runs. Their folders, memory and chats stay where they are.</p></aside>
+<h2 id="bots-give-it-a-first-job">Give it a first job</h2>
+<p>A bot you start from scratch greets you and asks what to work on first. Answer with one real task, for example:</p>
+<ul>
+<li>&quot;Every morning, summarize what changed in acme/web and what needs my review.&quot;</li>
+<li>&quot;When CI fails on a pull request, tell me if it&#x27;s flaky or real.&quot;</li>
+</ul>
+<p>The bot looks at what that task needs, does one small piece of it right away and shows you the result. Then it writes down what it&#x27;s for, so every later chat starts from the same place. It keeps what it learns in its memory, so you can start a new chat for each job without repeating yourself.</p>
+<p>For code changes, the bot hands the work to a worker: a Claude Code or Codex session in its own new workspace (a git worktree), so its changes stay out of your checkout. Workers show up under the bot in the sidebar, and their pull requests come back to the bot.</p>
+<p>A template comes with a purpose and, for some, abilities and schedules. Its schedules start turned off. Its automations and connectors are set up in the bot&#x27;s first chat, once you pick the repo or channel.</p>
+<h2 id="bots-talk-to-it">Talk to it</h2>
+<p>Select the bot in the sidebar to open its chat and ask it anything. In any Orca chat, type <code>@</code> to mention a bot and bring it into the conversation.</p>
+<p>When the bot needs you, for a decision, a sign-in or an approval, it says so, and the request waits under <strong>Needs you</strong> on the bot&#x27;s <strong>Home</strong> until you answer. Pick one of the replies it suggests, or answer in your own words.</p>
+<figure><a href="https://orca.dev/docs/bots/needs-you.webp"><img src="https://orca.dev/docs/bots/needs-you.webp" alt="A bot&#x27;s chat next to its Home panel. Home lists one item under Needs you, three in progress, two planned and two closed, and two automations: Triage new bugs on a new Linear bug, and Morning bug digest on weekdays at 9:00 AM." loading="lazy" decoding="async"></a><figcaption>A bot&#x27;s Home, simplified: what needs you first, then what it&#x27;s working on, then its automations. Demo data.<a href="https://orca.dev/docs/bots/needs-you.webp">Full size</a></figcaption></figure>
+<h2 id="bots-put-it-on-a-schedule">Put it on a schedule</h2>
+<p>Ask the bot in chat to do something on a schedule (&quot;every weekday at 9&quot;) or when something happens (&quot;when a pull request is opened in acme/web&quot;). It sets up the automation and tells you where it runs and where the results go. The automation shows in the bot&#x27;s panel, where you can pause or resume it.</p>
+<p>Schedules can be hourly, daily, weekdays, weekly, cron or RRULE. The events a bot can start on depend on the connectors you&#x27;ve added. See <a href="#bots-connectors">Connectors</a> and <a href="#cli-automations">Scheduled automations</a>.</p>
+<figure><a href="https://orca.dev/docs/bots/triggers.webp"><img src="https://orca.dev/docs/bots/triggers.webp" alt="Four ways a job reaches a bot: a Slack mention in #eng, a Linear issue labeled bot:scout, a failed CI run on GitHub, and a schedule for weekdays at 9:00 AM." loading="lazy" decoding="async"></a><figcaption>A job can start from Slack, Linear, GitHub or a schedule. Demo data.<a href="https://orca.dev/docs/bots/triggers.webp">Full size</a></figcaption></figure>
+<aside>The computer has to be on<p>A bot works while the computer it lives on is awake and online. The <strong>Keep computer awake</strong> setting in Orca prevents idle sleep while agents work; on a Mac, closing the lid still sleeps it. Requests from Slack, GitHub and Linear wait up to a day for the computer to come back. To keep a bot reachable, run it on a <a href="#remote-servers">server you&#x27;ve paired with Orca</a> and keep that server awake.</p></aside>
+<h2 id="bots-step-in">Step in</h2>
+<p>A bot&#x27;s work stays in Orca, so you can pick it up at any point:</p>
+<ul>
+<li><strong>A worker&#x27;s workspace:</strong> select the worker under the bot in the sidebar. You get its worktree with the editor, terminal and browser, where the worker left off.</li>
+<li><strong>A conversation from Slack, GitHub or Linear:</strong> it has its own chat under the bot. In Slack, look for the <strong>Open this thread in Orca</strong> link in the thread. In Linear, open the bot&#x27;s agent session on the issue and select <strong>Open in Orca</strong>.</li>
+<li><strong>Its pull requests:</strong> review them like any other. They come from a worker&#x27;s branch, not from your checkout.</li>
+</ul>
+<h2 id="bots-reach-it-from-slack-github-and-linear">Reach it from Slack, GitHub and Linear</h2>
+<p>Add a connector from the bot&#x27;s <strong>Connectors</strong> tab. Then people ask it where they already work:</p>
+<ul>
+<li><strong>Slack:</strong> <code>@scout</code> in a channel, or a direct message. Each bot is its own Slack app.</li>
+<li><strong>GitHub:</strong> a mention on an issue or pull request, as the bot&#x27;s <strong>How to ask</strong> line shows.</li>
+<li><strong>Linear:</strong> <code>@Orca scout</code> on an issue (Linear mentions go through the Orca app), or the label <code>bot:scout</code>.</li>
+</ul>
+<p>Slack needs a one-time App Configuration Token per workspace. Your workspace may also need an admin to approve the bot&#x27;s app. <a href="#bots-connectors-slack">Connectors</a> walks through it.</p>
+<h2 id="bots-decide-who-can-ask">Decide who can ask</h2>
+<p>By default, only you can ask your bot. To let teammates ask it from Slack, Linear or GitHub, add them under <strong>Who can ask</strong>. Their requests run on your access, on your computer, so add only people you&#x27;d trust at your keyboard. When someone who isn&#x27;t on the list asks, Orca normally replies with a note to ask you: privately on Slack, publicly on GitHub and Linear. You decide in Orca.</p>
+<p>Before you add anyone, read <a href="#bots-security">Security</a>. Consider switching the bot to <strong>Ask for approval</strong>, if its agent supports it; see <a href="#bots-security-permissions">Permissions</a>.</p>
+<h2 id="bots-what-runs-without-you-asking">What runs without you asking</h2>
+<p>Besides your asks and automations, a bot does two small jobs on its own. Both use your agent&#x27;s plan:</p>
+<ul>
+<li><strong>Look around:</strong> a few times a day, a bot on Claude Code or Codex reads what&#x27;s waiting for you in Slack, Linear, GitHub and your projects, and lists next steps under <strong>Suggestions</strong>. It is read-only: it can&#x27;t post or change files. By default it is scheduled every 4 hours from 8 AM to 8 PM on weekdays, and runs while Orca is running on the bot&#x27;s computer. Change how often, or turn it off, under <strong>Look around</strong> in the bot&#x27;s settings.</li>
+<li><strong>Memory upkeep:</strong> by default, after a day with new chats, a bot on Claude Code or Codex tidies its memory that night after 3 AM, when it isn&#x27;t paused or busy. A run missed while the computer was asleep can catch up once it wakes. You can review the changes, and restore <code>MEMORY.md</code> with <strong>Undo</strong> when it&#x27;s available. Switch it to once a week, or turn it off, under <strong>Memory upkeep</strong> in the bot&#x27;s settings.</li>
+</ul>
+<h2 id="bots-bring-over-a-bot-you-already-have">Bring over a bot you already have</h2>
+<p>If you run a bot in another bot app, select <strong>+</strong> in the <strong>Bots</strong> section, then <strong>New bot</strong> → <strong>Import from another app…</strong>. Your new bot reads the old one, shows you a plan and sets itself up. Import skips key and login files, and you reconnect each service in Orca. See <a href="#bots-import">Import a bot</a>.</p>
+<h2 id="bots-next-steps">Next steps</h2>
+<ul>
+<li><a href="#bots-use-cases">Use cases</a>: eight jobs to hand a bot, step by step.</li>
+<li><a href="#bots-connectors">Connectors</a>: reach your bot from Slack, GitHub and Linear, and let it work in Google.</li>
+<li><a href="#bots-import">Import a bot</a>: bring over a bot you already have in another app.</li>
+<li><a href="#bots-security">Security</a>: what a bot can reach, who can ask it, and where its data stays.</li>
+</ul>

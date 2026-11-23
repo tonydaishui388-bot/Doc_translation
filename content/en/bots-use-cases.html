@@ -1,0 +1,109 @@
+<h1>Bot use cases</h1>
+<p>Eight jobs you can hand a bot today: where you ask, what it does, what comes back and where you step in.</p>
+<p>Each walk-through below is a job a bot can do today, built on a template or a connector Orca ships. Every one follows the same shape: you ask (in Slack, Linear, GitHub, its chat or on a schedule), the bot works on your computer, it reports where you asked, and it waits for you where a person should decide.</p>
+<p>The examples use a demo bot called Scout, a demo repo <code>acme/web</code> and a Slack channel <code>#eng</code>. Swap in your own.</p>
+<p>Jump to a job:</p>
+<ul>
+<li><a href="#bots-use-cases-fix-a-bug-someone-reports-in-slack">Fix a bug someone reports in Slack</a></li>
+<li><a href="#bots-use-cases-triage-new-linear-issues">Triage new Linear issues</a></li>
+<li><a href="#bots-use-cases-watch-ci-and-fix-a-failing-check">Watch CI and fix a failing check</a></li>
+<li><a href="#bots-use-cases-a-weekday-standup-on-a-schedule">A weekday standup on a schedule</a></li>
+<li><a href="#bots-use-cases-review-a-pull-request-when-youre-asked">Review a pull request when you&#x27;re asked</a></li>
+<li><a href="#bots-use-cases-draft-release-notes">Draft release notes</a></li>
+<li><a href="#bots-use-cases-keep-docs-in-sync-with-the-code">Keep docs in sync with the code</a></li>
+<li><a href="#bots-use-cases-respond-to-a-webhook">Respond to a webhook</a></li>
+<li><a href="#bots-use-cases-more-templates">More templates</a></li>
+</ul>
+<figure><a href="https://orca.dev/docs/bots/use-cases-hero.webp"><img src="https://orca.dev/docs/bots/use-cases-hero.webp" alt="Orca window with the demo bot Scout. The chat shows a new Linear bug, two workers it started, and a pull request it linked. The right panel shows the bug as item 41 under Needs you, asking whether to ship the fix behind a flag or to everyone." loading="lazy" decoding="async"></a><figcaption>Scout picked up a Linear bug, reproduced it, had a worker fix it in its own worktree, and now asks how to ship. Demo data.<a href="https://orca.dev/docs/bots/use-cases-hero.webp">Full size</a></figcaption></figure>
+<h2 id="bots-use-cases-before-you-start">Before you start</h2>
+<ul>
+<li>A bot set up as in the <a href="#bots">Bots quickstart</a>. Start one from a template with <strong>+</strong> → <strong>New bot</strong> → <strong>Browse templates</strong>, or start from scratch and describe the job in its first chat.</li>
+<li>The connectors each job names, added from the bot&#x27;s <strong>Connectors</strong> tab. See <a href="#bots-connectors">Connectors</a>.</li>
+<li>A template&#x27;s schedules start turned off. Turn them on from the bot&#x27;s panel once you&#x27;ve told it which repo or channel to use.</li>
+</ul>
+<h2 id="bots-use-cases-fix-a-bug-someone-reports-in-slack">Fix a bug someone reports in Slack</h2>
+<p><strong>Start from:</strong> the <strong>Bug investigation</strong> template, with GitHub connected, plus Slack so people can ask there.</p>
+<ul>
+<li><strong>The ask.</strong> In <code>#eng</code>, Maya writes: &quot;@scout checkout breaks on Safari, can you look?&quot;</li>
+<li><strong>What the bot does.</strong> It starts a worker in a new git worktree that reproduces the bug and writes down the steps, then finds where it starts. It asks before it writes a fix. Once you agree, a worker fixes it, runs the tests and opens a pull request with your git login.</li>
+<li><strong>What comes back.</strong> A reply in the Slack thread: the cause, the test result and the pull request.</li>
+<li><strong>Where you step in.</strong> The &quot;Start a fix?&quot; question waits under <strong>Needs you</strong>. When the pull request is up, review it as you would any other. To look closer, open the worker from under the bot in Orca&#x27;s sidebar: you land in its worktree with the editor, terminal and browser.</li>
+</ul>
+<figure><a href="https://orca.dev/docs/bots/open-in-orca.webp"><img src="https://orca.dev/docs/bots/open-in-orca.webp" alt="Left: Scout&#x27;s Home chat with three workers, each on its own branch, two done and one running. Right: a Slack thread in #eng where Maya asks Scout about a Safari checkout bug and Scout replies that the fix is in acme/web#1287, followed by an Open this thread in Orca link." loading="lazy" decoding="async"></a><figcaption>Workers run in their own worktrees. The Slack thread links back to the same conversation in Orca. Demo data.<a href="https://orca.dev/docs/bots/open-in-orca.webp">Full size</a></figcaption></figure>
+<p>In Slack, look for the <strong>Open this thread in Orca</strong> link in the thread. It opens the same conversation in Orca.</p>
+<h2 id="bots-use-cases-triage-new-linear-issues">Triage new Linear issues</h2>
+<p><strong>Start from:</strong> a bot with Linear connected. There&#x27;s no template for this one; describe it in chat.</p>
+<ul>
+<li><strong>The ask.</strong> In the bot&#x27;s chat: &quot;When a new issue is filed for the ENG team in Linear, check it has steps to reproduce, look for duplicates, and suggest a label and an owner. Ask me before you close anything.&quot;</li>
+<li><strong>What the bot does.</strong> It sets up an automation that starts on Linear&#x27;s new-issue event. For each new issue it reads the description, searches for likely duplicates, and makes the changes you said it may make, as you.</li>
+<li><strong>What comes back.</strong> A short line per issue in the bot&#x27;s chat: what it found and what it changed.</li>
+<li><strong>Where you step in.</strong> Anything you said it should ask about, such as closing a duplicate, waits under <strong>Needs you</strong>. People can also hand it a single issue. In Linear the mention goes through the Orca app, so they write <code>@Orca scout</code> (not <code>@scout</code>) on the issue, or add the label <code>bot:scout</code>.</li>
+</ul>
+<h2 id="bots-use-cases-watch-ci-and-fix-a-failing-check">Watch CI and fix a failing check</h2>
+<p><strong>Start from:</strong> the <strong>CI failures</strong> template, with GitHub connected.</p>
+<ul>
+<li><strong>The ask.</strong> Set up by the template: &quot;When a check fails, say whether it&#x27;s flaky or real.&quot; Add to it in chat: &quot;If it&#x27;s real, ask me before you start a fix.&quot;</li>
+<li><strong>What the bot does.</strong> When a check fails in a repo you picked, it reads the failure, explains it, and says whether it looks flaky or real. It keeps a list of flaky checks and posts it Mondays at 9 AM.</li>
+<li><strong>What comes back.</strong> The explanation in the bot&#x27;s chat.</li>
+<li><strong>Where you step in.</strong> For a real failure, it asks under <strong>Needs you</strong> whether to start a fix worker. Say yes, and the fix comes back as a pull request for you to review.</li>
+</ul>
+<h2 id="bots-use-cases-a-weekday-standup-on-a-schedule">A weekday standup on a schedule</h2>
+<p><strong>Start from:</strong> the <strong>Daily standup notes</strong> template, with GitHub and Linear connected, plus Slack if you want it posted there.</p>
+<ul>
+<li><strong>The ask.</strong> Set up by the template: weekdays at 9 AM. Turn the schedule on in the bot&#x27;s panel. To share it, add in chat: &quot;Also post it in #standup.&quot;</li>
+<li><strong>What the bot does.</strong> It looks at your workspaces, pull requests and issues, and writes what you and your agents did yesterday and what&#x27;s next.</li>
+<li><strong>What comes back.</strong> The notes in the bot&#x27;s chat, and in <code>#standup</code> as the bot&#x27;s own Slack app if you asked.</li>
+<li><strong>Where you step in.</strong> Correct anything it got wrong in chat. It keeps what it learns in its memory, so the next day&#x27;s notes start from there.</li>
+</ul>
+<p>A schedule runs only while the bot&#x27;s computer is awake. See <a href="#bots-put-it-on-a-schedule">Put it on a schedule</a>.</p>
+<h2 id="bots-use-cases-review-a-pull-request-when-youre-asked">Review a pull request when you&#x27;re asked</h2>
+<p><strong>Start from:</strong> the <strong>Pull request review</strong> template, with GitHub connected.</p>
+<ul>
+<li><strong>The ask.</strong> Set up by the template: when someone requests your review on a pull request in the repos you pick.</li>
+<li><strong>What the bot does.</strong> It reviews the pull request and lists risky changes and missing tests, with file and line.</li>
+<li><strong>What comes back.</strong> The findings in the bot&#x27;s chat, for example: &quot;#4121: the retry counter is never reset, so a second outage stops retries.&quot;</li>
+<li><strong>Where you step in.</strong> It doesn&#x27;t comment on GitHub until you say it can. Tell it which findings to post, and it posts them as you. Its rules say approve, request changes or merge only when you ask; see <a href="#bots-security-what-orca-enforces-and-what-the-bot-is-told">what Orca enforces</a>.</li>
+</ul>
+<h2 id="bots-use-cases-draft-release-notes">Draft release notes</h2>
+<p><strong>Start from:</strong> the <strong>Release notes</strong> template, with GitHub connected.</p>
+<ul>
+<li><strong>The ask.</strong> In the bot&#x27;s chat: &quot;Draft the notes for 4.12.&quot; With Slack connected, you can ask in a channel instead: &quot;@scout draft the notes for 4.12.&quot;</li>
+<li><strong>What the bot does.</strong> It reads the pull requests merged since the last release and writes notes for users in three groups: new, fixed and changed.</li>
+<li><strong>What comes back.</strong> The draft, in the thread or chat where you asked.</li>
+<li><strong>Where you step in.</strong> Edit the wording in chat. When it reads right, ask it to open a pull request that adds the notes to your changelog, or copy them where you publish.</li>
+</ul>
+<h2 id="bots-use-cases-keep-docs-in-sync-with-the-code">Keep docs in sync with the code</h2>
+<p><strong>Start from:</strong> the <strong>Docs upkeep</strong> template, with GitHub connected.</p>
+<ul>
+<li><strong>The ask.</strong> Set up by the template: Wednesdays at 10 AM, for the repos you pick.</li>
+<li><strong>What the bot does.</strong> It checks recently merged pull requests against your docs and lists the pages that no longer match, with the line that is now wrong.</li>
+<li><strong>What comes back.</strong> The list in the bot&#x27;s chat.</li>
+<li><strong>Where you step in.</strong> Pick the pages to fix. A worker updates them in its own worktree and opens a pull request for you to review.</li>
+</ul>
+<h2 id="bots-use-cases-respond-to-a-webhook">Respond to a webhook</h2>
+<p><strong>Start from:</strong> the <strong>Deploy watch</strong> template, with GitHub connected so it can read the pull requests each deploy shipped. Any tool that can send a web request can start a bot the same way.</p>
+<ul>
+<li><strong>The ask.</strong> In the bot&#x27;s chat: &quot;Set up a webhook for our deploys.&quot; Copy the address with <strong>Copy URL</strong> on the automation&#x27;s card and paste it into your deploy tool. Add a signing secret if the tool supports one.</li>
+<li><strong>What the bot does.</strong> Each time the tool calls, it summarizes the deploy from the pull requests it shipped and flags a deploy that failed. Orca hands it what the call carries as information, not as instructions.</li>
+<li><strong>What comes back.</strong> A summary in the bot&#x27;s chat after each deploy.</li>
+<li><strong>Where you step in.</strong> Ask about anything that looks wrong. If the URL leaks, use <strong>Rotate key…</strong> on the webhook. See <a href="#bots-connectors-webhooks">Webhooks</a>.</li>
+</ul>
+<aside>It reports first, then acts<p>Most templates report what they found and ask before they change anything. You can widen what a bot does on its own in chat. Its asks wait under <strong>Needs you</strong> until you answer. To see what Orca enforces and what a bot is only told, read <a href="#bots-security">Security</a>.</p></aside>
+<h2 id="bots-use-cases-more-templates">More templates</h2>
+<p>Orca ships 24 templates. The ones above, plus:</p>
+<table><thead><tr><th>Template</th><th>What it does</th><th>When it reports</th></tr></thead><tbody><tr><td>Bug report intake</td><td>Drafts a Linear issue with repro steps for each bug posted in a Slack channel, and files it once you approve</td><td>When a bug is reported</td></tr><tr><td>GitHub issue triage</td><td>Proposes labels and duplicates, and lists missing details, for each new issue</td><td>When an issue is opened</td></tr><tr><td>Support triage</td><td>Lists unanswered questions in the Slack channels you pick, and notes which already have a Linear issue</td><td>Weekdays, every 2 hours from 9 AM to 5 PM</td></tr><tr><td>Feedback digest</td><td>Groups feedback from Slack into themes, with quotes and counts</td><td>Mondays at 9 AM</td></tr><tr><td>Backlog cleanup</td><td>Lists stale issues, likely duplicates and issues with no owner</td><td>The 1st of each month</td></tr><tr><td>Dependency updates</td><td>Lists outdated and vulnerable packages, most urgent first; one pull request per group once you agree</td><td>Mondays at 9 AM</td></tr><tr><td>Security check</td><td>Checks merged changes for leaked secrets, injection, missing auth and unsafe defaults</td><td>Mondays at 9 AM, and when a pull request merges</td></tr><tr><td>Release readiness</td><td>Keeps a short list of failing checks, pull requests waiting for review and open blockers</td><td>Weekday mornings</td></tr><tr><td>Incident notes</td><td>Keeps a timeline in an incident channel, then drafts a blameless write-up</td><td>During and after an incident</td></tr><tr><td>On-call handoff</td><td>Summarizes the week&#x27;s alerts and incidents, and lists open follow-ups</td><td>Fridays at 4 PM</td></tr><tr><td>Replies you owe</td><td>Finds questions to you with no reply in Slack and Linear, and things you said you&#x27;d do</td><td>Daily at 4 PM</td></tr><tr><td>Email digest</td><td>Lists emails that need a reply from you; never sends email</td><td>Weekdays at 9 AM and 2 PM</td></tr><tr><td>Meeting prep</td><td>Lists the issues, pull requests and docs a meeting is about</td><td>15 minutes before each meeting</td></tr><tr><td>Project briefing</td><td>Writes what changed, what&#x27;s blocked and what needs a decision</td><td>Fridays at 3 PM</td></tr><tr><td>Spec drafting</td><td>Turns a Slack thread or doc into a one-page spec</td><td>When you ask</td></tr><tr><td>Unreviewed agent work</td><td>Lists finished agent work with no review or pull request yet</td><td>Weekdays at 9 AM</td></tr><tr><td>Workspace cleanup</td><td>Lists done or abandoned workspaces; removes only the ones you pick</td><td>Fridays at 4 PM</td></tr></tbody></table>
+<h2 id="bots-use-cases-write-your-own">Write your own</h2>
+<p>A good first ask names four things:</p>
+<ol>
+<li><strong>When:</strong> a schedule (&quot;every weekday at 9&quot;), an event (&quot;when a check fails in acme/web&quot;) or just &quot;now&quot;.</li>
+<li><strong>What to do:</strong> one job, in a sentence.</li>
+<li><strong>Where to report:</strong> the bot&#x27;s chat, a Slack channel, or the issue or pull request it was asked on.</li>
+<li><strong>What needs you:</strong> what it should ask about before it acts.</li>
+</ol>
+<p>For example: &quot;When a pull request is opened in acme/web, check it has a test for each fix. Tell me in #eng which ones don&#x27;t. Don&#x27;t comment on GitHub.&quot;</p>
+<h2 id="bots-use-cases-next-steps">Next steps</h2>
+<ul>
+<li><a href="#bots">Bots quickstart</a>: create a bot and give it its first job.</li>
+<li><a href="#bots-connectors">Connectors</a>: connect Slack, GitHub, Linear, Google and webhooks.</li>
+<li><a href="#bots-security">Security</a>: what a bot can reach, and who can ask it.</li>
+</ul>

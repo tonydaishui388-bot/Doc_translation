@@ -1,0 +1,36 @@
+<h1>Import a bot</h1>
+<p>Bring over a bot you already have in another app: its persona, memory, abilities and schedules.</p>
+<p>If you already have a bot in another app, you can bring over its persona, memory, abilities and schedules. Your new Orca bot reads the old one, shows you a plan, and sets itself up once you approve. The old bot is only read, never changed.</p>
+<h2 id="bots-import-start-an-import">Start an import</h2>
+<p>In the sidebar&#x27;s <strong>Bots</strong> section, select <strong>+</strong>, then <strong>New bot</strong> → <strong>Import from another app…</strong>. Orca looks on this computer for bots in the bot apps it supports and lists what it finds. When it finds some, Orca may also offer to bring one over on its own.</p>
+<ul>
+<li><strong>A bot Orca found:</strong> pick it, name your new bot, and create it.</li>
+<li><strong>Another app…:</strong> for a bot Orca doesn&#x27;t find on its own. Copy the message Orca gives you and send it to your old bot; it copies its files into a folder. Add that folder, paste the old bot&#x27;s reply if it wrote one, then name your new bot and create it.</li>
+</ul>
+<h2 id="bots-import-where-orca-looks">Where Orca looks</h2>
+<p>For a bot Orca found, it looks in that app&#x27;s usual folder on this computer. It reads the old bot&#x27;s persona or instructions, notes about you, memory, abilities and schedules, and the names of the channels and tools it used. For <strong>Another app…</strong>, it reads the plain files in the folder your old bot made.</p>
+<p>What the old app calls skills come over as the bot&#x27;s <strong>abilities</strong>. Abilities that shipped with the old app stay behind.</p>
+<h2 id="bots-import-review-the-plan">Review the plan</h2>
+<p>Before it sets anything up, your new bot shows you a plan of what it found, in groups:</p>
+<ul>
+<li><strong>Comes over:</strong> its persona becomes the bot&#x27;s soul, facts about you go into memory, its abilities come in the same format, and its schedules become automations.</li>
+<li><strong>Changes:</strong> for example, results it used to post in a chat app Orca doesn&#x27;t have now come to the bot&#x27;s chat in Orca, many small notes become a few memory topics, and a Slack connection becomes the bot&#x27;s own Slack app.</li>
+<li><strong>Stays behind:</strong> chat apps Orca doesn&#x27;t connect to (such as Telegram or WhatsApp), chat history, model settings, abilities that came with the old app, routines that only run a script, and keys and logins.</li>
+</ul>
+<p>Answer in the chat: import all of it, or say what to leave out. The bot doesn&#x27;t set anything up until you do.</p>
+<aside>Keys and logins stay behind<p>Orca&#x27;s import reader skips key, login and session files, and leaves out lines that look like secrets. That check is best effort: it can miss a secret that doesn&#x27;t look like one. A reply you paste from the old bot is saved as you pasted it. Before you import, remove any keys or tokens from that reply and from an exported folder. You reconnect each service in Orca; see <a href="#bots-connectors">Connectors</a>.</p></aside>
+<h2 id="bots-import-after-the-import">After the import</h2>
+<ul>
+<li>Automations arrive <strong>paused</strong>, so the old bot and the new one don&#x27;t both run the same job. Switch the old bot off in its app, then ask your new bot to turn the automations on. If the old app is still running, the bot tells you which job would run twice.</li>
+<li>The old bot&#x27;s own words are kept in the new bot&#x27;s memory for reference, marked as notes, not instructions.</li>
+<li>Tools the old bot used come over without their keys; sign in to them again when the bot asks.</li>
+<li>If something needs Slack, GitHub or Linear, the bot offers to connect it. Automations started by events wait until that connector is added.</li>
+<li>Your new bot runs on your own Claude Code or Codex sign-in, or another supported agent, not on the old app&#x27;s model settings.</li>
+</ul>
+<p>For a bot Orca found on this computer, you can bring over anything new later. Start the import again and pick the same old bot; Orca offers to <strong>Update</strong> the bot you made. It adds only what is new or changed and keeps the edits you made in Orca.</p>
+<h2 id="bots-import-next-steps">Next steps</h2>
+<ul>
+<li><a href="#bots-connectors">Connectors</a>: reconnect Slack, GitHub, Linear and Google for your new bot.</li>
+<li><a href="#bots-use-cases">Use cases</a>: jobs to hand it once it&#x27;s set up.</li>
+<li><a href="#bots-security">Security</a>: what the bot can reach, and what import skips.</li>
+</ul>

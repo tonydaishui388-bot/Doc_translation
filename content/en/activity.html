@@ -1,0 +1,22 @@
+<h1>Agents feed</h1>
+<p>Threaded feed of agent completions, blocking states, response previews, and worktree creation events across every worktree.</p>
+<p>The <strong>Agents</strong> entry in the sidebar opens a threaded feed of agent events across every worktree — completions, blocking questions, unread state, and worktree creation. It complements the per-worktree <a href="#notifications">notifications</a> view by giving you one chronological surface to triage from.</p>
+<p>The entry is on by default. It shows an unread badge when new events have arrived since you last visited; clicking an entry jumps you to the matching worktree and pane — the same handoff Orca does from a system notification.</p>
+<p>Use <code>Cmd+F</code> on macOS or <code>Ctrl+F</code> on Windows and Linux to focus the feed filter. When the embedded terminal has focus, the same shortcut stays with the terminal instead.</p>
+<p>The feed header reflects the active filter. Right-click an agent row for its actions, and hold <code>Cmd</code> (<code>Ctrl</code> on Windows / Linux) to select several rows and apply one action to all of them at once; acting on rows keeps you in the activity view.</p>
+<h2 id="activity-what-shows-up">What shows up</h2>
+<p>Each entry in the feed is one of:</p>
+<ul>
+<li>An agent finishing a turn, either idle or blocked on a question.</li>
+<li>A new worktree being created.</li>
+<li>An agent that&#x27;s been waiting on input long enough to surface as blocking.</li>
+<li>A short preview of the agent&#x27;s most recent response, so you can skim the feed without opening every thread.</li>
+</ul>
+<p>Threads are grouped by status — running agents stay pinned at the top so you can spot the ones still working at a glance.</p>
+<h2 id="activity-interplay-with-notifications">Interplay with notifications</h2>
+<p>The Agents feed doesn&#x27;t replace the <a href="#notifications">header bell</a> or system notifications — those still fire on agent-finished pings. The feed is the catch-up surface when you&#x27;ve been away from Orca: instead of scrolling each worktree to find what changed, scan it.</p>
+<h2 id="activity-next-steps">Next steps</h2>
+<ul>
+<li><a href="#notifications">Notifications &amp; Inbox</a> — system pings, the header bell, and per-category tuning.</li>
+<li><a href="#model-agents-sessions">Agents &amp; sessions</a> — how Orca tracks the working/idle/blocked transitions this feed surfaces.</li>
+</ul>

@@ -1,0 +1,27 @@
+<h1>Worktree checkpoints</h1>
+<p>Every Orca worktree carries a lightweight, free-text <strong>comment</strong> field visible in the UI — a status snapshot of what the worktree is doing right now. Agents can update it from the CLI, and it&#x27;s the pattern we recommend for keeping human collaborators in the loop without forcing chat.</p>
+<h2 id="cli-worktree-checkpoints-the-pattern">The pattern</h2>
+<pre><code>orca worktree set --worktree active --comment &quot;reproduced auth failure; testing credential-chain fix&quot; --json</code></pre>
+<h2 id="cli-worktree-checkpoints-card-status-optional">Card status (optional)</h2>
+<p>Alongside the free-text comment, set the workspace card status when the phase changes:</p>
+<pre><code>orca worktree set --worktree active \
+  --comment &quot;fix implemented; running integration tests&quot; \
+  --workspace-status in-progress \
+  --json</code></pre>
+<p>Statuses: <code>todo</code>, <code>in-progress</code>, <code>in-review</code>, <code>completed</code> (or a custom id your workspace uses).</p>
+<h2 id="cli-worktree-checkpoints-good-checkpoint-moments">Good checkpoint moments</h2>
+<ul>
+<li>Finished a meaningful slice of implementation.</li>
+<li>Confirmed or refuted a hypothesis.</li>
+<li>Completed a code review.</li>
+<li>Hit a blocker (waiting on external input, upstream bug, missing access).</li>
+<li>Transitioning from investigation to fix, or fix to verify.</li>
+</ul>
+<h2 id="cli-worktree-checkpoints-format">Format</h2>
+<p>First line is the action: what just happened, where, and the status or next step.</p>
+<pre><code>orca worktree set --worktree active --comment &quot;added debounce to SearchBar onChange (src/components/SearchBar.tsx); ready for review
+goal: reduce redundant API calls per #298&quot; --json</code></pre>
+<h2 id="cli-worktree-checkpoints-reading-before-writing">Reading before writing</h2>
+<p>If the comment might have user-written context, read it first so you don&#x27;t clobber goals or constraints:</p>
+<pre><code>orca worktree current --json</code></pre>
+<p>Preserve what&#x27;s still valid, drop what&#x27;s stale, and weave in your update.</p>

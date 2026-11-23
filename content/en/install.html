@@ -1,0 +1,30 @@
+<h1>Install</h1>
+<p>Download Orca for macOS, Windows, or Linux, and opt into RC builds.</p>
+<h2 id="install-download">Download</h2>
+
+<ul><li><p><strong>macOS:</strong> <a href="https://github.com/stablyai/orca/releases/latest/download/orca-macos-arm64.dmg">Apple Silicon</a> · <a href="https://github.com/stablyai/orca/releases/latest/download/orca-macos-x64.dmg">Intel</a></p></li><li><p><strong>Windows:</strong> <a href="https://github.com/stablyai/orca/releases/latest/download/orca-windows-setup.exe">installer</a></p></li><li><p><strong>Linux:</strong> <a href="https://github.com/stablyai/orca/releases/latest/download/orca-linux.AppImage">AppImage</a> · <a href="https://github.com/stablyai/orca/releases">.deb</a> · <a href="https://github.com/stablyai/orca/releases">.rpm</a></p></li><li><p>Older versions: <a href="https://github.com/stablyai/orca/releases">GitHub Releases</a>.</p></li></ul>
+<h3 id="install-homebrew-macos">Homebrew (macOS)</h3>
+<p>Orca is also published as a Homebrew cask, auto-bumped on every stable release:</p>
+<pre><code>brew install --cask stablyai/orca/orca</code></pre>
+<p><code>brew upgrade --cask orca</code> picks up new stable builds. The cask tracks the stable channel — for RC builds, use the GitHub Releases links above or the in-app <strong>Check for Updates</strong> flow described under <a href="#install-updates">Updates</a>.</p>
+<h2 id="install-first-launch">First launch</h2>
+<p>On first launch Orca will:</p>
+<ul>
+<li>Ask for access to your home directory so it can add repos.</li>
+<li>Offer to import <code>~/.claude</code>, <code>~/.codex</code>, and Ghostty terminal settings if present.</li>
+<li>Drop you on an empty landing screen where you add your first repo.</li>
+</ul>
+<h2 id="install-updates">Updates</h2>
+<p>Orca checks for updates on the <strong>stable</strong> channel. To download, install, and relaunch automatically, enable <strong>Automatic updates</strong> under <strong>Settings → General → About</strong>; it is off by default. Automatic installation follows your check cadence, channel, and update delay. Orca waits if installation would terminate a live or launching in-process terminal, a WSL move is active, or window state cannot be saved.</p>
+<p>Stable releases are vetted; <strong>RC (release candidate)</strong> builds ship new features first, often daily.</p>
+<p>There is no permanent in-app opt-in for the RC channel. Modifier clicks on <strong>Check for Updates</strong> (<a href="#settings">Settings → General → Updates</a>, or the app / Help menu):</p>
+<table><thead><tr><th>Modifier</th><th>Effect</th></tr></thead><tbody><tr><td><strong>Shift+click</strong></td><td>Include the latest <strong>RC</strong> prerelease</td></tr><tr><td><strong>Cmd+click</strong> (macOS) / <strong>Ctrl+click</strong> (Windows/Linux)</td><td>Latest <strong>perf</strong>-tagged prerelease</td></tr><tr><td><strong>Option+click</strong> (macOS only)</td><td>Pick a <strong>validated local macOS build</strong> that passes Orca’s compatibility checks</td></tr></tbody></table>
+<p>You can still download any build directly from the <a href="https://github.com/stablyai/orca/releases">GitHub Releases page</a>.</p>
+<aside>Don&#x27;t like the current update<p>Older versions are always available on the <a href="https://github.com/stablyai/orca/releases">GitHub Releases page</a>. Orca will not force-downgrade your worktree data if you go back.</p></aside>
+<h2 id="install-platform-notes">Platform notes</h2>
+<h3 id="install-macos">macOS</h3>
+<p>Orca requires macOS 13.4 or later. Older Macs remain on their last compatible version through the in-app updater; macOS 13.0–13.3 users can update macOS before upgrading Orca. Orca is signed and notarized. On first launch, macOS may still ask you to confirm — that&#x27;s normal for Electron-based apps.</p>
+<h3 id="install-windows">Windows</h3>
+<p>The default shell can be set to PowerShell or CMD under <a href="#settings">Settings → Terminal</a>. Most users want PowerShell. The bundled <code>orca</code> command is a native program, so it runs without the Visual C++ Redistributable.</p>
+<h3 id="install-linux">Linux</h3>
+<p>Choose the AppImage if you want Orca to update itself. The <code>.deb</code> and <code>.rpm</code> packages report available updates and give you the package-manager command to install them; quit Orca before running that command. The Linux CLI is named <code>orca-ide</code> so it does not conflict with the GNOME Orca screen reader.</p>

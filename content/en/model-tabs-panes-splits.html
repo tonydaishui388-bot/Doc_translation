@@ -1,0 +1,32 @@
+<h1>Tabs, panes &amp; split layouts</h1>
+<p>Drag-to-split panes, tab groups, and pinned boundaries.</p>
+<p>Orca&#x27;s pane system is designed for watching multiple agents work without losing context. Tabs group into panes; panes split into layouts.</p>
+<figure><img src="https://orca.dev/whats-new/posters/tab-split.jpg" alt="Drag a tab to a pane edge to split — terminals, diffs, and browser tabs side by side" loading="lazy" decoding="async"><figcaption>Drag a tab to a pane edge to split — terminals, diffs, and browser tabs side by side</figcaption></figure>
+<h2 id="model-tabs-panes-splits-tabs">Tabs</h2>
+<p>Each tab holds one thing: a terminal, an editor buffer, a browser, a diff, a PR. Tabs live inside a <strong>tab group</strong>.</p>
+<ul>
+<li>Drag a tab up-down within a group to reorder.</li>
+<li>Drag a tab onto another group to move it.</li>
+<li>Right-click a terminal, editor, or browser tab and choose <strong>Copy Tab ID</strong> to copy a stable reference (such as <code>orcaTabId: abc123</code>) for that exact tab — handy when you want to point an agent at the precise tab. It works on inactive and pinned tabs and does not rename, activate, or close the tab.</li>
+<li>Close every editor file tab in the active worktree with <code>Cmd+Option+W</code> on macOS or <code>Ctrl+Alt+W</code> on Windows / Linux.</li>
+<li>An active-tab color bar marks which pane is focused.</li>
+<li>Hover anywhere on a tab to see its full title, with the tab&#x27;s icon and program on a row below. Moving to the next tab shows its card right away with a short slide, so truncated titles are easy to identify without aiming at their text.</li>
+</ul>
+<h3 id="model-tabs-panes-splits-switching-tabs">Switching tabs</h3>
+<p>Default chords on <strong>new installs</strong>:</p>
+<table><thead><tr><th>Action</th><th>macOS</th><th>Linux / Windows</th></tr></thead><tbody><tr><td>Next / previous tab (all types)</td><td><code>Cmd+Shift+]</code> / <code>Cmd+Shift+[</code></td><td><code>Ctrl+Shift+]</code> / <code>Ctrl+Shift+[</code></td></tr><tr><td>Next / previous tab (same type)</td><td><code>Cmd+Option+]</code> / <code>Cmd+Option+[</code></td><td><code>Ctrl+Alt+]</code> / <code>Ctrl+Alt+[</code></td></tr><tr><td>Previous recent tab</td><td><code>Ctrl+Tab</code></td><td><code>Ctrl+Tab</code></td></tr></tbody></table>
+<p>Remap under <a href="#settings">Settings → Shortcuts</a>. Existing installs keep customized overrides in <code>~/.orca/keybindings.json</code>.</p>
+<h2 id="model-tabs-panes-splits-split-panes">Split panes</h2>
+<p>Drag a tab to the edge of a pane to create a split:</p>
+<ul>
+<li><strong>Right edge</strong> — splits left/right (horizontal split).</li>
+<li><strong>Bottom edge</strong> — splits top/bottom (vertical split).</li>
+</ul>
+<p>In an empty split pane, press <code>/</code> to search for an agent or file, then use the arrow keys and Enter to open it.</p>
+<p>Splits nest. You can have an agent terminal on the left, a diff view on the top-right, and a browser tab on the bottom-right — all at once.</p>
+<figure><img src="https://orca.dev/whats-new/split-anything.webp" alt="Any tab type can split with any other — agent terminal, diff, browser, editor, PR view all coexist in one pane tree." loading="lazy" decoding="async"><figcaption>Any tab type can split with any other — agent terminal, diff, browser, editor, PR view all coexist in one pane tree.</figcaption></figure>
+<p>Terminal tabs can also split inside the tab. Use the terminal tab menu for <strong>Split terminal right</strong> or <strong>Split terminal down</strong>, or use the split button in the active terminal pane header for a right split.</p>
+<h2 id="model-tabs-panes-splits-pinned-boundaries">Pinned boundaries</h2>
+<p>Pane boundaries stay where you put them. Resizing the window doesn&#x27;t shuffle your layout; boundary positions are saved per worktree.</p>
+<h2 id="model-tabs-panes-splits-tab-groups-across-worktrees">Tab groups across worktrees</h2>
+<p>Each worktree owns its own tab layout. Switching worktrees swaps the entire pane tree — your browser tab, terminal, and diff reappear exactly as you left them.</p>

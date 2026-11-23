@@ -1,0 +1,12 @@
+<h1>Review an AI diff line-by-line</h1>
+<p>Reviewing an AI diff well is the difference between shipping fast and shipping bugs. Here&#x27;s the loop.</p>
+<h2 id="recipes-review-ai-diff-steps">Steps</h2>
+<ol>
+<li>Open the worktree&#x27;s diff view.</li>
+<li>Go file-by-file with <code>j</code> / <code>k</code>. For each hunk, ask: is the change necessary? is it minimal? does it match the rest of the file?</li>
+<li>Drop comments with <code>c</code> on anything you want changed — full sentences work best.</li>
+<li>When you&#x27;ve been through the whole diff, click <strong>Send to agent</strong>. Orca batches all comments into one prompt.</li>
+<li>Watch the agent revise. The state dot will go yellow (waiting for more input) or green (working).</li>
+<li>When it&#x27;s idle, re-open the diff. Your comments are pinned; resolve the ones that are fixed and leave follow-ups on the rest.</li>
+<li>Repeat until clean, then commit.</li>
+</ol>

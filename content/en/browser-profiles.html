@@ -1,0 +1,19 @@
+<h1>Browser-use profiles</h1>
+<p>Browser-use profiles let you run the Orca browser with a specific identity — a logged-in user, a particular cookie jar, a custom user-agent. Useful when an agent needs to log in, reproduce a session-specific bug, or emulate multiple users.</p>
+<h2 id="browser-profiles-create-a-profile">Create a profile</h2>
+<ol>
+<li>Open <a href="#settings">Settings → Browser → Profiles</a>.</li>
+<li>Click <strong>Add profile</strong>, give it a name.</li>
+<li>Optionally seed it with cookies, a user-agent, and a viewport size.</li>
+<li>For sites that reject Orca&#x27;s default Chrome-shaped UA (some Google sign-in flows), create a profile that keeps the <strong>native Electron user agent</strong> instead of spoofing. Default profiles still use the cleaned Chrome UA for broader Cloudflare compatibility.</li>
+</ol>
+<p>You can also create a no-spoof profile from the CLI with <code>orca tab profile create --no-ua-spoof</code> when you script browser setup.</p>
+<h2 id="browser-profiles-cookie-import-and-google-sign-in">Cookie import and Google sign-in</h2>
+<p>Import cookies from Chrome, Edge, or Vivaldi (or from a cookie file) into a profile from Settings or the browser toolbar. Orca replaces existing cookies only for domains included in the import, so sign-ins for unrelated sites in the same profile stay intact. Google cookies are excluded — import menus show <strong>Google logins aren&#x27;t imported</strong> and tell you to <strong>Sign in to Google directly in Orca.</strong> After an import that skipped Google cookies, a separate warning names the host that ran the import: open a browser in Orca on that host with the same profile, then sign in.</p>
+<p>If Google sign-in is stuck on an old account, open <strong>Settings → Browser → Session &amp; Cookies</strong>, select the host and active profile, and choose <strong>Clear Google cookies…</strong>. Confirm to sign out of Google in that profile; cookies for other sites remain. Older remote hosts may not support this action.</p>
+<p>When a site requests a discoverable passkey from a USB security key and the key offers multiple accounts, Orca opens an account picker instead of silently canceling the sign-in. Choose the account you want or cancel the request. Platform passkeys stored by the operating system are not available in Orca yet; this flow is for external FIDO security keys.</p>
+<h2 id="browser-profiles-use-a-profile">Use a profile</h2>
+<p>Pick the profile from the browser toolbar. All tabs in that pane use it until you switch. Agent-driven browser commands inherit the active profile.</p>
+<p>In project settings, choose <strong>Browser profile</strong> to use a profile for that project’s new tabs. The project choice overrides the app-wide profile scope; an explicit <code>orca tab create --profile</code> overrides both. Choose <strong>Browser setting</strong> to inherit the app-wide scope again. Phone-created and headless <code>orca serve</code> tabs do not apply this project choice.</p>
+<h2 id="browser-profiles-isolation">Isolation</h2>
+<p>Each profile has its own storage partition — cookies, local storage, cache. Profiles don&#x27;t leak into each other.</p>

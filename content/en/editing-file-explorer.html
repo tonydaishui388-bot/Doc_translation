@@ -1,0 +1,27 @@
+<h1>File explorer &amp; external drag-drop</h1>
+<p>The file explorer lives on the left side of each worktree. It tracks your on-disk files in real time — create, rename, delete, and move all map to filesystem operations, so external changes (say, from the agent) show up instantly. Directory listings sort directories first, then files, with <strong>natural (numeric-aware) name order</strong> — <code>9</code>, <code>99</code>, <code>100</code> instead of lexicographic <code>100</code>, <code>99</code>. The same ordering applies to SSH, remote runtime, Source Control tree nodes, folder pickers, and the mobile file tree.</p>
+<p>On updated SSH and paired servers, large remote folders load more entries as you scroll. Update the host server if a large folder does not load fully.</p>
+<p>When a worktree uses a git <strong>sparse checkout</strong>, the explorer scopes its tree to the checkout&#x27;s directories, so you land on the folders you actually work in instead of the full repository.</p>
+<h2 id="editing-file-explorer-external-drag-drop">External drag-drop</h2>
+<p>A drop lands exactly where you point it — the file tree, project sidebar, editor, tab strip, or the specific terminal pane under the cursor — rather than the active workspace.</p>
+<ul>
+<li>Drop files from Finder/Explorer into the file tree to copy them in.</li>
+<li>Drop an image into a markdown editor to insert it at the cursor.</li>
+<li>Drop files onto an agent terminal to paste their paths at the prompt.</li>
+<li>For <a href="#ssh">SSH worktrees</a>, drag-drop also works — Orca uploads the file to the remote host before completing the drop, so the agent sees the file as a real on-disk path.</li>
+</ul>
+<h2 id="editing-file-explorer-git-status">Git status</h2>
+<p>Files are colored by git status — untracked, modified, staged, ignored. Right-click for the usual actions: discard, stage, rename, <strong>Copy Path</strong>, and <strong>Copy Relative Path</strong> (<code>Cmd+Option+Shift+C</code> / <code>Ctrl+Alt+Shift+C</code> by default; remappable).</p>
+<p>Right-click a single file and choose <strong>Copy</strong> to place the file itself on the OS clipboard. For SSH worktrees, Orca first stages the remote file locally, then writes that staged file reference to the clipboard; remote folders are excluded.</p>
+<h2 id="editing-file-explorer-download-ssh--remote">Download (SSH / remote)</h2>
+<p>On the desktop app, right-click a remote file → <strong>Download</strong>, or a remote folder → <strong>Download Folder</strong> when the connection supports recursive transfer. Orca opens a native save/folder dialog. Not available in the web client. Local worktrees do not show this action.</p>
+<h2 id="editing-file-explorer-reveal-in-finder--file-explorer">Reveal in Finder / File Explorer</h2>
+<p>Right-click a file in the explorer, a changed file in Source Control, or a file-path link in a terminal and choose <strong>Reveal in Finder</strong> (macOS) or <strong>Reveal in File Explorer</strong> (Windows) to open its location in your OS file manager.</p>
+<h2 id="editing-file-explorer-search-a-folder">Search a folder</h2>
+<p>Right-click a folder and choose <strong>Find in Folder</strong> to open Search with that folder already scoped. You can also select a folder in the file explorer and press <code>Cmd-Shift-F</code> on macOS or <code>Ctrl-Shift-F</code> on Windows and Linux.</p>
+<p>The Explorer&#x27;s name filter also searches the full local file list when a very large workspace reaches its listing cap, so files beyond the initial listing can still match. Matching is debounced briefly while you type; smaller workspaces keep the instant filter behavior.</p>
+<h2 id="editing-file-explorer-next-steps">Next steps</h2>
+<ul>
+<li><a href="#editing-monaco">Monaco editor &amp; autosave</a> — edit files after you find the match you need.</li>
+<li><a href="#review-diff-viewer">Diff viewer</a> — review the changes your agent or editor made.</li>
+</ul>

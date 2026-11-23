@@ -1,0 +1,76 @@
+<h1>SSH worktrees</h1>
+<p>Orca can drive agents on remote machines over SSH — useful for long-running builds, GPU boxes, or any environment where your laptop isn&#x27;t the right place to run the work.</p>
+<aside>One of four run modes<p>SSH is one way to put agents on remote compute. For local, self-hosted servers, and ephemeral VMs, see <a href="#ways-to-run">Ways to run Orca</a>.</p></aside>
+<figure><img src="https://orca.dev/whats-new/posters/ssh-demo.jpg" alt="SSH remote workspace — agents run on the remote host, the editor and diff stay local" loading="lazy" decoding="async"><figcaption>SSH remote workspace — agents run on the remote host, the editor and diff stay local</figcaption></figure>
+<h2 id="ssh-add-an-ssh-target">Add an SSH target</h2>
+<ol>
+<li>Open <a href="#settings">Settings → SSH</a>.</li>
+<li>Click <strong>Add Target</strong>. The host form opens in a modal (not inline under the list), so Host, Advanced, and Save stay reachable even with a long host list. Edit uses the same dialog and shows the target label plus <code>user@host:port</code>.</li>
+<li>Fill in host, user, port, and optional identity file — or open the <strong>OpenSSH config</strong> picker in the same dialog to search <code>~/.ssh/config</code> (including <code>Include</code>d files), pick one host, and prefill the form. Hosts already saved in Orca show an <strong>In Orca</strong> badge. You can still import hosts in bulk from config when that flow is available.</li>
+<li>If the key is passphrase-protected, Orca will prompt the first time.</li>
+<li>Click <strong>Test</strong> to verify connectivity, then <strong>Save</strong>.</li>
+</ol>
+<p>Dirty add/edit forms ignore outside clicks so an accidental click away does not discard your fields; use Escape, Cancel, or × to discard.</p>
+<h2 id="ssh-host-key-verification">Host key verification</h2>
+<p>Orca checks built-in SSH connections against your effective OpenSSH <code>known_hosts</code> files and keys it previously saved. Existing matches connect silently. With the default policy, Orca accepts and remembers a host on first contact and shows its fingerprint; <code>StrictHostKeyChecking yes</code> rejects unknown hosts, while <code>no</code> / <code>off</code> accepts without saving a trust record.</p>
+<p>A changed, revoked, or unexpectedly different key type is rejected before Orca asks for a password or key passphrase. If you intentionally rebuilt or reprovisioned the host, verify its new fingerprint first, then follow the recovery path in the error. For a <code>known_hosts</code> mismatch, Orca provides the appropriate <code>ssh-keygen -R</code> command (including the bracketed host and port when needed).</p>
+<h2 id="ssh-use-a-target">Use a target</h2>
+<p>When creating a worktree, choose an SSH target instead of Local. Orca will:</p>
+<ul>
+<li>Create the git worktree on the remote host.</li>
+<li>Run agents remotely through the SSH connection.</li>
+<li>Sync file events so the editor, diff, and browser still feel local.</li>
+</ul>
+<h2 id="ssh-advanced-connection-options">Advanced connection options</h2>
+<p>Open <strong>Settings → SSH</strong>, edit a target, and expand <strong>Advanced Connection</strong> when the host needs a proxy, jump host, or SSH multiplexing override. Orca enables <strong>Reuse SSH connection for faster setup</strong> by default, which uses OpenSSH connection reuse on macOS and Linux so setup commands do not each pay a fresh SSH handshake. Turn it off only for hosts whose SSH policy rejects multiplexed sessions.</p>
+<h2 id="ssh-passphrases">Passphrases</h2>
+<p>Passphrases are held in memory for the life of the Orca session. Closing Orca clears them. You can opt into a longer TTL under SSH settings.</p>
+<h2 id="ssh-multi-factor-sign-in">Multi-factor sign-in</h2>
+<p>Hosts that ask for a verification code or another keyboard-interactive prompt (a one-time password, an MFA challenge, or a similar prompt) work over the built-in connection: Orca relays the prompt to you and forwards your answer. If the prompt is part of a scripted setup step, it is deferred to a step you can answer rather than failing the connect.</p>
+<p>If the built-in client and host have no compatible SSH algorithm, Orca retries through your system <code>ssh</code>, which can use the algorithms configured for that installation.</p>
+<h2 id="ssh-status">Status</h2>
+<p>Remote worktrees show a chip with live SSH status — green connected, yellow reconnecting, red disconnected. While an SSH host is still connecting, Orca can list workspaces from <strong>persisted local metadata</strong> so the sidebar is not empty until the live provider comes up; those rows refresh to authoritative remote state once the connection settles. Disconnects don&#x27;t kill running agents; Orca reconnects and re-attaches, replaying scrolling output and restoring full-screen app panes from their rendered frame instead of returning them blank or fragmented. Keystrokes you type while a restored SSH terminal reattaches are kept, not dropped. When a host drops, the affected workspace card can show an inline <strong>Connect</strong> / reconnect control so you can recover without opening a terminal overlay or hunting the status bar. If an SSH connection drops with a &quot;Multiplexer disposed&quot; style failure, Orca recovers automatically instead of leaving the pane stuck until you restart. Agent status (working / idle / blocked) propagates over SSH the same way it does locally, so the sidebar and <a href="#activity">Agents feed</a> reflect remote agents in real time.</p>
+<h2 id="ssh-sessions-across-app-close">Sessions across app close</h2>
+<p>Closing the desktop app no longer kills your remote PTY sessions. They live on the host&#x27;s managed Orca server, so they survive Orca closing on your laptop. When you reopen the app and reconnect to the target, the sessions are restored to their tabs in the <strong>attached</strong> state, with their scrollback intact. A structured chat on a managed server keeps its provider loaded while a reply is running or a question is waiting, so an approval is still there after the desktop disconnects. Losing contact with a host is not evidence that its work stopped, so check the host before starting a second agent on the same worktree.</p>
+<h2 id="ssh-reconnect-and-restart">Reconnect and restart</h2>
+<p>Open files, live agent tabs, and paused Claude or Codex resume offers survive an SSH reconnect and an app restart, so the workspace comes back the way you left it. Keys you type while the connection is down are delivered exactly once and in order when it returns, and a pane&#x27;s scrollback and size survive the reconnect. Open tabs reattach after a managed server update. Tabs you closed long ago no longer return as empty shells, and clicking an SSH worktree whose last tab you closed opens a fresh terminal.</p>
+<p>To leave an on-demand SSH host disconnected when Orca starts, edit that host and turn off <strong>Advanced → Reconnect on launch</strong>. The switch is on by default. While it is off, Orca waits until you select <strong>Connect</strong> before reconnecting the host or its managed server for that session.</p>
+<p>Shell startup files that print text, folders with tens of thousands of entries, and 64-bit ARM Linux servers no longer break or drop the connection. When two machines share a path, files, browser tabs, links, and drag-and-drop stay on the machine they belong to.</p>
+<h2 id="ssh-the-orca-cli-on-an-ssh-host">The orca CLI on an SSH host</h2>
+<p>By default, <code>orca</code> commands run on an SSH host reach only that host&#x27;s own terminals and orchestration messages. An agent there can still report back to a coordinator that dispatched it, but it can&#x27;t reach your other hosts, desktop control, accounts, or settings. To let that host&#x27;s agents create worktrees, open terminals, or dispatch work through <code>orca</code>, turn on <strong>Allow this host&#x27;s orca CLI to control Orca</strong> for that host (Settings → SSH → edit the host → Advanced Connection). Terminals carried over from v1.4.224 do not have <code>orca</code>; run <code>orca</code> commands in a new terminal on the same host.</p>
+<p>When deleting an SSH workspace that Orca cannot delete on the host, <strong>Remove from Orca</strong> removes it from the app and leaves its files on the host.</p>
+<h2 id="ssh-downloading-remote-files-and-folders">Downloading remote files and folders</h2>
+<p>Right-click in the SSH worktree file explorer:</p>
+<ul>
+<li><strong>File</strong> → <strong>Download</strong> — native save dialog; copies the file to your laptop.</li>
+<li><strong>Folder</strong> → <strong>Download Folder</strong> — recursive download into a folder you choose (desktop only).</li>
+</ul>
+<p>Orca uses the same SSH transfer path as the connection. Folder download appears only when the connection advertises recursive folder transfer (typically full SFTP). Connections that stay on system OpenSSH-only transfer may still download <strong>files</strong> but not show <strong>Download Folder</strong>.</p>
+<p>This is a desktop-only action — the web client doesn&#x27;t expose Download because it relies on Electron&#x27;s save dialog.</p>
+<h2 id="ssh-open-a-remote-workspace-in-vs-code">Open a remote workspace in VS Code</h2>
+<p>For SSH worktrees, the worktree menu&#x27;s <strong>Open in</strong> list can hand the remote path to VS Code Remote-SSH when your configured app is VS Code or VS Code Insiders (<code>code</code> / <code>code-insiders</code>, or a direct path to those launchers).</p>
+<ol>
+<li>Configure <strong>Settings → General → Open in menu</strong> so VS Code is listed (preset or custom command).</li>
+<li>Right-click the SSH worktree (or use the worktree overflow menu) → <strong>Open in</strong> → <strong>VS Code</strong>.</li>
+<li>Orca launches VS Code with Remote-SSH against that host and the worktree path (<code>--remote ssh-remote+&lt;host&gt; &lt;path&gt;</code>). The menu entry may show a <strong>Remote SSH</strong> badge.</li>
+</ol>
+<p><strong>Not supported for this remote path:</strong> Cursor, Zed, compound shell commands, or opening via a <strong>Remote Orca Server</strong> active runtime (those stay <strong>Local only</strong>). Use the Finder/Explorer item only for local paths.</p>
+<h2 id="ssh-kerberos--gssapi">Kerberos / GSSAPI</h2>
+<p>If a host in OpenSSH config sets <code>GSSAPIAuthentication yes</code>, Orca prefers the <strong>system OpenSSH</strong> transport for that target (the built-in ssh2 client does not speak GSSAPI). Keep a valid Kerberos ticket (<code>kinit</code> / your org&#x27;s SSO) before connecting. Manual targets can also enable GSSAPI when configured for system SSH.</p>
+<p>You do not flip a separate “Kerberos mode” switch for config-imported hosts — import/<code>ssh -G</code> carries the flag through.</p>
+<h2 id="ssh-fido2--security-keys">FIDO2 / security keys</h2>
+<p>Hardware-backed OpenSSH identities (<code>ed25519-sk</code>, <code>ecdsa-sk</code>, including agent-backed security keys) also use <strong>system OpenSSH</strong> rather than the built-in ssh2 client. Orca detects the key type from your identity files and hands the connection to the OS OpenSSH binary so the touch / PIN prompt works as usual. Regular Ed25519, ECDSA, and RSA keys stay on the built-in transport. If OpenSSH is not available on the machine, those FIDO2 targets cannot authenticate until it is installed and on <code>PATH</code> (or in the usual Windows/macOS/Linux locations).</p>
+<h2 id="ssh-managed-orca-server">Managed Orca server</h2>
+<p>On first connect, Orca sets up its own server on the host — a pinned runtime it ships and keeps up to date — so a connection no longer fails because the host has the wrong Node version or no build tools. There is no setting to turn this on.</p>
+<p>If neither your computer nor the host can download the Node.js runtime, the connection error offers <strong>Use a Node.js mirror…</strong>. Review or replace the prefilled mirror, then choose <strong>Save and retry</strong>; Orca verifies each download against its pinned checksum. If the configured mirror also fails, open <strong>Settings → Advanced → Network</strong> to correct the mirror before reconnecting.</p>
+<ul>
+<li>An empty host is set up and connects to its managed server.</li>
+<li>A host that already has Orca projects but no open terminals moves its projects, folders, project groups, and open editor tabs onto the managed server on its next connect.</li>
+<li>Terminals left running by v1.4.224 keep working in their existing tabs through the upgrade and reconnect; new terminals on that host open on the managed server.</li>
+<li>A host the managed server cannot run on no longer falls back to the old SSH runtime. The connect fails with the reason, and <strong>Settings → SSH Hosts</strong> shows it — use an older Orca version to keep connecting to that host.</li>
+</ul>
+<p>Manage each server under <strong>Settings → Managed servers</strong>: see its version and running terminals, <strong>Update</strong> or <strong>Roll back</strong>, <strong>Recover</strong> an interrupted update, or <strong>Stop…</strong> / <strong>Forget…</strong> it. If terminals are running, <strong>Update anyway</strong> updates the server without closing them. The CLI mirrors those actions — <code>orca environment status|update|rollback|recover|stop|forget</code> — see the <a href="#cli-reference-automations-environments-and-hooks">CLI reference</a>.</p>
+<h2 id="ssh-runtime-choices">Runtime choices</h2>
+<p>The old per-host <strong>Runtime</strong> selector (Auto / Orca-managed Node / Host Node) and the relay-only lifecycle settings are gone: every SSH connection runs on the managed Orca server. If Orca cannot run the managed server on a host — an unsupported OS or CPU, a <code>noexec</code> home directory, or an SSH server that refuses port forwarding — the connect explains why in <strong>Settings → SSH Hosts</strong> instead of silently falling back.</p>
+<h2 id="ssh-port-forwarding">Port forwarding</h2>
+<p>For remote worktrees, the right sidebar shows a <strong>Ports</strong> tab (toggle with <code>Cmd+Shift+I</code>). Orca scans the workspace&#x27;s own host — the managed SSH server or paired server the worktree runs on, not your laptop — and lists listening ports under <strong>Detected</strong>; one click forwards them to you, and you can stop a detected port from the same panel. You can also add forwards manually, edit them, or remove them. Saved forwards return on managed hosts after a reconnect, persist across app restarts, and privileged remote ports auto-remap locally (e.g. remote 80 → local 10080). If a saved forward cannot start, its row explains why and lets you remove it. On managed SSH hosts, select <strong>Forward</strong> on a detected port to open the forwarding dialog. On shared Linux hosts, the detected list excludes ports owned by other login users; root and system-service ports remain visible.</p>

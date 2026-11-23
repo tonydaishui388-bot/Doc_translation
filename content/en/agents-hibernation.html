@@ -1,0 +1,39 @@
+<h1>Agent hibernation</h1>
+<p>Let Orca pause idle background agent terminals and auto-resume them when you reopen the worktree.</p>
+<p>When you keep dozens of worktrees open, idle agents add up — each one is a live PTY holding a model session in memory. Agent hibernation lets Orca quietly stop those terminals once they&#x27;ve been done and untouched long enough, then resume the same session the next time you open the worktree.</p>
+<aside>Experimental<p>Agent hibernation is off by default. Turn it on under <strong>Settings → Experimental → Agent hibernation</strong> while we keep tuning the safety model.</p></aside>
+<h2 id="agents-hibernation-what-gets-hibernated">What gets hibernated</h2>
+<p>Orca only hibernates an agent terminal when <strong>all</strong> of the following are true:</p>
+<ul>
+<li>The agent is in a <strong>done</strong> state — it has finished its last turn and isn&#x27;t waiting on input.</li>
+<li>The terminal isn&#x27;t in the active worktree or any worktree currently rendering a foreground terminal.</li>
+<li>It hasn&#x27;t received keystrokes since the agent finished.</li>
+<li>The agent is one with a <a href="#agents-session-history">resumable session</a>: Claude, Codex, Gemini, Antigravity, OpenCode, Pi, MiMo Code, Droid, Grok, Devin, or OMP.</li>
+<li>It&#x27;s been idle for at least the configured idle window (default 30 minutes).</li>
+<li>No mobile session is currently driving the terminal.</li>
+<li>No <a href="#cli-orchestration">orchestration</a> Dispatch is still unsettled (<code>pending</code>, <code>dispatched</code>, or unknown). Sleep is allowed again after runtime-confirmed <code>completed</code>, <code>failed</code>, or <code>circuit_broken</code>.</li>
+<li>No live subagent / teammate roster remains on the pane (provider &quot;done&quot; alone is not enough while children are still attached).</li>
+</ul>
+<p>A terminal that fails any check stays running. If a worktree has multiple agent panes, they hibernate together as a unit so a partially-paused worktree never ships.</p>
+<p>You can also sleep worktrees manually from the sidebar (including <strong>Sleep with Descendants</strong> when nested children exist). See <a href="#model-worktrees">Worktrees</a>. Manual sleep keeps <strong>finished</strong> and <strong>interrupted</strong> resumable sessions so reopening the worktree can still relaunch with the same resume flags — it does not wipe those session records just because the pane was no longer &quot;live.&quot;</p>
+<h2 id="agents-hibernation-tuning-the-idle-window">Tuning the idle window</h2>
+<p>Under the <strong>Agent hibernation</strong> toggle, <strong>Hibernate after</strong> sets how many idle minutes a finished background agent has to wait before Orca pauses it.</p>
+<ul>
+<li>Default: <strong>30 minutes</strong>.</li>
+<li>Range: <strong>1 minute</strong> to <strong>24 hours</strong>.</li>
+<li>The clock starts from the agent&#x27;s last <code>done</code> update; any keystroke, new output, or returning to the agent&#x27;s terminal tab resets it.</li>
+</ul>
+<p>Longer windows trade memory savings for fewer pauses; shorter windows pause more aggressively but cost a resume next time you switch back.</p>
+<h2 id="agents-hibernation-finding-sleeping-worktrees">Finding sleeping worktrees</h2>
+<p>The sidebar filter menu controls whether sleeping worktrees are shown. If you hide them often, assign <strong>Toggle Sleeping Workspaces</strong> under <a href="#settings">Settings → Shortcuts</a> to show or hide them without opening the filter menu.</p>
+<h2 id="agents-hibernation-resuming">Resuming</h2>
+<p>When you open a hibernated worktree, Orca relaunches the agent CLI with the same resume flags it would use from <a href="#agents-session-history">Agent Session History</a> — <code>claude --resume &lt;id&gt;</code>, <code>codex resume &lt;id&gt;</code>, and so on — so the conversation, working directory, and provider session pick up where they left off. There&#x27;s nothing to click; the resume happens as part of bringing the terminal back into the foreground.</p>
+<p>Resume also reuses the launch command, arguments, and private environment captured when Orca first opened the agent.</p>
+<p>If the agent CLI can&#x27;t resume the session for any reason (the transcript was deleted, the provider rotated the session ID), the terminal opens to a fresh prompt and the previous transcript stays available under the agent&#x27;s session history.</p>
+<h2 id="agents-hibernation-limitations">Limitations</h2>
+<p>Only the listed resumable agents hibernate. Cursor CLI, Hermes, Copilot, Trae, and other non-resumable terminals are left running.</p>
+<h2 id="agents-hibernation-next-steps">Next steps</h2>
+<ul>
+<li><a href="#agents-session-history">Agent session history</a> — manually resume any past session, including ones Orca didn&#x27;t hibernate.</li>
+<li><a href="#agents-codex-hot-swap">Hot-swap Codex accounts</a> — swap the active Codex login without restarting the session, which works alongside hibernation.</li>
+</ul>

@@ -1,0 +1,12 @@
+<h1>Attribution</h1>
+<p>Orca tracks provenance on every line it sees an agent touch, so when you read a diff you can tell at a glance which lines were written by a human and which came from an AI.</p>
+<h2 id="review-attribution-how-it-works">How it works</h2>
+<p>When an agent writes to a file through its tooling, Orca records the ranges. The diff viewer renders AI-originated lines with a subtle marker in the gutter. Human edits on top of AI code flip the attribution back to human.</p>
+<h2 id="review-attribution-why-it-matters">Why it matters</h2>
+<ul>
+<li>You know which parts of a PR deserve extra scrutiny.</li>
+<li>Security and compliance audits can separate AI-written from human-written code.</li>
+<li>Reviews get faster — you don&#x27;t re-read code you just wrote by hand.</li>
+</ul>
+<h2 id="review-attribution-scope">Scope</h2>
+<p>Attribution is local to Orca — it doesn&#x27;t get committed to git. If you want persistent attribution, export the diff metadata from the diff toolbar.</p>

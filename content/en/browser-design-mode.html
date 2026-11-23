@@ -1,0 +1,21 @@
+<h1>Design Mode</h1>
+<p>Design Mode turns the Orca browser into a pointer-to-code tool. Toggle it on, click any UI element on the rendered page, and the element drops into the agent chat as rich context — with its DOM, computed styles, and a screenshot.</p>
+<figure><img src="https://orca.dev/whats-new/posters/orca-design-mode.jpg" alt="Design Mode: click a button, it lands in the agent chat" loading="lazy" decoding="async"><figcaption>Design Mode: click a button, it lands in the agent chat</figcaption></figure>
+<h2 id="browser-design-mode-turn-it-on">Turn it on</h2>
+<p>Click <strong>Annotate</strong> in the browser toolbar. Its arrow menu also offers <strong>Grab page element</strong> and <strong>Draw on screenshot</strong>. Your cursor becomes a picker; hovering highlights the element under it. The <strong>Annotate page element</strong> action is also available as a rebindable shortcut under <a href="#settings">Settings → Shortcuts</a>.</p>
+<h2 id="browser-design-mode-drop-into-chat">Drop into chat</h2>
+<p>Click an element. Orca captures:</p>
+<ul>
+<li>The element&#x27;s HTML (outer and a small neighborhood).</li>
+<li>Its computed CSS — colors, fonts, spacing.</li>
+<li>A cropped screenshot of the element.</li>
+<li>The source file/line if a dev-mode source map is available.</li>
+</ul>
+<p>All of that ships into the active agent terminal as one attachment, and you type what you want changed.</p>
+<h2 id="browser-design-mode-review-page-annotations">Review page annotations</h2>
+<p>Use the annotation tray to keep several notes on the page before sending them to the agent. Hover a note and choose <strong>Edit</strong> to change its comment or intent inline; choose <strong>Save</strong> or <strong>Cancel</strong> when you&#x27;re done.</p>
+<p>Send and Copy provide a short summary for each note by default, and notes can include pasted images. To include the full page details, select <strong>Include page details</strong> in the Send menu; Orca remembers the choice for that browser pane.</p>
+<p>Unsent text notes return after a reload or restart. Closing a tab with unsent notes asks before discarding them. A desktop agent can read them before you send using <code>orca tab annotations</code>.</p>
+<p>After a prompt is delivered, Orca removes the annotations it sent. Notes you add or edit while delivery is in progress stay on the page.</p>
+<h2 id="browser-design-mode-use-the-result">Use the result</h2>
+<p>The agent edits the source, Orca hot-reloads, you click again to verify. The tightest version of this loop is the hero recipe <a href="#recipes-design-mode-fix">Fix a UI bug with Design Mode</a>.</p>

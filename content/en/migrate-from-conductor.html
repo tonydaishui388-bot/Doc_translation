@@ -1,0 +1,99 @@
+<h1>Migrate from Conductor</h1>
+<p>Open your Conductor worktrees in Orca, move your setup scripts, and resume your agent sessions — including Conductor Cloud work before Cloud shuts down.</p>
+<p>Conductor and Orca share the same model: every task gets its own git worktree on its own branch, with an agent working inside it. Conductor workspaces are ordinary git worktrees, so Orca opens them in place. Nothing is copied or moved, and uncommitted changes stay where they are.</p>
+<p>Timeline: Conductor Cloud shuts down on November 20, 2026, and the Conductor desktop app is supported until early 2027.</p>
+<aside>Used Conductor Cloud?<p>Cloud workspaces aren&#x27;t on your Mac, so Orca can&#x27;t see them yet. Before the steps below, save that work with <a href="#migrate-from-conductor-move-your-conductor-cloud-work">Move your Conductor Cloud work</a> at the end of this page. Conductor Cloud becomes read-only on <strong>November 13, 2026</strong> and starts deleting cloud data on <strong>November 20, 2026</strong>.</p></aside>
+<h2 id="migrate-from-conductor-at-a-glance">At a glance</h2>
+<table><thead><tr><th>Conductor</th><th>Orca</th></tr></thead><tbody><tr><td>Workspace</td><td><a href="#model-worktrees">Worktree</a> — its own branch, files, and agent terminals</td></tr><tr><td><code>~/conductor/workspaces/&lt;repo&gt;/&lt;name&gt;</code></td><td>Shown in Orca where they are (hidden by default); new Orca workspaces go in Orca&#x27;s workspace folder</td></tr><tr><td><code>conductor.json</code> setup and archive scripts</td><td><code>scripts.setup</code> and <code>scripts.archive</code> in <code>orca.yaml</code></td></tr><tr><td>Run button and actions</td><td><a href="#terminal-quick-commands">Quick Commands</a> — one click opens a terminal tab and runs it</td></tr><tr><td><code>CONDUCTOR_ROOT_PATH</code></td><td><code>ORCA_ROOT_PATH</code> — Orca still sets <code>CONDUCTOR_ROOT_PATH</code> for setup and archive scripts</td></tr><tr><td><code>CONDUCTOR_WORKSPACE_PATH</code></td><td><code>ORCA_WORKTREE_PATH</code></td></tr><tr><td><code>CONDUCTOR_WORKSPACE_NAME</code></td><td><code>ORCA_WORKSPACE_NAME</code></td></tr><tr><td><code>CONDUCTOR_PORT</code></td><td>None — Orca doesn&#x27;t assign ports</td></tr><tr><td>Archive workspace</td><td>Delete the worktree</td></tr><tr><td>Diff, PRs, and checks</td><td><a href="#review-diff-viewer">Diff viewer</a>, <a href="#review-commit-push">Commit &amp; push</a>, <a href="#review-github">GitHub</a></td></tr><tr><td>Chat</td><td><a href="#agents-native-chat">Chat UI</a> — turn it on in <strong>Settings → Agents → Open agents as → Chat</strong></td></tr><tr><td>Conductor Cloud</td><td>A <a href="#remote-servers">Remote Orca Server</a> or <a href="#ways-to-run-4-cloud-vms-per-workspace-environments">Cloud VMs</a> on machines you control</td></tr><tr><td>iOS app</td><td><a href="#mobile">Orca mobile</a> for iOS and Android</td></tr></tbody></table>
+<h2 id="migrate-from-conductor-1-add-your-repos">1. Add your repos</h2>
+<p><a href="#install">Install Orca</a>, then click <strong>Add project</strong> at the top of the sidebar and pick the <strong>same checkout Conductor used</strong> — not a fresh clone. Conductor&#x27;s workspaces are worktrees of that checkout, and Orca finds them through it.</p>
+<p>Not sure which checkout that is? Run this inside any Conductor workspace:</p>
+<pre><code>git rev-parse --path-format=absolute --git-common-dir</code></pre>
+<p>It prints a path ending in <code>.git</code>. The folder containing it is the checkout to add.</p>
+<h2 id="migrate-from-conductor-2-show-your-conductor-worktrees">2. Show your Conductor worktrees</h2>
+<p>Orca hides worktrees it didn&#x27;t create until you choose to show them.</p>
+<ol>
+<li>Open the project&#x27;s actions menu in the sidebar and choose <strong>Show hidden worktrees</strong> (it reads <strong>Hide non-Orca worktrees</strong> when they&#x27;re shown by default).</li>
+<li>In <strong>Non-Orca worktrees</strong>, click <strong>Show</strong> next to each Conductor workspace still listed as hidden. They usually live under <code>~/conductor/workspaces/</code>, or in a <code>.conductor/</code> folder inside the repo on older Conductor versions.</li>
+</ol>
+<p>Each one keeps its path, branch, and uncommitted changes. Orca doesn&#x27;t run setup on them — they&#x27;re already set up.</p>
+<p>If a workspace is missing from the list, run <code>git worktree list</code> in the checkout from step 1 to confirm it belongs to that repo.</p>
+<aside>Don&#x27;t archive these in Conductor<p>Archiving a workspace in Conductor deletes its folder, which is now also your Orca worktree. Quit Conductor instead.</p></aside>
+<h2 id="migrate-from-conductor-3-move-your-scripts">3. Move your scripts</h2>
+<h3 id="migrate-from-conductor-let-an-agent-do-it">Let an agent do it</h3>
+<p>Open a worktree in the repo and ask your agent:</p>
+<pre><code>Convert this repo&#x27;s Conductor config (conductor.json or .conductor/settings.toml) into orca.yaml,
+following https://orca.dev/docs/migrate-from-conductor. Map CONDUCTOR_* variables to ORCA_*,
+drop CONDUCTOR_PORT, and list the run actions so I can save them as Quick Commands.</code></pre>
+<p>To do it by hand, pick one of the two options below for setup and archive scripts (if you do both, see the note after them), then save your run actions as Quick Commands.</p>
+<h3 id="migrate-from-conductor-option-a-save-the-detected-command-just-you">Option A: save the detected command (just you)</h3>
+<p>When a project has a <code>conductor.json</code> and no Orca setup yet, the sidebar shows an <strong>Add a setup script</strong> card: <em>Found a setup command in conductor.json</em>. Click <strong>Save local setup</strong>. Orca saves the <code>setup</code> and <code>archive</code> scripts as local commands in <strong>Settings → Repository</strong>, then runs <code>setup</code> in every new worktree in that project and <code>archive</code> before deleting one. The run script is skipped — save it as a <a href="#migrate-from-conductor-run-button-and-actions-quick-commands">Quick Command</a> — and <code>.conductor/settings.toml</code> isn&#x27;t read, so copy its commands by hand.</p>
+<h3 id="migrate-from-conductor-option-b-commit-orcayaml-your-whole-team">Option B: commit <code>orca.yaml</code> (your whole team)</h3>
+<p>Put the scripts in <code>orca.yaml</code> at the repo root:</p>
+<pre><code>scripts:
+  setup: |
+    bun install
+    cp &quot;$ORCA_ROOT_PATH/.env&quot; .env
+  archive: |
+    docker compose down</code></pre>
+<ul>
+<li><code>setup</code> runs in each new worktree right after Orca creates it.</li>
+<li><code>archive</code> runs before Orca deletes a worktree.</li>
+</ul>
+<p>Merge <code>orca.yaml</code> to your default branch and pull it into the checkout from step 1. New worktrees read <code>setup</code> from the branch they start from, and deletes read <code>archive</code> from that checkout. See <a href="#model-worktrees">Worktrees</a> for the full lifecycle.</p>
+<aside>Did both?<p>If you saved the card before adding <code>orca.yaml</code>, the project&#x27;s <strong>Command source &amp; orca.yaml</strong> setting (<strong>Settings → Repository</strong>) is <strong>Local only</strong>, which ignores <code>orca.yaml</code> scripts. Set it to <strong>orca.yaml only</strong>. Avoid <strong>Run both</strong> here — it runs the local commands and the <code>orca.yaml</code> scripts back to back, so the same migrated commands would run twice.</p></aside>
+<h3 id="migrate-from-conductor-run-button-and-actions-quick-commands">Run button and actions: Quick Commands</h3>
+<p>Conductor&#x27;s Run button and named actions become <a href="#terminal-quick-commands">Quick Commands</a>. Save each one once — a label and the command, such as <code>bun dev</code> or <code>bun test</code> — with <strong>Add Command</strong> in <strong>Settings → Quick Commands</strong>, or <strong>+ Command</strong> in the Quick Commands menu on a worktree&#x27;s tab bar. Choose <strong>Project</strong> scope to show it only in this repo&#x27;s worktrees, or <strong>Global</strong> for every repo.</p>
+<p>Run one from the Quick Commands button in any worktree&#x27;s tab bar: Orca opens a fresh terminal tab in that worktree and runs it. Right-click a terminal to insert a command into it instead. The same list is on <a href="#mobile-quick-commands">Orca mobile</a>, and it works in worktrees on a <a href="#remote-servers">Remote Orca Server</a>.</p>
+<h3 id="migrate-from-conductor-variables-and-ports">Variables and ports</h3>
+<p>Scripts that read <code>CONDUCTOR_ROOT_PATH</code> keep working — Orca sets it to the same path as <code>ORCA_ROOT_PATH</code>. Replace <code>CONDUCTOR_WORKSPACE_PATH</code> with <code>ORCA_WORKTREE_PATH</code> (or just use the current directory) and <code>CONDUCTOR_WORKSPACE_NAME</code> with <code>ORCA_WORKSPACE_NAME</code>.</p>
+<p>Orca doesn&#x27;t reserve ports per worktree, so drop <code>--port $CONDUCTOR_PORT</code>. Most dev servers pick a free port on their own.</p>
+<p>Copying <code>.env</code> in <code>setup</code> works, but you can list gitignored files in <code>.worktreeinclude</code> instead and Orca copies them into every new worktree. See <a href="#model-worktrees-shared-directories--gitignored-files">Shared directories &amp; gitignored files</a>.</p>
+<h2 id="migrate-from-conductor-4-pick-up-your-agents">4. Pick up your agents</h2>
+<p>Claude Code, Codex, Cursor CLI, and the other <a href="#agents-supported">supported agents</a> use the subscriptions and keys you already have.</p>
+<h3 id="migrate-from-conductor-turn-on-chat-ui-for-the-conductor-chat-look">Turn on Chat UI for the Conductor chat look</h3>
+<p>Orca opens agents in their own terminal CLI by default. For a chat view like Conductor&#x27;s, with rich messages, visuals, and images, open <strong>Settings → Agents</strong> and under <strong>Open agents as</strong> choose <strong>Chat</strong>. New sessions for supported agents, including Claude Code and Codex, then open as chats. If some agents stay in the terminal because you chose CLI for them before, click <strong>Set all to Chat</strong> in the confirmation. You can still pick Chat or CLI for each agent in that page&#x27;s <strong>Installed</strong> list. See <a href="#agents-native-chat">Chat UI</a>.</p>
+<h3 id="migrate-from-conductor-resume-a-conductor-conversation">Resume a Conductor conversation</h3>
+<p>To pick up a Conductor conversation, select the worktree, open the right sidebar&#x27;s <strong>Agents</strong> tab (<a href="#agents-session-history">Agent Session History</a>), find the session, and click <strong>Resume</strong>. Orca lists every transcript the agent CLI saved in its usual place, like <code>~/.claude</code> for Claude Code. To continue a Claude Code or Codex conversation as a chat, choose <strong>Resume in New Chat</strong> from the session&#x27;s menu instead. Because the worktree keeps its path, <code>claude --resume</code> in its terminal works too. Claude Code removes sessions older than 30 days by default, so older chats may be gone.</p>
+<p>To keep a copy of every Conductor chat, use Conductor&#x27;s <strong>Settings → Account → Export data</strong>. Orca can&#x27;t import that export.</p>
+<h2 id="migrate-from-conductor-5-retire-conductor">5. Retire Conductor</h2>
+<ol>
+<li>Quit Conductor and move it to the Trash.</li>
+<li>Keep <code>~/conductor/workspaces/</code> (or the repo&#x27;s <code>.conductor/</code> folder) while any of your worktrees still live there — deleting it deletes your work.</li>
+<li>When you finish with an old worktree, delete it from Orca. Orca runs your archive script, removes the folder, and deletes the branch if it&#x27;s fully merged (unmerged branches are kept — see <a href="#model-worktrees-preserved-branches">Preserved branches</a>).</li>
+<li>After the last old worktree is gone, run <code>git worktree prune</code> in each repo. Then you can delete <code>~/conductor/workspaces/</code> and any <code>.conductor/</code> folders.</li>
+</ol>
+<aside>Check before deleting ~/conductor/<p>If a project you added in Orca lives under <code>~/conductor/</code> (common after <strong>Transfer to local</strong>), that folder is the repository every one of its worktrees depends on. Keep it, or move your work to another clone first.</p></aside>
+<h2 id="migrate-from-conductor-move-your-conductor-cloud-work">Move your Conductor Cloud work</h2>
+<p>On <strong>November 13, 2026</strong>, Conductor Cloud becomes read-only: you can read chats and export data, but agents stop taking messages. On <strong>November 20, 2026</strong>, it shuts down and Conductor starts deleting cloud data.</p>
+<p>Orca doesn&#x27;t host machines. Cloud work moves to your Mac, or to an always-on machine you control.</p>
+<h3 id="migrate-from-conductor-save-your-work">Save your work</h3>
+<p>Do this before November 13 if you can.</p>
+<ol>
+<li><strong>Push every branch.</strong> Commit everything, including new files (<code>git add -A</code>), and push. Gitignored files like <code>.env</code> aren&#x27;t pushed — copy them somewhere safe.</li>
+<li><strong>Export your chats.</strong> In Conductor, open <strong>Settings → Account → Export data</strong>. It&#x27;s your only copy of cloud chats.</li>
+</ol>
+<h3 id="migrate-from-conductor-continue-on-your-mac">Continue on your Mac</h3>
+<ol>
+<li>In Conductor, right-click the cloud workspace and choose <strong>Transfer to local</strong>. This moves the workspace and its chats to your Mac.</li>
+<li>Follow steps 1–4 above.</li>
+</ol>
+<p>A transferred workspace can be attached to Conductor&#x27;s own copy of the repo under <code>~/conductor/</code> instead of your clone. Run <code>git rev-parse --path-format=absolute --git-common-dir</code> inside it. If the path is under <code>~/conductor/</code>, add that folder as the project. Or, since the branch is pushed, create a new worktree in your usual clone and choose that remote branch under <strong>Branch from</strong> in the New Workspace composer.</p>
+<h3 id="migrate-from-conductor-keep-agents-running-with-your-laptop-closed">Keep agents running with your laptop closed</h3>
+<p>Cloud workspaces kept working while you were away. In Orca, run agents on a machine you own — see <a href="#ways-to-run">Ways to run Orca</a>:</p>
+<ul>
+<li><strong><a href="#remote-servers">Remote Orca Server</a></strong> — keep Orca running on a Mac mini, home server, or cloud VM, and connect from your laptop or <a href="#mobile">phone</a>. Agents keep going when your laptop sleeps.</li>
+<li><strong><a href="#ssh">SSH</a></strong> — run worktrees on any SSH host while the UI stays on your laptop.</li>
+<li><strong><a href="#ways-to-run-4-cloud-vms-per-workspace-environments">Cloud VMs</a></strong> — give each worktree its own sandbox or VM from a provider you already use, like Fly, Modal, or Vercel Sandbox.</li>
+</ul>
+<p>Install and sign in to <code>git</code> and your agent CLIs on that machine; your laptop&#x27;s logins don&#x27;t carry over. Then create a worktree from your pushed branch and tell the agent where to pick up — for example, <em>&quot;Continue the work on this branch. Read the last commits and the open PR first.&quot;</em></p>
+<h3 id="migrate-from-conductor-move-your-routines">Move your routines</h3>
+<p>Rebuild each Conductor routine as an <a href="#cli-automations">Orca automation</a>, created on your Remote Orca Server so it runs on schedule while your laptop is off.</p>
+<h2 id="migrate-from-conductor-related">Related</h2>
+<ul>
+<li><a href="#first-session">Your first 3-agent session</a></li>
+<li><a href="#model-worktrees">Worktrees</a></li>
+<li><a href="#agents-session-history">Agent session history</a></li>
+<li><a href="#ways-to-run">Ways to run Orca</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
