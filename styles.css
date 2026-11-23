@@ -236,6 +236,39 @@ body:has(.doc:target) #what-is-orca:not(:target) {
   border-radius: 10px;
 }
 
+.clip {
+  position: relative;
+  display: block;
+  margin: 1.1rem 0 1.3rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #1c1916;
+}
+
+.clip img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.clip video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clip video {
+    display: none;
+  }
+}
+
 .doc-body table {
   display: block;
   max-width: 100%;
