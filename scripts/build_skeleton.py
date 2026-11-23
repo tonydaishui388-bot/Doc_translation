@@ -503,6 +503,55 @@ def render(pages):
 """
 
 
+ASSET_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".mp4", ".webm")
+
+
+def page_slugs():
+    return {item[1]: slug_for(item[1]) for item in NAV if item[0] == "page"}
+
+
+def chapter_hash(href: str, slugs: dict) -> str | None:
+    """Map an orca.dev docs page URL to this site's chapter anchor."""
+    raw = href
+    for prefix in (
+        "https://www.orca.dev",
+        "http://www.orca.dev",
+        "https://orca.dev",
+        "http://orca.dev",
+    ):
+        if raw.startswith(prefix):
+            raw = raw[len(prefix) :]
+            break
+    else:
+        return None
+    path = raw.split("?", 1)[0].split("#", 1)[0].rstrip("/") or "/"
+    if not path.startswith("/docs"):
+        return None
+    if path.lower().endswith(ASSET_SUFFIXES):
+        return None
+    slug = slugs.get(path)
+    if not slug:
+        return None
+    return "#" + slug
+
+
+def rewrite_doc_links(html: str) -> tuple[str, int]:
+    """Keep docs-page links on this site. Downloads and other sites stay put."""
+    slugs = page_slugs()
+    count = 0
+
+    def repl(match):
+        nonlocal count
+        href = match.group(1)
+        target = chapter_hash(href, slugs)
+        if not target:
+            return match.group(0)
+        count += 1
+        return f'<a href="{target}"'
+
+    return re.sub(r'<a href="([^"]*)"', repl, html), count
+
+
 def upgrade_clips(html: str) -> str:
     """Swap poster stills for the official muted, looping mp4 when in view."""
 
@@ -578,18 +627,31 @@ def check(pages, html):
     install = html.split('id="install"', 1)[1].split("</article>", 1)[0]
     if "安装" not in install or ">Install<" not in install:
         raise SystemExit("安装页没有中英两个标题")
+    slugs = page_slugs()
+    leftover = []
+    for href in re.findall(r'<a href="([^"]*)"', html):
+        if chapter_hash(href, slugs):
+            leftover.append(href)
+    if leftover:
+        raise SystemExit(f"仍有文档链接指向官网: {leftover[:5]}")
+    home = html.split('id="what-is-orca"', 1)[1].split("</article>", 1)[0]
+    if 'href="#install"' not in home or 'href="#bots"' not in home:
+        raise SystemExit("首页正文没有改成站内章节链接")
+    if "https://github.com/stablyai/orca/releases" not in html:
+        raise SystemExit("GitHub 外链被改掉了")
 
 
 def main():
     if not ZH_DIR.is_dir():
         raise SystemExit(f"找不到译文目录 {ZH_DIR}")
     pages = collect_pages()
-    html = upgrade_clips(render(pages))
+    html, rewritten = rewrite_doc_links(upgrade_clips(render(pages)))
     check(pages, html)
     out = ROOT / "index.html"
     out.write_text(html, encoding="utf-8")
     missing = [page["source"] for page in pages if page["missing"]]
     print(f"wrote {out}")
+    print(f"rewrote {rewritten} doc links")
     print(f"replaced {len(pages) - len(missing)}")
     print(f"placeholder {len(missing)}")
     if missing:
