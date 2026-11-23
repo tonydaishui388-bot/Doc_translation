@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build the ORCA Chinese docs site from the translated Markdown.
 
-Navigation keeps the English sidebar's order and grouping. Page labels come
-from each translation's title. Agent stays "Agent"; worktree stays "工作树".
+Sidebar labels match https://orca.dev/docs in English. Page headings stay
+Chinese. Autoplay clips use the official mp4 plus poster, same as AutoplayClip.
 Translator notes (选页说明 / 术语候选) are not published.
 """
 
@@ -18,89 +18,111 @@ PLACEHOLDER = "这一章的译文尚未放入。"
 ORIGIN = "https://orca.dev"
 NOTE_KEYS = ("原文：", "英文标题：", "页面导语：", "选页说明", "入门样章")
 
-# ("section", title) | ("group", title) | ("page", source_path)
-# Page titles are filled from the translation H1. Order matches orca.dev/docs.
+# ("section", title) | ("group", title) | ("page", source_path, english_nav_title)
+# Order and English labels match the live sidebar on https://orca.dev/docs.
 NAV = [
-    ("section", "从这里开始"),
-    ("page", "/docs"),
-    ("page", "/docs/install"),
-    ("page", "/docs/first-session"),
-    ("page", "/docs/migrate-from-conductor"),
-    ("group", "工作区的组织方式"),
-    ("page", "/docs/model/worktrees"),
-    ("page", "/docs/model/tabs-panes-splits"),
-    ("page", "/docs/model/agents-sessions"),
-    ("page", "/docs/model/session-restore"),
-    ("page", "/docs/model/quick-open"),
-    ("group", "使用 Agent"),
-    ("page", "/docs/agents/supported"),
-    ("page", "/docs/agents/claude-code"),
-    ("page", "/docs/agents/glm-agent"),
-    ("page", "/docs/agents/codex"),
-    ("page", "/docs/agents/cursor-cli"),
-    ("page", "/docs/agents/codex-hot-swap"),
-    ("page", "/docs/agents/native-chat"),
-    ("page", "/docs/agents/session-history"),
-    ("page", "/docs/agents/hibernation"),
-    ("page", "/docs/agents/usage-tracking"),
-    ("page", "/docs/agents/hooks-memory"),
-    ("group", "审阅并交付代码"),
-    ("page", "/docs/review/diff-viewer"),
-    ("page", "/docs/review/annotate-ai-diff"),
-    ("page", "/docs/review/attribution"),
-    ("page", "/docs/review/commit-push"),
-    ("page", "/docs/review/github"),
-    ("page", "/docs/review/linear"),
-    ("page", "/docs/review/jira"),
-    ("group", "在 Orca 里编辑"),
-    ("page", "/docs/editing/monaco"),
-    ("page", "/docs/editing/markdown"),
-    ("page", "/docs/editing/viewers"),
-    ("page", "/docs/editing/file-explorer"),
-    ("group", "浏览器与设计模式"),
-    ("page", "/docs/browser/overview"),
-    ("page", "/docs/browser/design-mode"),
-    ("page", "/docs/browser/profiles"),
+    ("section", "Start Here"),
+    ("page", "/docs", "What is Orca?"),
+    ("page", "/docs/install", "Install"),
+    ("page", "/docs/first-session", "Your first 3-agent session"),
+    ("page", "/docs/migrate-from-conductor", "Migrate from Conductor"),
+    ("group", "The Orca Model"),
+    ("page", "/docs/model/worktrees", "Worktrees"),
+    ("page", "/docs/model/tabs-panes-splits", "Tabs, panes & split layouts"),
+    ("page", "/docs/model/agents-sessions", "Agents & sessions"),
+    ("page", "/docs/model/session-restore", "Session restore"),
+    ("page", "/docs/model/quick-open", "Quick Open & Jump Palette"),
+    ("group", "Working with Agents"),
+    ("page", "/docs/agents/supported", "Supported agents"),
+    ("page", "/docs/agents/claude-code", "Claude Code in Orca"),
+    ("page", "/docs/agents/glm-agent", "How to use GLM-5.2 in Orca ADE"),
+    ("page", "/docs/agents/codex", "Codex in Orca"),
+    ("page", "/docs/agents/cursor-cli", "Cursor CLI in Orca"),
+    ("page", "/docs/agents/codex-hot-swap", "Hot-swap Codex accounts"),
+    ("page", "/docs/agents/native-chat", "Chat UI (native chat)"),
+    ("page", "/docs/agents/session-history", "Agent session history"),
+    ("page", "/docs/agents/hibernation", "Agent hibernation"),
+    ("page", "/docs/agents/usage-tracking", "Usage & rate-limit tracking"),
+    ("page", "/docs/agents/hooks-memory", "Agent hooks & memory"),
+    ("group", "Reviewing & Shipping Code"),
+    ("page", "/docs/review/diff-viewer", "Diff viewer"),
+    ("page", "/docs/review/annotate-ai-diff", "Annotate AI Diff"),
+    ("page", "/docs/review/attribution", "Attribution"),
+    ("page", "/docs/review/commit-push", "Commit & push from Orca"),
+    ("page", "/docs/review/github", "Hosted reviews, issues & Actions"),
+    ("page", "/docs/review/linear", "Linear items drawer"),
+    ("page", "/docs/review/jira", "Jira items drawer"),
+    ("group", "Editing in Orca"),
+    ("page", "/docs/editing/monaco", "Monaco editor & autosave"),
+    ("page", "/docs/editing/markdown", "Rich markdown editor"),
+    ("page", "/docs/editing/viewers", "HTML, Mermaid, PDF & image viewers"),
+    ("page", "/docs/editing/file-explorer", "File explorer & external drag-drop"),
+    ("group", "Browser & Design Mode"),
+    ("page", "/docs/browser/overview", "Per-worktree browser"),
+    ("page", "/docs/browser/design-mode", "Design Mode"),
+    ("page", "/docs/browser/profiles", "Browser-use profiles"),
     ("section", "Bots"),
-    ("page", "/docs/bots"),
-    ("page", "/docs/bots/use-cases"),
-    ("page", "/docs/bots/connectors"),
-    ("page", "/docs/bots/import"),
-    ("page", "/docs/bots/security"),
-    ("section", "终端"),
-    ("page", "/docs/terminal"),
-    ("section", "远程与 SSH"),
-    ("page", "/docs/ways-to-run"),
-    ("page", "/docs/ssh"),
-    ("page", "/docs/remote-servers"),
-    ("section", "命令行与自动化"),
-    ("group", "Orca CLI 与技能"),
-    ("page", "/docs/cli/overview"),
-    ("page", "/docs/cli/reference"),
-    ("page", "/docs/cli/orchestration"),
-    ("page", "/docs/cli/automations"),
-    ("page", "/docs/cli/computer-use"),
-    ("page", "/docs/cli/worktree-checkpoints"),
-    ("page", "/docs/cli/skills"),
-    ("section", "移动端"),
-    ("page", "/docs/mobile"),
-    ("page", "/docs/android-apk"),
-    ("section", "通知与收件箱"),
-    ("page", "/docs/notifications"),
-    ("page", "/docs/activity"),
-    ("group", "场景示例"),
-    ("page", "/docs/recipes/parallel-agents"),
-    ("page", "/docs/recipes/review-ai-diff"),
-    ("page", "/docs/recipes/jump-worktrees"),
-    ("page", "/docs/recipes/design-mode-fix"),
-    ("page", "/docs/recipes/remote-worktrees"),
-    ("section", "设置参考"),
-    ("page", "/docs/settings"),
-    ("section", "隐私与遥测"),
-    ("page", "/docs/telemetry"),
-    ("section", "故障排除与常见问题"),
-    ("page", "/docs/troubleshooting"),
-    ("page", "/docs/github-errors"),
+    ("page", "/docs/bots", "Bots quickstart"),
+    ("page", "/docs/bots/use-cases", "Bot use cases"),
+    ("page", "/docs/bots/connectors", "Bot connectors"),
+    ("page", "/docs/bots/import", "Import a bot"),
+    ("page", "/docs/bots/security", "Bot security"),
+    ("section", "Terminal"),
+    ("page", "/docs/terminal", "Terminal"),
+    ("section", "Remote & SSH"),
+    ("page", "/docs/ways-to-run", "Ways to run Orca"),
+    ("page", "/docs/ssh", "SSH worktrees"),
+    ("page", "/docs/remote-servers", "Remote Orca Servers"),
+    ("section", "CLI & Automation"),
+    ("group", "Orca CLI & Skills"),
+    ("page", "/docs/cli/overview", "Orca CLI overview"),
+    ("page", "/docs/cli/reference", "Orca CLI reference"),
+    ("page", "/docs/cli/orchestration", "Orchestration"),
+    ("page", "/docs/cli/automations", "Scheduled automations"),
+    ("page", "/docs/cli/computer-use", "Computer use"),
+    ("page", "/docs/cli/worktree-checkpoints", "Worktree checkpoints"),
+    ("page", "/docs/cli/skills", "Orca skills registry & MCP"),
+    ("section", "Mobile"),
+    ("page", "/docs/mobile", "Mobile companion"),
+    ("page", "/docs/android-apk", "Install Orca Mobile on Android"),
+    ("section", "Notifications & Inbox"),
+    ("page", "/docs/notifications", "Notifications & Inbox"),
+    ("page", "/docs/activity", "Agents feed"),
+    ("group", "Recipes"),
+    ("page", "/docs/recipes/parallel-agents", "Race three agents on the same task"),
+    ("page", "/docs/recipes/review-ai-diff", "Review an AI diff line-by-line"),
+    ("page", "/docs/recipes/jump-worktrees", "Jump between 10 worktrees"),
+    ("page", "/docs/recipes/design-mode-fix", "Fix a UI bug with Design Mode"),
+    ("page", "/docs/recipes/remote-worktrees", "Work on a remote machine over SSH"),
+    ("section", "Settings Reference"),
+    ("page", "/docs/settings", "Settings reference"),
+    ("section", "Privacy & Telemetry"),
+    ("page", "/docs/telemetry", "Privacy & Telemetry"),
+    ("section", "Troubleshooting & FAQ"),
+    ("page", "/docs/troubleshooting", "Troubleshooting & FAQ"),
+    ("page", "/docs/github-errors", "Troubleshooting GitHub errors"),
+]
+
+# Official AutoplayClip turns a .gif src into /whats-new/videos/<name>.mp4
+# and shows /whats-new/posters/<name>.jpg until the clip is in view.
+CLIP_STEMS = [
+    "orca-split-screen",
+    "default-agent-opening",
+    "tab-split",
+    "agent-statuses",
+    "session-that-survives-restart",
+    "codex-account-switcher",
+    "annotate-ai-diff",
+    "orca-github",
+    "orca-markdown-editor",
+    "orca-design-mode",
+    "browser-2-demo",
+    "orca-browser-use",
+    "ghostty-style-terminal",
+    "keyboard-native",
+    "ssh-demo",
+    "orca-cli-demo",
+    "orca-mobile",
 ]
 
 MARKDOWN = mistune.create_markdown(plugins=["table"])
@@ -185,7 +207,7 @@ def collect_pages():
                 raise SystemExit(f"分组「{item[1]}」不在任何栏目下")
             group = item[1]
         elif kind == "page":
-            source = item[1]
+            source, nav_title = item[1], item[2]
             loaded = load_translation(source)
             pages.append(
                 {
@@ -193,7 +215,8 @@ def collect_pages():
                     "source": source,
                     "section": section,
                     "group": group,
-                    "title": loaded["title"] if loaded else source,
+                    "nav_title": nav_title,
+                    "title": loaded["title"] if loaded else nav_title,
                     "html": loaded["html"] if loaded else "",
                     "body": loaded["body"] if loaded else "",
                     "path": loaded["path"] if loaded else None,
@@ -225,7 +248,7 @@ def nav_html(pages_by_source):
             page = pages_by_source[item[1]]
             css = "nav-link sub" if group_open else "nav-link"
             lines.append(
-                f'        <a class="{css}" href="#{page["slug"]}">{escape(page["title"])}</a>'
+                f'        <a class="{css}" href="#{page["slug"]}">{escape(page["nav_title"])}</a>'
             )
     return "\n".join(lines)
 
@@ -242,13 +265,13 @@ def pager(pages, index):
         prev = pages[index - 1]
         parts.append(
             f'        <a class="prev" href="#{prev["slug"]}"><span>上一章</span>'
-            f'<strong>{escape(prev["title"])}</strong></a>'
+            f'<strong>{escape(prev["nav_title"])}</strong></a>'
         )
     if index < len(pages) - 1:
         nxt = pages[index + 1]
         parts.append(
             f'        <a class="next" href="#{nxt["slug"]}"><span>下一章</span>'
-            f'<strong>{escape(nxt["title"])}</strong></a>'
+            f'<strong>{escape(nxt["nav_title"])}</strong></a>'
         )
     parts.append("      </nav>")
     return "\n".join(parts)
@@ -319,6 +342,46 @@ SCRIPT = """
       });
       window.addEventListener("hashchange", sync);
       sync();
+
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+      var clips = document.querySelectorAll(".clip");
+      function mount(clip) {
+        if (reduce.matches || clip.querySelector("video")) return;
+        var video = document.createElement("video");
+        video.src = clip.getAttribute("data-video");
+        video.poster = clip.querySelector("img").src;
+        video.muted = true;
+        video.loop = true;
+        video.playsInline = true;
+        video.autoplay = true;
+        video.preload = "none";
+        video.setAttribute("aria-hidden", "true");
+        clip.appendChild(video);
+        var pending = video.play();
+        if (pending && pending.catch) pending.catch(function () {});
+      }
+      function unmount(clip) {
+        var video = clip.querySelector("video");
+        if (video) video.remove();
+      }
+      if (!("IntersectionObserver" in window)) {
+        for (var c = 0; c < clips.length; c++) mount(clips[c]);
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) mount(entries[i].target);
+          else unmount(entries[i].target);
+        }
+      }, { rootMargin: "200px 0px", threshold: 0.01 });
+      for (var n = 0; n < clips.length; n++) observer.observe(clips[n]);
+      if (reduce.addEventListener) {
+        reduce.addEventListener("change", function () {
+          for (var i = 0; i < clips.length; i++) {
+            if (reduce.matches) unmount(clips[i]);
+          }
+        });
+      }
     })();
 """
 
@@ -365,6 +428,32 @@ def render(pages):
 """
 
 
+def upgrade_clips(html: str) -> str:
+    """Swap poster stills for the official muted, looping mp4 when in view."""
+
+    def repl(match):
+        src, alt = match.group(1), match.group(2)
+        stem = src.rsplit("/", 1)[-1]
+        if stem.endswith(".jpg"):
+            stem = stem[: -len(".jpg")]
+        else:
+            return match.group(0)
+        if stem not in CLIP_STEMS:
+            return match.group(0)
+        video = f"{ORIGIN}/whats-new/videos/{stem}.mp4"
+        return (
+            f'<span class="clip" data-video="{escape(video)}">'
+            f'<img src="{src}" alt="{alt}" loading="lazy" decoding="async">'
+            f"</span>"
+        )
+
+    return re.sub(
+        r'<p><img src="(https://orca.dev/whats-new/posters/[^"]+)" alt="([^"]*)" /></p>',
+        repl,
+        html,
+    )
+
+
 def check(pages, html):
     nav = html.split("<nav", 1)[1].split("</nav>", 1)[0]
     if "智能体" in nav:
@@ -395,8 +484,16 @@ def check(pages, html):
             )
             if rendered not in html:
                 raise SystemExit(f"{page['source']} 丢了代码块开头: {probe}")
+    if "What is Orca?" not in nav or "Start Here" not in nav:
+        raise SystemExit("侧栏没有换成英文栏目")
+    if "从这里开始" in nav or "Orca 是什么" in nav:
+        raise SystemExit("侧栏仍有中文栏目名")
+    if "https://orca.dev/whats-new/videos/orca-split-screen.mp4" not in html:
+        raise SystemExit("首页动图没有换成官网 mp4")
     if "https://orca.dev/whats-new/posters/orca-split-screen.jpg" not in html:
-        raise SystemExit("首页图片 URL 不在页面里")
+        raise SystemExit("首页海报静帧不在页面里")
+    if html.count('class="clip"') != 19:
+        raise SystemExit(f"动图数量不对: {html.count('class=\"clip\"')}")
     if "brew install --cask stablyai/orca/orca" not in html:
         raise SystemExit("安装页代码块不在页面里")
 
@@ -405,7 +502,7 @@ def main():
     if not ZH_DIR.is_dir():
         raise SystemExit(f"找不到译文目录 {ZH_DIR}")
     pages = collect_pages()
-    html = render(pages)
+    html = upgrade_clips(render(pages))
     check(pages, html)
     out = ROOT / "index.html"
     out.write_text(html, encoding="utf-8")
