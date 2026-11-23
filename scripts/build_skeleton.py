@@ -1,106 +1,174 @@
 #!/usr/bin/env python3
-"""Generate the browsable ORCA Chinese docs skeleton (index.html).
+"""Build the ORCA Chinese docs site from the translated Markdown.
 
-Navigation follows the sidebar on https://orca.dev/docs. Page bodies are
-placeholders; this script does not translate documentation.
+Navigation keeps the English sidebar's order and grouping. Page labels come
+from each translation's title. Agent stays "Agent"; worktree stays "工作树".
+Translator notes (选页说明 / 术语候选) are not published.
 """
 
 from html import escape
 from pathlib import Path
+import re
+
+import mistune
 
 ROOT = Path(__file__).resolve().parents[1]
+ZH_DIR = Path("/cursor/stores/bc-7f62f27b-3e33-4cb9-a277-10330258c79e/docs/zh")
 PLACEHOLDER = "这一章的译文尚未放入。"
 ORIGIN = "https://orca.dev"
+NOTE_KEYS = ("原文：", "英文标题：", "页面导语：", "选页说明", "入门样章")
 
-# ("section", title) | ("group", title) | ("page", title, source_path)
+# ("section", title) | ("group", title) | ("page", source_path)
+# Page titles are filled from the translation H1. Order matches orca.dev/docs.
 NAV = [
     ("section", "从这里开始"),
-    ("page", "Orca 是什么", "/docs"),
-    ("page", "安装", "/docs/install"),
-    ("page", "第一次三个智能体一起干活", "/docs/first-session"),
-    ("page", "从 Conductor 迁移", "/docs/migrate-from-conductor"),
+    ("page", "/docs"),
+    ("page", "/docs/install"),
+    ("page", "/docs/first-session"),
+    ("page", "/docs/migrate-from-conductor"),
     ("group", "工作区的组织方式"),
-    ("page", "工作树", "/docs/model/worktrees"),
-    ("page", "标签页、窗格与分栏", "/docs/model/tabs-panes-splits"),
-    ("page", "智能体与会话", "/docs/model/agents-sessions"),
-    ("page", "恢复会话", "/docs/model/session-restore"),
-    ("page", "快速打开与跳转面板", "/docs/model/quick-open"),
-    ("group", "使用智能体"),
-    ("page", "支持的智能体", "/docs/agents/supported"),
-    ("page", "在 Orca 里使用 Claude Code", "/docs/agents/claude-code"),
-    ("page", "在 Orca ADE 里使用 GLM-5.2", "/docs/agents/glm-agent"),
-    ("page", "在 Orca 里使用 Codex", "/docs/agents/codex"),
-    ("page", "在 Orca 里使用 Cursor CLI", "/docs/agents/cursor-cli"),
-    ("page", "快速切换 Codex 账号", "/docs/agents/codex-hot-swap"),
-    ("page", "聊天界面（原生对话）", "/docs/agents/native-chat"),
-    ("page", "智能体会话记录", "/docs/agents/session-history"),
-    ("page", "智能体休眠", "/docs/agents/hibernation"),
-    ("page", "用量与速率上限", "/docs/agents/usage-tracking"),
-    ("page", "智能体钩子与记忆", "/docs/agents/hooks-memory"),
+    ("page", "/docs/model/worktrees"),
+    ("page", "/docs/model/tabs-panes-splits"),
+    ("page", "/docs/model/agents-sessions"),
+    ("page", "/docs/model/session-restore"),
+    ("page", "/docs/model/quick-open"),
+    ("group", "使用 Agent"),
+    ("page", "/docs/agents/supported"),
+    ("page", "/docs/agents/claude-code"),
+    ("page", "/docs/agents/glm-agent"),
+    ("page", "/docs/agents/codex"),
+    ("page", "/docs/agents/cursor-cli"),
+    ("page", "/docs/agents/codex-hot-swap"),
+    ("page", "/docs/agents/native-chat"),
+    ("page", "/docs/agents/session-history"),
+    ("page", "/docs/agents/hibernation"),
+    ("page", "/docs/agents/usage-tracking"),
+    ("page", "/docs/agents/hooks-memory"),
     ("group", "审阅并交付代码"),
-    ("page", "查看代码改动", "/docs/review/diff-viewer"),
-    ("page", "给 AI 改动加批注", "/docs/review/annotate-ai-diff"),
-    ("page", "标明改动出处", "/docs/review/attribution"),
-    ("page", "在 Orca 里提交并推送", "/docs/review/commit-push"),
-    ("page", "托管的评审、议题与 Actions", "/docs/review/github"),
-    ("page", "Linear 事项抽屉", "/docs/review/linear"),
-    ("page", "Jira 事项抽屉", "/docs/review/jira"),
+    ("page", "/docs/review/diff-viewer"),
+    ("page", "/docs/review/annotate-ai-diff"),
+    ("page", "/docs/review/attribution"),
+    ("page", "/docs/review/commit-push"),
+    ("page", "/docs/review/github"),
+    ("page", "/docs/review/linear"),
+    ("page", "/docs/review/jira"),
     ("group", "在 Orca 里编辑"),
-    ("page", "Monaco 编辑器与自动保存", "/docs/editing/monaco"),
-    ("page", "Markdown 富文本编辑", "/docs/editing/markdown"),
-    ("page", "HTML、Mermaid、PDF 与图片查看", "/docs/editing/viewers"),
-    ("page", "文件浏览器与外部拖放", "/docs/editing/file-explorer"),
+    ("page", "/docs/editing/monaco"),
+    ("page", "/docs/editing/markdown"),
+    ("page", "/docs/editing/viewers"),
+    ("page", "/docs/editing/file-explorer"),
     ("group", "浏览器与设计模式"),
-    ("page", "每个工作树各自的浏览器", "/docs/browser/overview"),
-    ("page", "设计模式", "/docs/browser/design-mode"),
-    ("page", "供智能体使用的浏览器配置", "/docs/browser/profiles"),
-    ("section", "机器人"),
-    ("page", "机器人快速上手", "/docs/bots"),
-    ("page", "机器人能做什么", "/docs/bots/use-cases"),
-    ("page", "机器人的外部连接", "/docs/bots/connectors"),
-    ("page", "导入机器人", "/docs/bots/import"),
-    ("page", "机器人安全", "/docs/bots/security"),
+    ("page", "/docs/browser/overview"),
+    ("page", "/docs/browser/design-mode"),
+    ("page", "/docs/browser/profiles"),
+    ("section", "Bots"),
+    ("page", "/docs/bots"),
+    ("page", "/docs/bots/use-cases"),
+    ("page", "/docs/bots/connectors"),
+    ("page", "/docs/bots/import"),
+    ("page", "/docs/bots/security"),
     ("section", "终端"),
-    ("page", "终端", "/docs/terminal"),
+    ("page", "/docs/terminal"),
     ("section", "远程与 SSH"),
-    ("page", "运行 Orca 的方式", "/docs/ways-to-run"),
-    ("page", "SSH 工作树", "/docs/ssh"),
-    ("page", "远程 Orca 服务器", "/docs/remote-servers"),
+    ("page", "/docs/ways-to-run"),
+    ("page", "/docs/ssh"),
+    ("page", "/docs/remote-servers"),
     ("section", "命令行与自动化"),
-    ("group", "Orca 命令行与技能"),
-    ("page", "Orca 命令行概览", "/docs/cli/overview"),
-    ("page", "Orca 命令行参考", "/docs/cli/reference"),
-    ("page", "编排", "/docs/cli/orchestration"),
-    ("page", "定时任务", "/docs/cli/automations"),
-    ("page", "让智能体操作电脑", "/docs/cli/computer-use"),
-    ("page", "工作树检查点", "/docs/cli/worktree-checkpoints"),
-    ("page", "Orca 技能注册与 MCP", "/docs/cli/skills"),
+    ("group", "Orca CLI 与技能"),
+    ("page", "/docs/cli/overview"),
+    ("page", "/docs/cli/reference"),
+    ("page", "/docs/cli/orchestration"),
+    ("page", "/docs/cli/automations"),
+    ("page", "/docs/cli/computer-use"),
+    ("page", "/docs/cli/worktree-checkpoints"),
+    ("page", "/docs/cli/skills"),
     ("section", "移动端"),
-    ("page", "手机伴侣", "/docs/mobile"),
-    ("page", "在 Android 上安装 Orca Mobile", "/docs/android-apk"),
+    ("page", "/docs/mobile"),
+    ("page", "/docs/android-apk"),
     ("section", "通知与收件箱"),
-    ("page", "通知与收件箱", "/docs/notifications"),
-    ("page", "智能体动态", "/docs/activity"),
+    ("page", "/docs/notifications"),
+    ("page", "/docs/activity"),
     ("group", "场景示例"),
-    ("page", "让三个智能体同时做一件事", "/docs/recipes/parallel-agents"),
-    ("page", "逐行审阅 AI 改动", "/docs/recipes/review-ai-diff"),
-    ("page", "在 10 个工作树之间跳转", "/docs/recipes/jump-worktrees"),
-    ("page", "用设计模式修界面问题", "/docs/recipes/design-mode-fix"),
-    ("page", "通过 SSH 在远程机器上工作", "/docs/recipes/remote-worktrees"),
-    ("section", "设置说明"),
-    ("page", "设置说明", "/docs/settings"),
+    ("page", "/docs/recipes/parallel-agents"),
+    ("page", "/docs/recipes/review-ai-diff"),
+    ("page", "/docs/recipes/jump-worktrees"),
+    ("page", "/docs/recipes/design-mode-fix"),
+    ("page", "/docs/recipes/remote-worktrees"),
+    ("section", "设置参考"),
+    ("page", "/docs/settings"),
     ("section", "隐私与遥测"),
-    ("page", "隐私与遥测", "/docs/telemetry"),
-    ("section", "故障排查与常见问题"),
-    ("page", "故障排查与常见问题", "/docs/troubleshooting"),
-    ("page", "排查 GitHub 错误", "/docs/github-errors"),
+    ("page", "/docs/telemetry"),
+    ("section", "故障排除与常见问题"),
+    ("page", "/docs/troubleshooting"),
+    ("page", "/docs/github-errors"),
 ]
+
+MARKDOWN = mistune.create_markdown(plugins=["table"])
 
 
 def slug_for(source: str) -> str:
     if source == "/docs":
         return "what-is-orca"
     return source.removeprefix("/docs/").replace("/", "-")
+
+
+def zh_path(source: str) -> Path:
+    if source == "/docs":
+        name = "what-is-orca.md"
+    else:
+        name = source.removeprefix("/docs/").replace("/", "--") + ".md"
+    return ZH_DIR / name
+
+
+def strip_notes(text: str) -> str:
+    while True:
+        text = text.lstrip("\n")
+        if not text.startswith(">"):
+            return text
+        lines = text.splitlines()
+        index = 0
+        while index < len(lines):
+            line = lines[index]
+            if line.startswith(">"):
+                index += 1
+                continue
+            if line.strip() == "" and index + 1 < len(lines) and lines[index + 1].startswith(">"):
+                index += 1
+                continue
+            break
+        block = "\n".join(lines[:index])
+        if any(key in block for key in NOTE_KEYS):
+            text = "\n".join(lines[index:])
+            continue
+        return text
+
+
+def cut_glossary(text: str) -> str:
+    kept = []
+    in_fence = False
+    for line in text.splitlines():
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+        if not in_fence and line.strip() == "## 术语候选":
+            break
+        kept.append(line)
+    return "\n".join(kept).strip()
+
+
+def load_translation(source: str):
+    path = zh_path(source)
+    if not path.is_file():
+        return None
+    raw = path.read_text(encoding="utf-8")
+    lines = raw.splitlines()
+    if not lines or not lines[0].startswith("# "):
+        raise SystemExit(f"{path} 缺少一级标题")
+    title = lines[0][2:].strip()
+    body = cut_glossary(strip_notes("\n".join(lines[1:])))
+    if not body:
+        return {"title": title, "html": "", "body": "", "path": path}
+    html = MARKDOWN(body)
+    return {"title": title, "html": html, "body": body, "path": path}
 
 
 def collect_pages():
@@ -117,14 +185,19 @@ def collect_pages():
                 raise SystemExit(f"分组「{item[1]}」不在任何栏目下")
             group = item[1]
         elif kind == "page":
-            title, source = item[1], item[2]
+            source = item[1]
+            loaded = load_translation(source)
             pages.append(
                 {
                     "slug": slug_for(source),
-                    "title": title,
                     "source": source,
                     "section": section,
                     "group": group,
+                    "title": loaded["title"] if loaded else source,
+                    "html": loaded["html"] if loaded else "",
+                    "body": loaded["body"] if loaded else "",
+                    "path": loaded["path"] if loaded else None,
+                    "missing": loaded is None or not (loaded and loaded["html"]),
                 }
             )
         else:
@@ -149,7 +222,7 @@ def nav_html(pages_by_source):
             group_open = True
             lines.append(f'        <p class="nav-group">{escape(item[1])}</p>')
         else:
-            page = pages_by_source[item[2]]
+            page = pages_by_source[item[1]]
             css = "nav-link sub" if group_open else "nav-link"
             lines.append(
                 f'        <a class="{css}" href="#{page["slug"]}">{escape(page["title"])}</a>'
@@ -165,11 +238,7 @@ def kicker(page):
 
 def pager(pages, index):
     parts = ['      <nav class="pager" aria-label="章节">']
-    if index == 0:
-        parts.append(
-            '        <a class="prev" href="#home"><span>返回</span><strong>文档骨架首页</strong></a>'
-        )
-    else:
+    if index > 0:
         prev = pages[index - 1]
         parts.append(
             f'        <a class="prev" href="#{prev["slug"]}"><span>上一章</span>'
@@ -188,38 +257,22 @@ def pager(pages, index):
 def chapter_html(pages, index):
     page = pages[index]
     url = ORIGIN + page["source"]
+    if page["missing"]:
+        body = f'      <p class="placeholder">{escape(PLACEHOLDER)}</p>'
+    else:
+        body = f'      <div class="doc-body">\n{page["html"]}\n      </div>'
     return f"""    <article id="{page["slug"]}" class="doc" data-source="{escape(page["source"])}">
       <p class="kicker">{escape(kicker(page))}</p>
       <h1>{escape(page["title"])}</h1>
-      <p class="placeholder">{escape(PLACEHOLDER)}</p>
+{body}
       <p class="meta">英文原文：<a href="{escape(url)}">{escape(url.removeprefix("https://"))}</a></p>
 {pager(pages, index)}
     </article>"""
 
 
-HOME = """    <article id="home" class="doc">
-      <p class="kicker">文档骨架</p>
-      <h1>ORCA 说明文档</h1>
-      <p class="lead">这是 ORCA 中文说明文档的骨架。左侧目录按照英文文档站的真实栏目排好，先把站点立起来。各章正文的译文还没有放入。</p>
-      <h2>现在能看什么</h2>
-      <ul>
-        <li>目录与 <a href="https://orca.dev/docs">orca.dev/docs</a> 的侧栏一致，名称是临时的中文意译。</li>
-        <li>点开任意一章，会看到统一的占位句。</li>
-        <li>版式按长文来排：正文有最大宽度，标题分层，代码单独成块。</li>
-      </ul>
-      <h2>版式预览</h2>
-      <p>下面用一段命令确认代码块和行内代码的样式。命令和标识符保持原文。</p>
-      <h3>代码块</h3>
-      <pre><code>git worktree list</code></pre>
-      <p>行内命令写成 <code>orca</code>，与正文分开。</p>
-      <h2>接下来</h2>
-      <p>从目录进入 <a href="#what-is-orca">Orca 是什么</a>。译文写好后，会替换各章里的占位，目录仍与英文站对应。</p>
-    </article>"""
-
-
 CURRENT_CSS = """
-    body:not(:has(.doc:target)) a.nav-link[href="#home"],
-    body:has(#home:target) a.nav-link[href="#home"],
+    body:not(:has(.doc:target)) a.nav-link[href="#what-is-orca"],
+    body:has(#what-is-orca:target) a.nav-link[href="#what-is-orca"],
     {selectors} {{
       background: var(--accent-soft);
       color: var(--accent);
@@ -230,7 +283,9 @@ CURRENT_CSS = """
 
 def current_css(pages):
     selectors = ",\n    ".join(
-        f'body:has(#{page["slug"]}:target) a.nav-link[href="#{page["slug"]}"]' for page in pages
+        f'body:has(#{page["slug"]}:target) a.nav-link[href="#{page["slug"]}"]'
+        for page in pages
+        if page["slug"] != "what-is-orca"
     )
     return CURRENT_CSS.format(selectors=selectors).strip()
 
@@ -241,8 +296,8 @@ SCRIPT = """
       var sidebar = document.getElementById("sidebar");
 
       function sync() {
-        var id = (location.hash || "#home").slice(1);
-        if (!document.getElementById(id)) id = "home";
+        var id = (location.hash || "#what-is-orca").slice(1);
+        if (!document.getElementById(id)) id = "what-is-orca";
         var links = sidebar.querySelectorAll("a[href^='#']");
         for (var i = 0; i < links.length; i++) {
           var on = links[i].getAttribute("href") === "#" + id;
@@ -250,7 +305,7 @@ SCRIPT = """
           else links[i].removeAttribute("aria-current");
         }
         var heading = document.querySelector("#" + id + " h1");
-        document.title = !heading || id === "home"
+        document.title = !heading || id === "what-is-orca"
           ? "ORCA 说明文档"
           : heading.textContent + " · ORCA 说明文档";
         var current = sidebar.querySelector('[aria-current="page"]');
@@ -277,7 +332,7 @@ def render(pages):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ORCA 说明文档</title>
-  <meta name="description" content="ORCA 中文说明文档骨架。栏目已按英文文档站排好，各章译文尚未放入。">
+  <meta name="description" content="ORCA 中文说明文档。栏目与英文文档站对应。">
   <link rel="stylesheet" href="styles.css">
   <style>
     {current_css(pages)}
@@ -286,21 +341,19 @@ def render(pages):
 <body>
   <a class="skip" href="#content">跳到正文</a>
   <header class="topbar">
-    <a class="brand" href="#home">ORCA 说明文档</a>
-    <p class="brand-note">中文骨架</p>
+    <a class="brand" href="#what-is-orca">ORCA 说明文档</a>
+    <p class="brand-note">中文</p>
     <label class="menu-button" for="nav-toggle">目录</label>
   </header>
   <input class="nav-toggle" id="nav-toggle" type="checkbox">
   <div class="layout">
     <aside class="sidebar" id="sidebar">
       <nav aria-label="文档目录">
-        <a class="nav-link" href="#home">文档骨架</a>
 {nav_html(by_source)}
       </nav>
     </aside>
     <label class="backdrop" for="nav-toggle"></label>
     <main class="content" id="content">
-{HOME}
 {chapters}
     </main>
   </div>
@@ -312,21 +365,56 @@ def render(pages):
 """
 
 
+def check(pages, html):
+    nav = html.split("<nav", 1)[1].split("</nav>", 1)[0]
+    if "智能体" in nav:
+        raise SystemExit("导航里仍有「智能体」")
+    if "术语候选" in html or "选页说明" in html or "入门样章" in html:
+        raise SystemExit("译者备注混进了页面")
+    if PLACEHOLDER in html:
+        missing = [page["source"] for page in pages if page["missing"]]
+        raise SystemExit("仍有占位页: " + ", ".join(missing))
+    used = {page["path"].name for page in pages if page["path"]}
+    on_disk = {path.name for path in ZH_DIR.glob("*.md")}
+    if used != on_disk:
+        raise SystemExit(f"译文文件没有一一对应: 多 {sorted(on_disk - used)} 缺 {sorted(used - on_disk)}")
+    image_re = re.compile(r"!\[[^\]]*\]\(([^)\s]+)\)")
+    for page in pages:
+        for url in image_re.findall(page["body"]):
+            if url not in html:
+                raise SystemExit(f"{page['source']} 丢了图片 {url}")
+        for fence in re.findall(r"```[^\n]*\n(.*?)```", page["body"], flags=re.S):
+            probe = fence.strip().splitlines()[0].strip() if fence.strip() else ""
+            if not probe:
+                continue
+            rendered = (
+                probe.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace('"', "&quot;")
+            )
+            if rendered not in html:
+                raise SystemExit(f"{page['source']} 丢了代码块开头: {probe}")
+    if "https://orca.dev/whats-new/posters/orca-split-screen.jpg" not in html:
+        raise SystemExit("首页图片 URL 不在页面里")
+    if "brew install --cask stablyai/orca/orca" not in html:
+        raise SystemExit("安装页代码块不在页面里")
+
+
 def main():
+    if not ZH_DIR.is_dir():
+        raise SystemExit(f"找不到译文目录 {ZH_DIR}")
     pages = collect_pages()
     html = render(pages)
-    if PLACEHOLDER not in html:
-        raise SystemExit("缺少占位句")
-    home, _, rest = html.partition('<article id="what-is-orca"')
-    if PLACEHOLDER in home:
-        raise SystemExit("首页不应使用章节占位句")
-    if html.count(PLACEHOLDER) != len(pages):
-        raise SystemExit("占位句数量与章节数不一致")
-    if "Orca is a desktop IDE" in html:
-        raise SystemExit("骨架里混入了英文正文")
+    check(pages, html)
     out = ROOT / "index.html"
     out.write_text(html, encoding="utf-8")
-    print(f"wrote {out} ({len(pages)} chapters)")
+    missing = [page["source"] for page in pages if page["missing"]]
+    print(f"wrote {out}")
+    print(f"replaced {len(pages) - len(missing)}")
+    print(f"placeholder {len(missing)}")
+    if missing:
+        print("still placeholder: " + ", ".join(missing))
 
 
 if __name__ == "__main__":

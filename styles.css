@@ -209,7 +209,7 @@ body {
   scroll-margin-top: calc(var(--header-height) + 0.75rem);
 }
 
-#home {
+#what-is-orca {
   display: block;
 }
 
@@ -217,8 +217,33 @@ body {
   display: block;
 }
 
-body:has(.doc:target) #home:not(:target) {
+body:has(.doc:target) #what-is-orca:not(:target) {
   display: none;
+}
+
+.doc h1 + p {
+  font-size: 1.125rem;
+}
+
+.doc-body li > p {
+  margin: 0.2rem 0;
+}
+
+.doc-body img {
+  display: block;
+  margin: 1.1rem 0 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.doc-body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.doc-body a {
+  overflow-wrap: anywhere;
 }
 
 .kicker {
