@@ -1,0 +1,22 @@
+<h1>Annotate AI Diff</h1>
+<p>Annotate AI Diff is Orca&#x27;s inline review loop for agent-generated code. You leave comments on any line of any AI-generated hunk, then send them back to the agent as a single batch for revision — no copying line numbers, no context-switching.</p>
+<figure><img src="https://orca.dev/whats-new/posters/annotate-ai-diff.jpg" alt="Annotate AI Diff — inline comments pinned to diff lines" loading="lazy" decoding="async"><figcaption>Annotate AI Diff — inline comments pinned to diff lines</figcaption></figure>
+<h2 id="review-annotate-ai-diff-leave-a-comment">Leave a comment</h2>
+<ol>
+<li>Hover any line in the diff. A <strong>+</strong> appears in the gutter. Drag across adjacent lines, or hold <code>Shift</code> while extending the selection, to comment on a multi-line range. Orca keeps the range inside the hunk and labels it with the selected line span.</li>
+<li>Click it (or press <code>c</code> with the cursor on the line).</li>
+<li>Type your feedback — markdown supported.</li>
+<li>Press <code>Enter</code> or <code>Cmd/Ctrl-Enter</code> to save, <code>Shift-Enter</code> for a new line, or <code>Esc</code> to cancel.</li>
+</ol>
+<p>Comments pin to the exact line; Orca tracks them across edits so they follow the line if the diff shifts.</p>
+<h2 id="review-annotate-ai-diff-send-the-batch">Send the batch</h2>
+<p>When your review is done, click <strong>Send to agent</strong> at the top of the diff. Orca composes a single prompt with all your comments, line-anchored, then opens a <strong>Send notes to</strong> menu for the worktree&#x27;s available agents. Pick the agent that should revise the change, or start a new agent from the same menu.</p>
+<p><strong>Send Review Notes to Agent</strong> is unbound by default so it won&#x27;t collide with other chords. Assign it under <a href="#settings">Settings → Shortcuts</a> to open that send menu from the keyboard (works even while the editor is focused).</p>
+<h2 id="review-annotate-ai-diff-why-batch">Why batch?</h2>
+<p>Sending comments one at a time causes the agent to swing back and forth. Batching keeps the feedback coherent: one round of thinking, one revision pass, and a much higher hit rate.</p>
+<h2 id="review-annotate-ai-diff-reply-resolve-re-review">Reply, resolve, re-review</h2>
+<ul>
+<li>Comments stay pinned after the agent revises — use them to verify the fix.</li>
+<li>Click <strong>Resolve</strong> to collapse a thread.</li>
+<li>Unresolved comments are part of the next batch if you hit <strong>Send</strong> again.</li>
+</ul>

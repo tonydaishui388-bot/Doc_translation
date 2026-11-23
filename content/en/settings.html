@@ -1,0 +1,203 @@
+<h1>Settings reference</h1>
+<p>Settings are grouped into panes. Everything here is searchable with <code>Cmd-,</code> then typing a keyword. Feature pages in these docs link directly to the relevant pane.</p>
+<h2 id="settings-general">General</h2>
+<ul>
+<li><strong>Orca CLI</strong> — register the bundled command-line tool for shells and agents.</li>
+<li><strong>Automatic updates</strong> — under <strong>General → About</strong>, opt in to download, install, and relaunch automatically. It is off by default and follows your check cadence, channel, and delay. See <a href="#install-updates">Install → Updates</a>.</li>
+<li><strong>Updates</strong> — check for and install updates. <strong>Update Delay</strong> waits None (the default), 1, 3, 7, 14, or 30 days after a release is published before offering it. A held update shows when it becomes available; choose <strong>Skip Delay Once</strong> to check without waiting. With a 14- or 30-day delay, a release may leave the feed before it becomes eligible. Modifier clicks on <strong>Check for Updates</strong>:</li>
+</ul>
+<table><thead><tr><th>Modifier</th><th>Effect</th></tr></thead><tbody><tr><td><strong>Shift+click</strong></td><td>Include the latest <strong>RC</strong> prerelease</td></tr><tr><td><strong>Cmd+click</strong> (macOS) / <strong>Ctrl+click</strong> (Windows/Linux)</td><td>Latest <strong>perf</strong>-tagged prerelease</td></tr><tr><td><strong>Option+click</strong> (macOS only)</td><td>Pick a <strong>validated local macOS build</strong> (compatibility-checked). Failures surface as “Could Not Use Local Build” with <strong>Choose Another Build</strong>.</td></tr></tbody></table>
+<ul>
+<li><strong>Open in menu</strong> — choose apps on the worktree <strong>Open in</strong> menu. VS Code / Insiders enable <strong>Remote SSH</strong> open for SSH worktrees; other editors remain local-path only.</li>
+<li><strong>UI zoom</strong> — per-install UI scale.</li>
+<li><strong>Default new-worktree name</strong> — custom prefix or marine creatures.</li>
+<li><strong>Format on Save</strong> — off by default. Enable it and configure a formatter and include patterns for each project. See <a href="#editing-monaco-format-on-save">Monaco editor → Format on save</a>.</li>
+<li><strong>Default Markdown view</strong> — choose how Markdown files open. See <a href="#editing-markdown">Rich markdown editor</a>.</li>
+<li><strong>Insert Final Newline</strong> — optionally add a final newline when saving files.</li>
+<li><strong>Editor Word Wrap</strong> — default wrap for file editors (on by default). Toggle from a file tab&#x27;s <strong>⋯</strong> menu or <code>Alt+Z</code>. Separate from <strong>Diff Word Wrap</strong>.</li>
+<li><strong>Reuse a preview tab when browsing files</strong> — on by default. Turn it off to open each single-clicked file in its own tab instead of replacing the current preview tab.</li>
+<li><strong>Collapse Unchanged Regions</strong> — fold long unchanged bands in single-file diffs while keeping a little surrounding context visible. Expand a band when you need the full file; <strong>View all changes</strong> keeps its own collapsed layout.</li>
+</ul>
+<h2 id="settings-appearance">Appearance</h2>
+<ul>
+<li>Theme, accent color, density. Search the theme pickers by name. Installed plugins can add app and terminal themes to the theme pickers; an app theme may offer its terminal colors too.</li>
+<li>Font family for UI; editor font is opt-in (empty = follow terminal font; set a value to override file editors and diffs only).</li>
+<li>Editor minimap toggle.</li>
+<li>Status bar toggles, including <strong>Resource Manager</strong> (CPU/memory/sessions, daemon controls, workspace disk scans; when your projects live on a paired Orca server, it lists that server&#x27;s processes under the server&#x27;s name).</li>
+<li><strong>Usage percentages</strong> — show provider limits as <strong>% used</strong> or <strong>% remaining</strong> on the status-bar roster. The roster now defaults to a shorter <strong>Compact</strong> view unless you already chose one; <strong>Detailed</strong> is still available from the same selector.</li>
+<li>App Icon — cycle between Classic, Watercolor, and Blue for the icon shown in the Dock and window switcher.</li>
+<li><strong>Language</strong> — primary Interface control. Switch between System (follows the OS), English, 中文（简体）, 繁體中文, 한국어, 日本語, Español, Deutsch, Русский, or Türkçe. Settings search also matches native words for “language” (语言 / 語言 / 언어 / 言語 / Idioma) so you can find Language while the UI is still in English.</li>
+</ul>
+<h2 id="settings-chat">Chat</h2>
+<p>Choose the default Chat or CLI launch surface and per-agent overrides here or under <strong>Agents</strong>. On first-run onboarding, Chat is preselected; existing launch preferences are preserved. See <a href="#agents-native-chat">Chat UI</a>.</p>
+<ul>
+<li><strong>Behavior</strong> — choose whether follow-ups queue, whether sending moves the scroll position, when idle chat agents stop, whether working chats resume after a restart, and whether a usage-limited chat continues automatically after its limit resets. Set permission defaults for new sessions under <strong>Agents</strong>; an existing chat keeps its own mode.</li>
+<li><strong>Agents</strong> — choose Chat or CLI for each supported agent. Choices apply to starts from this desktop, including CLI, orchestration, and relayed phone launches. If Antigravity’s chat runtime is not installed, its row offers <strong>Install</strong>; <strong>Remove</strong> stops its running chats and removes the runtime while keeping chat history.</li>
+<li><strong>Appearance</strong> — choose a chat <strong>Font family</strong> (with a preview and suggestions from installed fonts), <strong>Text size</strong> and <strong>Code text size</strong> in pixels, <strong>Width</strong>, and <strong>Contrast</strong>. Turn on <strong>Match terminal interface</strong> to use your terminal&#x27;s font and colors for the whole chat, and stay in sync if you change your terminal theme later; the font and size controls are disabled while it is on. <strong>Reset chat appearance</strong> restores the defaults.</li>
+<li><strong>Inline visuals</strong> — let the agent show charts, diagrams, and mockups inside its replies. Applies to newly started chats.</li>
+<li><strong>Chat naming</strong> — new chats use their own agent and account to generate a name by default. Choose a different naming agent under <strong>Advanced</strong>; previously saved naming commands and arguments continue to work.</li>
+</ul>
+<h2 id="settings-git">Git</h2>
+<ul>
+<li>Default base ref resolver.</li>
+<li>Commit signing options.</li>
+<li>Editor for external git tools.</li>
+<li>Auto-Rename Branch From Work — rename Orca-generated creature branches after an agent starts work.</li>
+<li><strong>GitHub API Budget</strong> — remaining REST (core), Search, and GraphQL quota from the local <code>gh</code> CLI. Useful when PR checks or Tasks stop refreshing; see <a href="#github-errors">Troubleshooting GitHub errors</a> if the numbers look fine but GitHub still rate-limits live calls.</li>
+</ul>
+<h2 id="settings-terminal">Terminal</h2>
+<ul>
+<li>Font, theme, cursor style, padding.</li>
+<li>Ghostty import.</li>
+<li>Warp theme import — bring in your Warp YAML themes with <strong>Import themes from Warp</strong> (auto-discovers Warp&#x27;s themes folder per OS) or <strong>Import from YAML</strong> for any folder of Warp-format theme files.</li>
+<li>JIS Yen (¥) to Backslash (\) for macOS Japanese keyboards.</li>
+<li><strong>Default shell</strong> for new local terminal tabs. Leave it blank to use the system default; Windows also offers PowerShell, Command Prompt, and WSL when available.</li>
+<li><strong>Shell arguments</strong> for a custom Unix default shell, under <strong>Default shell → Advanced</strong>. Choose <strong>-l (default)</strong> for a login shell, or <strong>Custom args</strong> and enter one argument per line. An empty custom list passes no arguments.</li>
+<li><strong>Running terminal limit</strong> — set a limit per computer under <strong>Advanced</strong>. The default is half the system terminal limit, up to 4096, or 256 when Orca cannot read the system limit. Changing it does not close running terminals. After updating, open a new terminal to use the new terminal host; older remote servers must update before their limit can be changed.</li>
+<li><strong>Allow TUI Clipboard Writes (OSC 52)</strong> — <strong>on by default</strong>. Lets Zellij, tmux, Neovim, fzf, Grok (and similar) write the system clipboard over the PTY, including over SSH. Turn off if you prefer the older lockdown.</li>
+</ul>
+<h2 id="settings-quick-commands">Quick Commands</h2>
+<ul>
+<li>Saved terminal commands and agent-prompt presets, scoped globally or to a project. Each row has a copy control for the command body.</li>
+<li>Scope filters for reviewing and editing the command list. The same list syncs to the <a href="#mobile">mobile companion</a>.</li>
+<li>With remote or multi-host setups, commands are grouped by the Orca host that owns them (<strong>Saved on</strong>). Host ownership is separate from Global/Project scope and from where the command runs — see <a href="#terminal-quick-commands">Terminal → Quick Commands</a>.</li>
+</ul>
+<h2 id="settings-agents">Agents</h2>
+<ul>
+<li>Installed agents — detected CLIs you can enable or disable.</li>
+<li>Per-agent launch defaults — override an agent&#x27;s binary path or name, and edit its default <strong>Command</strong> and <strong>Arguments</strong> (and environment). Structured native chats use the same saved command and arguments. These launch settings are edited on the workspace&#x27;s own host, so a remote or SSH workspace uses the settings from the machine that runs it.</li>
+<li>Enable or disable detected agents so launch menus only show the CLIs you want to use.</li>
+<li><strong>Agent permissions</strong> — choose <strong>Manual</strong>, <strong>Auto</strong>, or <strong>Yolo</strong> for new terminal and structured-chat sessions. <strong>Auto</strong> lets supported agents (Claude, Claude Agent Teams, and Codex) approve routine actions themselves; when you choose it, use <strong>Other agents</strong> to set Manual or Yolo for agents that do not support Auto. Existing chats keep their current mode, and agents with custom launch arguments remain unchanged until you replace those arguments with a preset.</li>
+<li><strong>Folder trust</strong> — the first time you start an agent in a new repository, choose whether Orca trusts the repository for agents or lets each agent ask for itself. Repositories you already use keep their previous behavior. You can change the choice in the repository settings. See <a href="#agents-codex">Codex in Orca</a> and <a href="#agents-supported">Supported agents</a>.</li>
+<li><strong>Share Codex history across accounts</strong> — on by default. History from Orca-managed accounts also appears in <code>~/.codex</code> when you switch back to system default. Accounts migrate to a shared conversation store before their next launch, which can delay the first launch; busy accounts migrate later. Turning sharing off leaves shared history in place, and long conversations started while sharing was on need it enabled to resume. Older SSH or WSL hosts need an update before this setting is available there.</li>
+<li><strong>Run each Codex terminal on its own server</strong> — <strong>on by default</strong>. Keeps Orca&#x27;s status and tab-closing correct for Codex tabs; turn it off to use Codex&#x27;s shared server and its agents overview. Applies to new terminals. A companion <strong>Warn when a Codex tab shares a server</strong> notice appears when a Codex you started yourself shares a server. See <a href="#agents-codex">Codex in Orca</a>.</li>
+<li>Account lists for Claude, Codex, OpenCode, Devin, Antigravity, and the GLM Coding Plan. On Linux, a saved credential that could not be encrypted is flagged here with a warning. Each Claude account keeps its own config folder, and adding one offers <strong>Copy sign-in link instead</strong> when your default browser is already signed in to another Claude email. The Antigravity account row also shows its chat runtime&#x27;s install status and lets you install or remove it for that host.</li>
+<li>OpenCode Go session cookie — paste the full <code>opencode.ai</code> Cookie header, including <code>__Host-console_session</code>, to show Go rate limits. An <code>auth</code> cookie alone is insufficient.</li>
+<li>Startup hooks per agent.</li>
+<li><strong>Agent status hooks</strong> — show working / waiting / done states in Orca. Toggle takes effect without restarting the app (including the Windows WSL hook relay). CLI: <code>orca agent hooks on|off|status</code>.</li>
+<li><strong>Keep computer awake</strong> — <strong>On</strong> (stay awake continuously), <strong>Agent</strong> (stay awake while an agent is working), or <strong>Off</strong>. The same control lives on the desktop status bar as <strong>Caffeinate</strong> (coffee icon). Hidden on paired web clients.</li>
+<li><strong>Skill freshness</strong> — the Agents pane and skill cards still show full status. Sidebar navigation only badges skills that need action (<strong>Update available</strong>, <strong>Needs attention</strong> / review); healthy, loading, and optional not-installed rows stay quiet. Use <strong>Update</strong> in the dialog to refresh global skills in the background (no terminal). Progress appears on the status bar; closing the dialog does not cancel the run. See <a href="#cli-skills-keep-skills-up-to-date">Orca skills</a>.</li>
+</ul>
+<h2 id="settings-browser">Browser</h2>
+<ul>
+<li>Profiles (see <a href="#browser-profiles">Browser-use profiles</a>).</li>
+<li><strong>Password manager</strong> — enable saved logins, manage or import them; see <a href="#browser-overview-password-manager">Password manager</a>.</li>
+<li>Default Zoom — zoom level applied to newly opened browser tabs (per-tab adjustments via Cmd-wheel are remembered separately).</li>
+<li>Design Mode defaults.</li>
+<li>Devtools opt-in.</li>
+<li><strong>Remote server workspaces</strong> — choose <strong>This device</strong> to render new paired-runtime browser pages on this desktop, or <strong>Server (streamed)</strong> to render them on the server. Traffic always goes through the remote server, and the choice applies to new pages only. See <a href="#browser-overview-remote-workspaces">Per-worktree browser → Remote workspaces</a>.</li>
+<li><strong>Browse through SSH workspace hosts</strong> — send browser traffic and DNS through each workspace&#x27;s SSH host. Turn it off to browse from this device instead.</li>
+<li><strong>Link Routing</strong> — open http(s) links from the terminal, markdown, and editor in Orca&#x27;s browser or the system browser. Nested <strong>Hold Shift…</strong> inverts that default for one click (<code>⇧⌘-click</code> / <code>Shift+Ctrl+click</code>). See <a href="#browser-overview-link-routing">Per-worktree browser</a>.</li>
+<li><strong>Terminal URL clicks</strong> — choose whether a plain URL click opens the action menu, opens directly, or requires a modifier; configure middle-click URL behavior separately.</li>
+<li><strong>Show terminal link actions</strong> — <strong>on by default</strong>. A plain click on a terminal link opens a compact action popover. Turn off to require <code>⌘</code>-click / <code>Ctrl</code>-click. See <a href="#terminal-link-actions">Terminal → Link actions</a>.</li>
+<li><strong>Default Search Engine</strong> — used when you type non-URL text in the browser address bar or the <a href="#model-quick-open">new-tab omnibox</a>.</li>
+</ul>
+<h2 id="settings-artifacts">Artifacts</h2>
+<ul>
+<li><strong>Orca account</strong> — sign in (same account family as Orca Relay) to publish and manage shared files.</li>
+<li><strong>Allow publishing public artifact links</strong> — <strong>off by default</strong>. Device-wide gate: when on, you, agents, and the <code>orca</code> CLI on this machine can upload HTML/Markdown up to <strong>10 MiB</strong> and mint public view links. Turning it off does not delete existing links.</li>
+<li><strong>Show Artifacts</strong> / sidebar shortcut — open the Artifacts list to search, preview, copy, or delete account-owned links.</li>
+<li><strong>Ask Before Deleting Artifacts</strong> — optional confirmation before breaking a public link.</li>
+<li>Share from an open local HTML page or Markdown editor with <strong>Share as artifact</strong>, or via <code>orca artifacts …</code>. See <a href="#cli-reference-artifacts">CLI reference → Artifacts</a>.</li>
+</ul>
+<h2 id="settings-integrations">Integrations</h2>
+<ul>
+<li>GitHub OAuth.</li>
+<li>Linear API token.</li>
+<li>Jira — Cloud (email + API token) or self-hosted Server/Data Center (PAT or username/password). See <a href="#review-jira">Jira items drawer</a>.</li>
+<li>Bitbucket Cloud — <strong>Connect</strong> with <strong>Email &amp; API token</strong> (default) or an <strong>Access token</strong>. Orca verifies the credential before saving. <code>ORCA_BITBUCKET_*</code> environment variables take precedence and hide Connect / Disconnect. Saved credentials stay on this machine — on a <a href="#remote-servers">Remote Orca Server</a>, set the env vars on the server instead. See <a href="#review-github">Hosted reviews</a>.</li>
+<li>MiniMax — paste a MiniMax session cookie (from <code>platform.minimax.io/console/usage</code>) to enable local usage and rate-limit tracking for the MiniMax CLI. Optional group ID and usage models fields override the defaults picked from the cookie.</li>
+<li>MCP servers. Repository MCP settings stay with the host you selected them on.</li>
+</ul>
+<h2 id="settings-notifications">Notifications</h2>
+<ul>
+<li>Choose a paired server in the Settings host picker to view and change the notifications it sends for its agents and terminals, including phone pushes. Older servers must be updated to edit these switches. Local sound and per-machine controls apply to this computer. See <a href="#notifications-per-machine">Notifications &amp; Inbox</a>.</li>
+<li>Agent-finished: system, sound, chip.</li>
+<li>Custom desktop notification sound per category.</li>
+<li><strong>Machines</strong> — choose which machines can show notifications on this computer (this computer, SSH targets, paired Orca Servers). A paired server&#x27;s switch also covers work reached through it; a newly added machine still notifies. See <a href="#notifications-per-machine">Notifications &amp; Inbox</a>.</li>
+<li>PR check failures.</li>
+<li>Update available.</li>
+</ul>
+<h2 id="settings-voice">Voice</h2>
+<ul>
+<li><strong>Set up</strong> — when no usable model is selected, Voice suggests an on-device model for your language. Set up selects and downloads it, requests microphone access, and enables dictation. You can choose another model from the list. Existing local model downloads may need an update; start it from Voice settings or the dictation pill before relying on offline dictation.</li>
+<li><strong>Microphone</strong> — pick which input device dictation uses. Defaults to the system mic; choose a specific device (for example a headset) when you do not want the OS default. If the chosen mic is unplugged or missing, Orca falls back to the system default and shows a non-blocking notice.</li>
+<li><strong>Test</strong> — record and play back a microphone sample. When the speech model is ready, Orca also shows its transcript.</li>
+<li><strong>Stop After Silence</strong> — under Voice → Input, choose 30 seconds, one minute, two minutes, or Off. Orca keeps the text captured when dictation stops.</li>
+<li><strong>Dictation mode</strong> — <strong>Toggle</strong> (press shortcut to start/stop), <strong>Hold</strong> (hold shortcut to talk), or <strong>Auto</strong> (hold to talk or tap to toggle).</li>
+<li><strong>Dictation language</strong> — choose the language used by Whisper, SenseVoice, and OpenAI dictation models.</li>
+<li><strong>Speech Model</strong> — download/select an on-device model, or use cloud OpenAI models after pasting an API key:
+<ul>
+<li><strong>Parakeet TDT v3</strong> (recommended) — multilingual European languages, offline.</li>
+<li><strong>Parakeet TDT v2</strong> — English, faster.</li>
+<li><strong>Parakeet Unified EN</strong> — English-only streaming; download it in Voice settings.</li>
+<li><strong>Nemotron 3.5</strong> — streaming transcription with live text.</li>
+<li><strong>Zipformer</strong> family — bilingual ZH+EN streaming; streaming ZH; <strong>Zipformer Streaming KO</strong> (Korean). <strong>Zipformer Streaming EN</strong> is no longer offered; existing selections move to Parakeet v2, which you may need to download.</li>
+<li><strong>Paraformer Bilingual</strong> — Chinese dialects + English.</li>
+<li><strong>Parakeet TDT-CTC JA</strong> — Japanese.</li>
+<li><strong>SenseVoice</strong> — ZH / EN / JA / KO / Cantonese with auto language detection.</li>
+<li><strong>Whisper Tiny</strong> — 90+ languages, lower accuracy.</li>
+<li><strong>GPT Transcribe</strong> — cloud; needs an OpenAI key under the same pane. Saved GPT-4o Transcribe selections move to GPT Transcribe.</li>
+</ul>
+</li>
+<li>You can also configure an OpenAI-compatible transcription service, choose whether to use the GPU for on-device models, add personal or repository vocabulary, and remove filler words.</li>
+<li>With voice enabled, Orca loads the on-device speech model ahead of your first dictation. Use <strong>Unload Speech Model</strong> to choose when to free that memory.</li>
+<li><strong>AI cleanup</strong> is optional and off by default. It can fix punctuation and spoken corrections before insertion, and asks before sending dictated text, vocabulary, and instructions to your selected agent. If cleanup fails or times out, Orca inserts the original words.</li>
+<li>The dictation pill shows committed and pending words and lets you finish or cancel. On-device dictation inserts phrases as you pause. If transcription fails, you can retry the recording. Pressing Enter or Send while dictating waits for the words before sending. You can also dictate into a focused field in the <a href="#browser-overview">browser</a> using Toggle or Auto mode; Hold mode cannot detect key release inside a page.</li>
+</ul>
+<h2 id="settings-ssh">SSH</h2>
+<ul>
+<li>SSH worktrees, targets, passphrases, default identity file, and bulk host management. Select several hosts to <strong>Test</strong> or <strong>Remove</strong> them together; hosts removed from the OpenSSH-config list stay removed until you choose <strong>Restore removed hosts</strong>.</li>
+<li>Advanced: proxy / jump host; <strong>Reuse SSH connection for faster setup</strong> (system OpenSSH multiplexing; default on); per-host <strong>Allow this host&#x27;s orca CLI to control Orca</strong>.</li>
+<li><strong>Managed servers</strong> — Orca installs and runs its own server on an empty SSH host and keeps it up to date; view its version and terminals, <strong>Update</strong>, <strong>Roll back</strong>, <strong>Recover</strong>, or <strong>Stop…</strong> / <strong>Forget…</strong> each one. Every SSH host runs on this managed server — the old Runtime selector is gone, and a host it cannot run on shows the reason and does not connect. See <a href="#ssh-managed-orca-server">SSH worktrees → Managed Orca server</a>.</li>
+<li>Kerberos hosts: <code>GSSAPIAuthentication</code> from OpenSSH config drives system OpenSSH auth (see <a href="#ssh">SSH worktrees</a>).</li>
+</ul>
+<h2 id="settings-remote-orca-servers">Remote Orca Servers</h2>
+<ul>
+<li>Pair and connect to remote Orca runtimes in one server list. Use <strong>Add server</strong> to paste an access link, install on an SSH host, or set up a Cloud VM; each row shows its status and puts less-common actions in its <strong>⋯</strong> menu.</li>
+<li>Advertise this desktop app as a server and create revocable access links.</li>
+<li>Set this desktop&#x27;s <strong>Machine name</strong> for paired mobile hosts; leave it blank to use the detected computer name. See <a href="#mobile-pairing">Mobile companion</a>.</li>
+<li>Advanced default runtime selection for server-routed projects, terminals, and provider checks.</li>
+</ul>
+<h2 id="settings-shortcuts">Shortcuts</h2>
+<ul>
+<li>Full keymap — every binding remappable.</li>
+<li>Toggle Sleeping Workspaces ships unbound; assign it here if you want a direct shortcut for the sidebar sleeping-worktree filter.</li>
+<li><strong>Toggle Child Workspaces</strong> ships unbound; assign it here to show or hide a parent worktree&#x27;s nested children, the same as clicking its <strong>N children</strong> chip. It targets the worktree under the pointer, or the active worktree when nothing is hovered.</li>
+<li><strong>Toggle Workspace Board</strong> ships unbound; assign it here to open or close the Workspace Board with one shortcut. Existing bindings for <code>workspace.openBoard</code> continue to work.</li>
+<li>Close all editor tabs defaults to <code>Cmd+Option+W</code> on macOS and <code>Ctrl+Alt+W</code> on Windows / Linux.</li>
+<li><strong>Tab navigation defaults (new installs):</strong> next/previous tab <strong>across all types</strong> is <code>Cmd+Shift+]</code> / <code>Cmd+Shift+[</code> (Ctrl on Linux/Windows). Same-type next/previous is <code>Cmd+Option+]</code> / <code>Cmd+Option+[</code>. Previous recent tab is <code>Ctrl+Tab</code>. Existing installs keep customized overrides under <code>~/.orca/keybindings.json</code>.</li>
+<li><strong>Add Review Note</strong> defaults to <code>Cmd+Shift+A</code> (macOS) / <code>Ctrl+Shift+A</code> (Windows / Linux); remappable.</li>
+<li><strong>Send Review Notes to Agent</strong> ships unbound; assign it here to open the send-notes menu for the active worktree&#x27;s diff notes without using the mouse.</li>
+<li><strong>Delete workspace</strong> defaults to <code>Cmd+Shift+Backspace</code> on macOS and <code>Ctrl+Shift+Backspace</code> on Windows / Linux. Hover the sidebar workspace you mean to delete; Orca still asks for confirmation.</li>
+</ul>
+<h2 id="settings-repository">Repository</h2>
+<ul>
+<li>Per-repo base ref and hooks.</li>
+<li>Auto-run commands on worktree create.</li>
+<li>Repo icons for the sidebar: choose an icon, full searchable emoji picker, uploaded image, website favicon, or GitHub avatar, then pick a preset or custom hex badge color.</li>
+<li>Source Control AI overrides for commit messages, pull request details, and branch names. See <a href="#review-commit-push-per-repo-ai-action-recipes">AI action recipes</a>.</li>
+<li><strong>Worktree Shared Paths</strong> — gitignored paths to materialize from the primary checkout into each new worktree (APFS clone-copy on macOS when possible, otherwise symlink). Complements repo-checked-in <code>worktree.sharedDirectories</code> in <code>orca.yaml</code> and <code>.worktreeinclude</code> (see <a href="#model-worktrees">Worktrees</a>).</li>
+</ul>
+<h2 id="settings-floating-workspace">Floating Workspace</h2>
+<ul>
+<li><strong>Enable Floating Workspace</strong> — global surface for terminal, browser, and markdown tabs that are <strong>not</strong> tied to a repo worktree.</li>
+<li><strong>Terminal Directory</strong> — start directory for new floating terminal tabs (<code>~</code> = home).</li>
+<li><strong>Toggle Button Location</strong> — where the floating-workspace toggle appears; the keyboard shortcut works regardless of button placement.</li>
+</ul>
+<h2 id="settings-plugins">Plugins</h2>
+<ul>
+<li>Open <strong>Settings → Plugins</strong>, use the status bar button, or press <code>Cmd-Shift-X</code> / <code>Ctrl-Shift-X</code> outside text fields. Browse the catalog, filter by category or install state, and enable or disable installed plugins.</li>
+<li>Plugins can add themes, icon themes, syntax highlighting, custom editors, and other capabilities. You can also add a git marketplace source and manage installed versions.</li>
+<li>The plugin system is on by default. Installing a plugin, including through an <code>orca://plugins</code> link, opens a review screen. Plugins that run code require your consent before installation and, once approved, have full access to your computer. Install only plugins you trust. Plugin workers run on this computer; SSH workspace actions still route through Orca.</li>
+</ul>
+<h2 id="settings-experimental">Experimental</h2>
+<ul>
+<li><a href="#activity">Activity Page</a> — Slack-style worktree feed for agent events.</li>
+<li>Compact worktree cards — hide redundant second lines in the sidebar while the layout is still experimental.</li>
+<li><a href="#agents-hibernation">Agent hibernation</a> — pause idle background agents and auto-resume them on reopen.</li>
+<li><strong>Agent Dashboard</strong> — kanban of Needs You / Working / Done agents (optional Idle), with search and project/workspace/PR filters; open in-window or as a pop-out. <strong>Show idle agents</strong> lives on the dashboard board settings control, not here. See <a href="#model-agents-sessions-agent-dashboard">Agents &amp; sessions</a>.</li>
+<li><strong>Browser extensions</strong> — enable Chrome Web Store extensions in local browser profiles after a restart. See <a href="#browser-overview-chrome-extensions">Per-worktree browser → Chrome extensions</a>.</li>
+<li><strong>Cloud VM</strong> — show setup controls and workspace <strong>Run on</strong> targets for repo-owned, on-demand environments (cloud sandboxes, VMs, or local Docker). Setup guide and recipe install live under this experimental toggle. See <a href="#ways-to-run-4-cloud-vms-per-workspace-environments">Ways to run Orca</a>.</li>
+<li>Features not yet stable — behavior may change.</li>
+</ul>

@@ -91,9 +91,54 @@ body {
   font-size: 0.8125rem;
 }
 
+.lang-switch {
+  display: inline-flex;
+  margin-left: auto;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.lang-switch button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 650;
+  line-height: 1.2;
+  padding: 0.32rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.lang-switch button[aria-pressed="true"],
+html[data-lang="en"] #lang-en,
+html:not([data-lang="en"]) #lang-zh {
+  background: var(--accent);
+  color: #fff;
+}
+
+html[data-lang="en"] #lang-zh {
+  background: transparent;
+  color: var(--muted);
+}
+
+.lang-switch button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+html[data-lang="en"] .lang-zh,
+html:not([data-lang="en"]) .lang-en {
+  display: none !important;
+}
+
 .menu-button {
   display: none;
-  margin-left: auto;
+  margin-left: 0.6rem;
   padding: 0.28rem 0.7rem;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -213,11 +258,13 @@ body {
   display: block;
 }
 
-.doc:target {
+.doc:target,
+.doc.is-current {
   display: block;
 }
 
-body:has(.doc:target) #what-is-orca:not(:target) {
+body:has(.doc:target) #what-is-orca:not(:target),
+body:has(.doc.is-current) #what-is-orca:not(.is-current) {
   display: none;
 }
 
@@ -231,9 +278,43 @@ body:has(.doc:target) #what-is-orca:not(:target) {
 
 .doc-body img {
   display: block;
+  max-width: 100%;
+  height: auto;
   margin: 1.1rem 0 1.3rem;
   border: 1px solid var(--line);
   border-radius: 10px;
+}
+
+.doc-body figure {
+  margin: 1.1rem 0 1.3rem;
+}
+
+.doc-body figure img,
+.doc-body figure .clip {
+  margin: 0;
+}
+
+.doc-body figcaption {
+  margin-top: 0.45rem;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.doc-body aside {
+  margin: 1.1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+}
+
+.doc-body th,
+.doc-body td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.35rem 0.9rem 0.35rem 0;
+  text-align: left;
+  vertical-align: top;
 }
 
 .clip {

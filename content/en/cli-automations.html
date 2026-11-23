@@ -1,0 +1,96 @@
+<h1>Scheduled automations</h1>
+<p>Orca automations run a prompt on a schedule from the CLI, so recurring triage, review, and maintenance tasks can start without you opening a worktree by hand. By the end of this page, you&#x27;ll create a disabled automation, inspect it, and run it when you&#x27;re ready.</p>
+<h2 id="cli-automations-create-a-safe-first-automation">Create a safe first automation</h2>
+<p>Start with <code>--disabled</code> while you tune the prompt and target:</p>
+<pre><code>orca automations create \
+  --name &quot;Weekday triage&quot; \
+  --trigger weekdays \
+  --time 09:00 \
+  --prompt &quot;Triage new issues and summarize blockers&quot; \
+  --provider codex \
+  --repo my-repo \
+  --disabled \
+  --json</code></pre>
+<p><code>--trigger</code> accepts presets such as <code>hourly</code>, <code>daily</code>, <code>weekdays</code>, and <code>weekly</code>, plus cron expressions or RRULE strings. Use <code>--timezone &lt;tz&gt;</code> when the schedule should follow a specific IANA timezone instead of the runtime default. Multi-day rules without a preset label, such as Tuesday/Thursday/Saturday, display as their stored schedule instead of <strong>Invalid schedule</strong>.</p>
+<h2 id="cli-automations-choose-where-runs-happen">Choose where runs happen</h2>
+<p>Use <code>--repo &lt;selector&gt;</code> when each run should create or select work in a repository. Use <code>--workspace &lt;selector&gt;</code> when the automation should run inside an existing Orca worktree or folder workspace instead:</p>
+<pre><code>orca automations create \
+  --name &quot;Nightly status&quot; \
+  --trigger &quot;0 18 * * 1-5&quot; \
+  --prompt &quot;Summarize today&#x27;s changes&quot; \
+  --provider claude \
+  --workspace active \
+  --disabled</code></pre>
+<p>When you omit both target flags, Orca resolves the enclosing worktree from the current shell directory when it can.</p>
+<p>When a scheduled run happens in an existing workspace on an Orca server, Orca types the automation&#x27;s prompt into agents that read it after they start (Aider, Goose, Amp, and similar) once they are ready, instead of leaving them idle. Agents that take the prompt on the command line, such as Claude and Codex, were never affected.</p>
+<h2 id="cli-automations-precheck-before-a-run">Precheck before a run</h2>
+<p>Skip scheduled work when a cheap shell probe fails (non-zero exit records a skipped run):</p>
+<pre><code>orca automations create \
+  --name &quot;PR review&quot; \
+  --trigger hourly \
+  --precheck &quot;gh pr list --json number -q .[0].number&quot; \
+  --prompt &quot;Review requested PRs&quot; \
+  --provider codex \
+  --repo my-repo \
+  --disabled \
+  --json</code></pre>
+<h2 id="cli-automations-project-host--setup-targets">Project host / setup targets</h2>
+<p>When the automation should run on a specific project host setup rather than only <code>--repo</code> / <code>--workspace</code>:</p>
+<pre><code>orca automations create \
+  --name &quot;Remote triage&quot; \
+  --trigger daily \
+  --time 09:00 \
+  --prompt &quot;Triage open issues&quot; \
+  --provider claude \
+  --project &lt;projectId&gt; \
+  --host &lt;hostId&gt; \
+  --disabled \
+  --json</code></pre>
+<p>Use <code>--project-host-setup &lt;id&gt;</code> when you already have a setup id. Optional <code>--source-context &#x27;&lt;json&gt;&#x27;</code> pins task/provider data to a host/account (pass <code>null</code> on edit to clear).</p>
+<h2 id="cli-automations-manage-automations-across-hosts">Manage automations across hosts</h2>
+<p>The desktop <strong>Automations</strong> page loads schedules from this computer and supported connected Orca hosts into one table. The <strong>Host</strong> column shows where each automation is stored and scheduled; use <strong>Filters → Host</strong> to show one or more hosts, or return to <strong>All hosts</strong>.</p>
+<p>When you create an automation in the desktop UI, <strong>Create on</strong> chooses its host before you choose a project. The project picker then shows projects available on that destination. Connected hosts that need a newer Orca server stay visible but disabled, with an <strong>Update server</strong> message, instead of disappearing from the picker.</p>
+<h2 id="cli-automations-missed-run-grace">Missed-run grace</h2>
+<pre><code>orca automations edit &lt;automationId&gt; --missed-run-grace-minutes 30 --json</code></pre>
+<h2 id="cli-automations-reuse-an-existing-automation-session">Reuse an existing automation session</h2>
+<p>For automations that target an existing worktree, add <code>--reuse-session</code> when later runs should continue in the previous live automation terminal instead of starting from a blank terminal each time:</p>
+<pre><code>orca automations create \
+  --name &quot;Inbox digest&quot; \
+  --trigger hourly \
+  --prompt &quot;Summarize unread mail&quot; \
+  --provider codex \
+  --workspace active \
+  --reuse-session \
+  --disabled</code></pre>
+<p>Use <code>orca automations edit &lt;automationId&gt; --fresh-session --json</code> to switch the automation back to a fresh terminal per run.</p>
+<h2 id="cli-automations-per-run-model-and-effort">Per-run model and effort</h2>
+<p>Each automation can pass extra agent arguments on every run, so one automation can use a different model or effort without changing the host&#x27;s defaults for the others:</p>
+<pre><code>orca automations create \
+  --name &quot;Docs tidy&quot; \
+  --trigger daily \
+  --prompt &quot;Tidy the docs&quot; \
+  --provider claude \
+  --extra-agent-args=&quot;--model opus --add-dir docs&quot; \
+  --disabled</code></pre>
+<p>In the desktop automation editor, the same field is <strong>Advanced → Extra agent arguments</strong>. On each fresh run, Orca starts from the host&#x27;s default <strong>Arguments</strong> for that agent and appends the extras; a model or effort option in the extras replaces the default&#x27;s. Pass the value with <code>=</code> because it begins with <code>--</code>.</p>
+<p>Extras accept only model and effort options, plus Claude&#x27;s <code>--add-dir</code>, for Claude, Codex, CodeBuddy, Cursor, Grok, and OMP. Permission, config, prompt, and session options are rejected. They require a fresh session for every run, so they can&#x27;t be combined with <code>--reuse-session</code>; clear them with <code>orca automations edit &lt;automationId&gt; --extra-agent-args=</code>.</p>
+<h2 id="cli-automations-review-and-enable">Review and enable</h2>
+<p>List and inspect automations before enabling them:</p>
+<pre><code>orca automations list --json
+orca automations show &lt;automationId&gt; --json
+orca automations edit &lt;automationId&gt; --enabled --json</code></pre>
+<p>In the desktop automations list, use the search field to filter by <strong>name</strong>, <strong>project</strong>, or <strong>prompt</strong> text when you have many schedules. External automations that live on an SSH host still appear as jobs you can manage (including delete) when that host is disconnected — you do not need an active SSH session just to remove a schedule.</p>
+<p>Use <strong>Filters</strong> to narrow the list by <strong>Host</strong>, <strong>Enabled</strong> or <strong>Paused</strong> state, last-run outcome (<strong>Failed</strong>, <strong>Succeeded</strong>, or <strong>Never ran</strong>), or one or more <strong>Agents</strong>. Search inside the agent submenu when the list is long; active filters appear as removable pills above the table. The table shows the host, last-run result, and relative time for each automation. Click the <strong>Name</strong> or <strong>Last run</strong> column to sort; name sorts alphabetically, while last run defaults to newest first.</p>
+<p>When the automation list is open, type in the search field and press <strong>ArrowUp</strong> or <strong>ArrowDown</strong> to move the selection through the visible matching rows. The list keeps the selected row in view; modified or composing input keeps its normal cursor behavior.</p>
+<p>Keyboard navigation also works across the automation details: press <strong>Enter</strong> to open the selected automation or run, <strong>ArrowUp</strong> / <strong>ArrowDown</strong> to move through run history, <strong>ArrowLeft</strong> / <strong>ArrowRight</strong> to switch between Overview and Runs, and <strong>Escape</strong> to return from the detail view to the list. On an individual run page, use the older and newer run arrows or <strong>J</strong> / <strong>K</strong> to move between runs.</p>
+<p>Use <code>edit</code> to change the name, prompt, provider, target, schedule, or enabled state. <code>remove</code> deletes an automation and its run history.</p>
+<h2 id="cli-automations-run-on-demand">Run on demand</h2>
+<p>After creating an automation, trigger it manually to check the prompt and target before waiting for the next scheduled time:</p>
+<pre><code>orca automations run &lt;automationId&gt; --json
+orca automations runs --id &lt;automationId&gt; --json</code></pre>
+<p>If a run fails before it opens a workspace or reconnects to its target, open that run in Orca and click <strong>Rerun</strong> to queue a fresh manual run for the same automation.</p>
+<h2 id="cli-automations-next-steps">Next steps</h2>
+<ul>
+<li><a href="#cli-overview">Orca CLI overview</a> — see the rest of the CLI surface for worktrees, terminals, and browser control.</li>
+<li><a href="#cli-skills">Skills registry &amp; MCP</a> — install the Orca CLI skill so agents can call the same commands.</li>
+</ul>

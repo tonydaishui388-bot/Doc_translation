@@ -1,0 +1,28 @@
+<h1>Diff viewer</h1>
+<p>Orca&#x27;s diff viewer is designed for serious review of AI-generated code — not a quick glance. Every worktree has a built-in diff against its start-from ref.</p>
+<h2 id="review-diff-viewer-features">Features</h2>
+<ul>
+<li><strong>Combined diff</strong> across all staged, unstaged, and untracked files.</li>
+<li><strong>Line numbers</strong> for both sides, toggleable.</li>
+<li><strong>Image diffs</strong> — side-by-side, swipe, and onion-skin modes for binary images.</li>
+<li><strong>HTML preview</strong> — in <strong>View all</strong> / combined diffs, HTML sections that still exist in the working tree show <strong>Open Preview to the Side</strong> (eye) next to the always-visible open-file control. Preview opens the working-tree HTML in a side browser split. Deleted HTML and commit-only combined surfaces skip the eye.</li>
+<li><strong>Merge-conflict UI</strong> with three-way view and inline resolution.</li>
+<li><strong>Staging by hunk or line</strong> — same as <code>git add -p</code> but visual.</li>
+<li><strong>Show Whitespace</strong> — reveal spaces, tabs, and other whitespace characters when reviewing a diff. Toggle it from the diff viewer actions menu.</li>
+<li><strong>Collapse unchanged regions</strong> — optionally fold long runs of context in a file diff so the changed lines stay in view. Turn it on from the diff editor actions menu; it is off by default.</li>
+</ul>
+<h2 id="review-diff-viewer-scoping">Scoping</h2>
+<p>The diff shows changes against the worktree&#x27;s start-from ref by default. You can switch to comparing against any commit, branch, or the base ref from the diff toolbar.</p>
+<h2 id="review-diff-viewer-word-wrap">Word wrap</h2>
+<p>Long lines wrap in place when diff word wrap is on, so wide diffs read top-to-bottom without horizontal scrolling. It&#x27;s off by default. Toggle <strong>Word Wrap</strong> from the <strong>⋯</strong> actions menu in the diff editor header, or set the global default under <strong>Settings → General → Diff Word Wrap</strong>. Both controls share the same setting — toggling from the editor flips it everywhere.</p>
+<p>Collapsed unchanged regions and word wrap apply to file diffs; combined diffs keep their own file-tree and hunk controls.</p>
+<h2 id="review-diff-viewer-file-tree">File tree</h2>
+<p>Combined diffs can show a collapsible file tree beside the hunks. Drag the tree&#x27;s resize handle (or use arrow keys on the handle; Shift multiplies the step) to set width — the size is remembered across sessions. Collapse or show the tree from the combined-diff toolbar.</p>
+<h2 id="review-diff-viewer-keyboard-shortcuts">Keyboard shortcuts</h2>
+<ul>
+<li><code>j</code> / <code>k</code> — next / previous changed file.</li>
+<li><code>n</code> / <code>p</code> — next / previous hunk.</li>
+<li><code>F7</code> / <code>Shift+F7</code> — next / previous change in the active editor.</li>
+<li><code>s</code> — stage the hunk under the cursor.</li>
+<li><code>c</code> — start a comment (<a href="#review-annotate-ai-diff">Annotate AI Diff</a>).</li>
+</ul>

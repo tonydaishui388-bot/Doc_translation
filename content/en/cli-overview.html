@@ -1,0 +1,63 @@
+<h1>Orca CLI overview</h1>
+<p>Use the Orca CLI to script Orca from a terminal, manage worktrees, control agent terminals, automate the built-in browser, and install agent skills.</p>
+<p>The Orca CLI is the <code>orca</code> command-line interface for scripting a running Orca editor from any shell. Use it to create and inspect worktrees, drive agent terminals, open files and diffs, automate the built-in browser, run scheduled automations, share HTML/Markdown artifacts, and control Orca-native tools from scripts or AI agents.</p>
+<p>It ships with the desktop app; register it under <a href="#settings">Settings → General → Orca CLI</a>. Orca keeps its own <code>orca</code> command first on a terminal&#x27;s <code>PATH</code> even when a shell startup file adds an older global install, so scripts and agents call the CLI that matches the running app.</p>
+<p>Agents can install the matching Orca CLI skill with:</p>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill orca-cli
+# headless / no Settings UI:
+orca skills install --skill orca-cli</code></pre>
+<p>See <a href="#cli-skills">Skills registry &amp; MCP</a> for every installable Orca skill, including <code>orca skills install</code> / <code>orca skills update</code>.</p>
+<figure><img src="https://orca.dev/whats-new/posters/orca-cli-demo.jpg" alt="Orca CLI — drive worktrees, terminals, and the built-in browser from any shell" loading="lazy" decoding="async"><figcaption>Orca CLI — drive worktrees, terminals, and the built-in browser from any shell</figcaption></figure>
+<h2 id="cli-overview-install--verify">Install &amp; verify</h2>
+<pre><code>command -v orca
+orca status --json</code></pre>
+<h2 id="cli-overview-worktree-commands">Worktree commands</h2>
+<pre><code>orca worktree ps --json
+orca worktree create --repo id:&lt;repoId&gt; --name my-task --issue 123 --json
+orca worktree create --repo id:&lt;repoId&gt; --name review-pr-123 --pr 123 --json
+orca worktree current --json
+orca worktree set --worktree active --comment &quot;reproduced bug&quot; --json
+orca worktree set --worktree active --gitlab-issue 42 --gitlab-mr 77 --json
+orca worktree rm --worktree id:&lt;id&gt; --force --json</code></pre>
+<p>For selectors, setup flags, parent/child worktrees, and the broader command map, see <a href="#cli-reference">Orca CLI reference</a>.</p>
+<h2 id="cli-overview-terminal-commands">Terminal commands</h2>
+<pre><code>orca terminal list --json
+orca terminal read --json
+orca terminal send --text &quot;continue&quot; --enter --json
+orca terminal wait --for tui-idle --timeout-ms 30000 --json
+orca terminal create --worktree path:/projects/app --command &quot;npm test&quot; --json
+orca terminal split --direction vertical --command &quot;npm run dev&quot; --json</code></pre>
+<p>For tracked multi-agent work, use <a href="#cli-orchestration">Orchestration</a> instead of plain terminal prompts.</p>
+<h2 id="cli-overview-file-commands">File commands</h2>
+<p>Open files and diffs in the active Orca worktree from a shell:</p>
+<pre><code>orca file open src/App.tsx
+orca file diff src/App.tsx --staged
+orca file open-changed --mode both</code></pre>
+<p>Use <code>--worktree &lt;selector&gt;</code> when the shell&#x27;s current directory is not inside the target worktree.</p>
+<h2 id="cli-overview-browser-profiles">Browser profiles</h2>
+<p>Browser profiles isolate tab session state, so a script or agent can test with different cookies, local storage, and logged-in identities. The CLI exposes profile commands under <code>orca tab profile</code>; start with <code>orca tab profile list --json</code>, then use <code>create</code>, <code>set</code>, <code>clone</code>, or <code>use-default</code> as needed.</p>
+<h2 id="cli-overview-scheduled-automations">Scheduled automations</h2>
+<p>Use <code>orca automations</code> to create, inspect, run, and remove scheduled Orca tasks from a shell. Start with <a href="#cli-automations">Scheduled automations</a> when you want a recurring prompt to run against a repo or an existing worktree.</p>
+<h2 id="cli-overview-artifacts">Artifacts</h2>
+<p>Share HTML or Markdown as public view links through the signed-in Orca account (<code>orca artifacts share|update|list|delete</code>). Publishing is <strong>opt-in</strong> under Settings → Artifacts. Command details: <a href="#cli-reference-artifacts">CLI reference → Artifacts</a>.</p>
+<h2 id="cli-overview-browser-automation">Browser automation</h2>
+<p>The CLI also drives the built-in browser with a snapshot-interact-re-snapshot loop:</p>
+<pre><code>orca goto --url https://example.com --json
+orca snapshot --json     # returns refs like @e1, @e3
+orca click --element @e3 --json
+orca fill --element @e1 --value &quot;[email protected]&quot; --json
+orca screenshot --json</code></pre>
+<p>For responsive browser checks, switch the active tab to a named device profile:</p>
+<pre><code>orca set device --name &quot;iPhone 12&quot; --json
+orca screenshot --json</code></pre>
+<h2 id="cli-overview-mobile-emulator">Mobile emulator</h2>
+<p>The CLI can also drive an iOS Simulator through Orca&#x27;s mobile emulator bridge. It is scoped to the active worktree, so agents and scripts can attach a simulator from <code>orca emulator list</code>, tap normalized coordinates, type text, send gestures, rotate the device, and shut it down without leaving Orca.</p>
+<pre><code>orca emulator list --json
+orca emulator attach &quot;&lt;device-name-or-udid&gt;&quot; --json
+orca emulator tap 0.5 0.7 --json
+orca emulator type &quot;hello&quot; --json
+orca emulator gesture &#x27;[{&quot;type&quot;:&quot;begin&quot;,&quot;x&quot;:0.5,&quot;y&quot;:0.8},{&quot;type&quot;:&quot;move&quot;,&quot;x&quot;:0.5,&quot;y&quot;:0.4},{&quot;type&quot;:&quot;end&quot;,&quot;x&quot;:0.5,&quot;y&quot;:0.2}]&#x27; --json
+orca emulator rotate landscape_left --json
+orca emulator kill --json</code></pre>
+<p>Use <code>--worktree &lt;selector&gt;</code>, <code>--device &lt;udid-or-name&gt;</code>, or <code>--emulator &lt;id&gt;</code> when a script needs an explicit target.</p>
+<aside><p>For the full command surface including tabs, waits, cookies, and frames, see <a href="#cli-reference">Orca CLI reference</a>, then install the Orca CLI skill (see <a href="#cli-skills">Skills registry</a>) and point your agent at it.</p></aside>

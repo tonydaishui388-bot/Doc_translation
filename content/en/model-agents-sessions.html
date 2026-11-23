@@ -1,0 +1,58 @@
+<h1>Agents &amp; sessions</h1>
+<p>State dots, restart chips, and the lifecycle of an agent session.</p>
+<p>An <strong>agent session</strong> is one CLI agent running in one terminal in one worktree. Orca tracks its lifecycle so you always know which sessions are working and which are idle — without you having to click into each tab to check.</p>
+<figure><img src="https://orca.dev/whats-new/posters/agent-statuses.jpg" alt="Inline agent status on every worktree card — yellow while working, green when done" loading="lazy" decoding="async"><figcaption>Inline agent status on every worktree card — yellow while working, green when done</figcaption></figure>
+<h2 id="model-agents-sessions-state-indicators">State indicators</h2>
+<p>Agent tabs and worktree rows use shared status glyphs:</p>
+<ul>
+<li><strong>Spinner</strong> — working</li>
+<li><strong>Amber question mark</strong> — waiting on you (permission / needs input); sidebar “Needs You” counts use the same glyph</li>
+<li><strong>Emerald check</strong> (dashboard) or <strong>emerald dot</strong> (sidebar) — done / quiet active</li>
+<li><strong>Red dot</strong> — blocked, interrupted, or failed</li>
+<li><strong>Gray dot</strong> — idle</li>
+<li><strong>No indicator</strong> — plain shell, not a recognized agent CLI</li>
+</ul>
+<p>State is detected from the terminal&#x27;s OSC title sequence and agent hooks, which Claude Code, Codex, and several other agents emit.</p>
+<h2 id="model-agents-sessions-agent-dashboard">Agent dashboard</h2>
+<p>Turn on <strong>Settings → Experimental → Agent Dashboard</strong>. Orca adds an <strong>Agent Dashboard</strong> entry in the left sidebar: a kanban of agents across worktrees.</p>
+<p>You can assign a keyboard shortcut to <strong>Toggle Agent Dashboard</strong> under <a href="#settings-shortcuts">Settings → Shortcuts</a>. It has no default binding, and works while a terminal, editor, or browser tab has focus.</p>
+<h3 id="model-agents-sessions-columns">Columns</h3>
+<ul>
+<li><strong>Needs You</strong> — waiting on a permission or question</li>
+<li><strong>Working</strong> — actively running</li>
+<li><strong>Done</strong> — finished sessions you may still want to review</li>
+<li><strong>Idle</strong> — quiet agents that have not reported completion for about 30 minutes. <strong>Hidden by default</strong> on the board; enable <strong>Show idle agents</strong> from the dashboard <strong>board settings</strong> control (gear) on the in-window or pop-out surface — not from global Experimental settings. In-window and pop-out stay in sync.</li>
+</ul>
+<p>Dashboard cards show a host badge for SSH workspaces and paired <a href="#remote-servers">Remote Orca Servers</a>. Hover or focus the badge to see the saved host name, such as <strong>SSH host · openclaw</strong> or <strong>Remote Orca host · Build Mac</strong>. Local workspaces do not show a host badge.</p>
+<h3 id="model-agents-sessions-open-as">Open as</h3>
+<p><strong>In-window</strong> board beside the sidebar, or <strong>Pop-out</strong> in a separate window.</p>
+<h3 id="model-agents-sessions-search-and-filters">Search and filters</h3>
+<p>The board toolbar includes:</p>
+<ul>
+<li><strong>Search</strong> — worktree, project, or agent name (result count shows when a query or filter is active)</li>
+<li><strong>Filter</strong> — multi-select <strong>Project</strong>, <strong>Workspace status</strong>, and <strong>PR / MR status</strong> (Open, Draft, Merged, Closed, No review)</li>
+<li>Removable filter chips and <strong>Clear all filters</strong></li>
+</ul>
+<h3 id="model-agents-sessions-cards">Cards</h3>
+<ul>
+<li><strong>Header</strong> — agent icon, session <strong>conversation name</strong> (rename, generated title, AI Vault / agent session title, or fallback to the worktree name), state glyph</li>
+<li><strong>Preview</strong> — last user / agent message when available; otherwise the task summary</li>
+<li><strong>Footer</strong> — project icon, worktree name (when the header already shows a session name), and age; cached review state when present. Workspace status stays in the toolbar filter only — cards no longer show a per-worktree status dot.</li>
+<li><strong>Needs You</strong> cards tint amber (and can show the pending question summary); <strong>Done</strong> cards tint green; other states stay neutral so tint means “look here”</li>
+<li>Click a card to open/focus that agent’s live terminal — including agents on a paired <a href="#remote-servers">Remote Orca Server</a>, whose preview comes from the host that runs them</li>
+<li>Nested Codex/Claude subagents can appear as expandable children under the parent row</li>
+</ul>
+<p>Worktree cards still inline agent rows with the same glyphs when the experimental board is off. If you don&#x27;t see status indicators, the agent CLI in that session isn&#x27;t one Orca recognizes — start it through the agent combobox rather than typing the binary by hand.</p>
+<h2 id="model-agents-sessions-launch-defaults">Launch defaults</h2>
+<p>Orca launches every supported agent with its full-autonomy permission flag pre-applied — Claude with <code>--dangerously-skip-permissions</code>, Codex with <code>--dangerously-bypass-approvals-and-sandbox</code>, Gemini with <code>--yolo</code>, and the equivalent for each other agent in the picker. The intent is that the worktree itself is the sandbox: agents can do their thing without per-tool approval prompts breaking the flow.</p>
+<p>If you want different defaults for an agent, open <strong>Settings → Agents</strong>, expand the agent&#x27;s row, and edit its <strong>launch arguments</strong> — Orca remembers the override and applies it on every subsequent launch. A <strong>Reset</strong> button next to the field puts the shipped flag back if you want to revert.</p>
+<h2 id="model-agents-sessions-restart-chip">Restart chip</h2>
+<p>When an agent exits (clean or crash), the tab shows a <strong>Restart</strong> chip. One click rehydrates the same agent with the same working directory. Codex&#x27;s restart chip also preserves the current account (see <a href="#agents-codex-hot-swap">Hot-swap Codex accounts</a>).</p>
+<h2 id="model-agents-sessions-session-lifecycle">Session lifecycle</h2>
+<ol>
+<li><strong>Launch</strong> — pick an agent from the combobox; Orca spawns the CLI.</li>
+<li><strong>Work</strong> — OSC titles update state; terminal output scrolls with search, copy, and Ghostty theming.</li>
+<li><strong>Idle</strong> — Orca detects the working→idle transition and fires an <a href="#notifications">agent-finished notification</a>.</li>
+<li><strong>Exit</strong> — the process ends; the Restart chip appears.</li>
+</ol>
+<aside><p>For the exact detection rules, see the <code>terminal wait --for tui-idle</code> command in the <a href="#cli-overview">Orca CLI</a>.</p></aside>

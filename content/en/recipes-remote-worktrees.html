@@ -1,0 +1,17 @@
+<h1>Work on a remote machine over SSH</h1>
+<p>Point Orca at any SSH target — a beefier dev box, a GPU host, a cloud sandbox — and it feels like a local worktree. Same editor, same diff view, same agents, different compute. You can open remote repos <em>or</em> just arbitrary folders. For the full menu of local / SSH / server / ephemeral-VM modes, see <a href="#ways-to-run">Ways to run Orca</a>.</p>
+<h2 id="recipes-remote-worktrees-setup">Setup</h2>
+<ol>
+<li>Add the host under <a href="#settings">Settings → SSH</a>.</li>
+<li>Test the connection. Make sure git is installed on the host if you&#x27;re working with a repo.</li>
+<li>Add the repo to Orca, selecting the SSH target as its location — or open any remote folder directly from the file picker.</li>
+</ol>
+<h2 id="recipes-remote-worktrees-run">Run</h2>
+<ol>
+<li>Create a worktree. Orca runs <code>git worktree add</code> on the remote.</li>
+<li>Launch an agent — it runs on the remote host, not your laptop.</li>
+<li>Edit files inline — Orca streams saves to the remote filesystem.</li>
+<li>Review the diff, commit, and push from your laptop as usual.</li>
+</ol>
+<h2 id="recipes-remote-worktrees-disconnects">Disconnects</h2>
+<p>Laptop sleeps, Wi-Fi drops — the agent keeps running remotely. Orca reconnects and re-attaches the terminal. Nothing lost.</p>

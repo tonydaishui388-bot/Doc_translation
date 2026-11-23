@@ -1,0 +1,55 @@
+<h1>Per-worktree browser</h1>
+<p>Every Orca worktree has its own browser. It&#x27;s a real Chromium window — address bar, history, devtools — embedded in a pane. Tabs are scoped to the worktree, so the app you&#x27;re building against stays out of the way of your other work.</p>
+<figure><img src="https://orca.dev/whats-new/posters/orca-design-mode.jpg" alt="Per-worktree browser pane with address bar and tab strip" loading="lazy" decoding="async"><figcaption>Per-worktree browser pane with address bar and tab strip</figcaption></figure>
+<h2 id="browser-overview-controls">Controls</h2>
+<ul>
+<li>Address bar with history and fuzzy URL completion. Non-URL text searches with your <a href="#settings">Default Search Engine</a> — the same engine the <a href="#model-quick-open">new-tab omnibox</a> uses. Prefix a query with <code>?</code> in the <strong>+</strong> field to force search. Double-click a word to select it, like other browsers.</li>
+<li>Back / forward / reload / stop. Hover the reload control for the normal-reload shortcut; right-click (or long-press) for <strong>Reload</strong> and <strong>Hard Reload</strong> with their shortcuts — hard reload bypasses the cache when you&#x27;re iterating on local frontend assets.</li>
+<li><code>Cmd-F</code> — find in page.</li>
+<li>Open <strong>⋯ → Open browser devtools</strong> to inspect the current page. You can dock the tools to a side of the pane, resize them, or pop them out when you need more room for the page.</li>
+<li>A tab that is playing sound shows a speaker indicator; select it to mute or unmute that tab. When you hover or focus a link, Orca shows its destination at the bottom of the page.</li>
+<li>Use <strong>Annotate</strong> and its arrow menu to annotate or grab a page element or draw on a screenshot. The <strong>⋯</strong> menu contains browser actions, including zoom, viewport size, profiles, and extensions. Non-default zoom and viewport sizes appear in the address field; select a chip to reset it. See <a href="#browser-design-mode">Design Mode</a>.</li>
+<li><code>Cmd-T</code> — new tab, scoped to this worktree. On macOS, <code>Cmd-Option-B</code> opens a browser tab in a split to the right; you can change this shortcut in Settings → Keyboard.</li>
+<li><code>Cmd-Shift-T</code> — reopen last closed tab.</li>
+<li>Links and <code>window.open</code> follow Chrome&#x27;s routing: a page link or script-opened tab that would open a new tab in Chrome opens a new Orca tab, using the opener tab&#x27;s browser profile. Named or OAuth-style popups can still open in a separate window.</li>
+<li>New tabs load in the background even when they are not active, so their URL, title, and navigation state are ready when you switch to them. Restored inactive tabs may still load lazily.</li>
+<li>HTML previews expose their document path in the address bar. Enter a web URL to convert the preview into a browser tab in place; enter a workspace HTML path in a browser tab to convert it back to a preview. <strong>Back</strong> crosses the conversion when the tab has no intervening history.</li>
+</ul>
+<p>Orca shortcuts, split focus, and mouse back/forward buttons continue to work while a page has focus. Links opened from a terminal or chat open beside the pane that supplied them. When an agent uses the browser, its cursor and activity badge appear on the page; select the browser link in chat to jump to that page.</p>
+<h2 id="browser-overview-worktree-scoping">Worktree scoping</h2>
+<p>Tabs are filtered per worktree. Switching worktrees restores that worktree&#x27;s browser tabs and scroll positions.</p>
+<figure><img src="https://orca.dev/whats-new/posters/browser-2-demo.jpg" alt="Per-worktree browser tabs with persistent sessions — one click imports cookies from Chrome or Edge. Google logins are not imported; sign in to Google directly in Orca." loading="lazy" decoding="async"><figcaption>Per-worktree browser tabs with persistent sessions — one click imports cookies from Chrome or Edge. Google logins are not imported; sign in to Google directly in Orca.</figcaption></figure>
+<h2 id="browser-overview-memory-saver">Memory Saver</h2>
+<p>Memory Saver frees eligible browser pages after four hours out of view by default. The tab stays open and reloads when you return; its title, history, cookies, and saved site data remain, but scroll position and page-only state can reset. Desktop pages with unsaved edits, or whose edits cannot be safely assessed, stay loaded. Change the idle interval or turn Memory Saver off in <strong>Settings → Browser</strong>. It also applies to eligible tabs on an updated <code>orca serve</code> host.</p>
+<h2 id="browser-overview-remote-workspaces">Remote workspaces</h2>
+<p>For a workspace on a paired <a href="#remote-servers">Remote Orca Server</a>, new browser pages render on this desktop by default while HTTP(S), WebSocket, DNS, and loopback traffic still go through the remote host. Input, selection, and popups stay native to this device without changing the page&#x27;s network identity. The host indicator in the browser toolbar shows where traffic is going.</p>
+<p>Under <a href="#settings">Settings → Browser → Remote server workspaces</a>, choose <strong>This device</strong> or <strong>Server (streamed)</strong>. The choice applies to new pages only; it does not move a page that is already open. If a locally rendered remote page cannot start, <strong>Reopen on server</strong> opens a new server-hosted page at its last address (signed-in or form state may differ).</p>
+<p>For SSH workspaces, <strong>Browse through SSH workspace hosts</strong> controls whether browser traffic and DNS go through the workspace&#x27;s SSH host or this device. Downloads from a client-hosted remote page stay on the remote workspace host, and uploads are staged there before the page receives them.</p>
+<h2 id="browser-overview-link-routing">Link routing</h2>
+<p>Under <a href="#settings">Settings → Browser → Link Routing</a>, choose whether http(s) links from the terminal, markdown, and editor open in Orca&#x27;s per-worktree browser or the system browser.</p>
+<p>A nested <strong>Hold Shift…</strong> toggle inverts that default for one click with the platform modifier (<code>⇧⌘-click</code> on macOS, <code>Shift+Ctrl+click</code> on Windows / Linux):</p>
+<ul>
+<li>When links open in <strong>Orca</strong>, the modifier sends one link to the system browser.</li>
+<li>When links open in the <strong>system browser</strong>, turn the toggle on so the modifier opens one link in Orca&#x27;s built-in browser instead (plain click stays system).</li>
+</ul>
+<p>A capability-verified paired runtime or an eligible SSH workspace can offer the same Orca/system-browser choice for its terminal links. Links from older runtimes remain system-browser only. See <a href="#terminal-link-actions">Terminal → Link actions</a>.</p>
+<h2 id="browser-overview-password-manager">Password manager</h2>
+<p>Enable the password manager in <strong>Settings → Browser</strong> to save and fill logins in Orca’s browser. After signing in, you can save the login from the password offer in the address bar; select a saved login in a sign-in field to fill it. Use <strong>Manage</strong> in browser settings to edit logins or import passwords from Chrome and other supported browsers or a CSV file.</p>
+<p>Each browser profile has its own vault, encrypted using your operating system’s secure storage. The vault is unavailable if secure storage is unavailable. It works for local and SSH workspace pages in the desktop browser; streamed paired-server pages and the web client do not have a vault. See <a href="#browser-profiles">Browser profiles</a>.</p>
+<h2 id="browser-overview-chrome-extensions">Chrome extensions</h2>
+<p>To install an extension, turn on <strong>Settings → Experimental → Browser extensions</strong> and restart Orca. Open the Chrome Web Store in an Orca browser tab and choose <strong>Add to Orca</strong>. Extensions run only in local browser profiles. Ad blockers can be installed but do not block yet, and some extensions, such as Tampermonkey, do not work.</p>
+<p>Extensions that use side panels can open a resizable panel beside the page. Select the extension&#x27;s toolbar button to open its panel. Extension popups also support Paste, Copy, and Select All.</p>
+<h2 id="browser-overview-downloads">Downloads</h2>
+<p>Browser downloads appear in a shelf under the toolbar while they are active or recently completed, with actions to cancel an in-progress download, open a finished file, show it in its folder, or dismiss the row.</p>
+<h2 id="browser-overview-share-as-artifact">Share as artifact</h2>
+<p>Local HTML files opened in the worktree browser can use <strong>Share as artifact</strong> in the address field to mint a public view link through your signed-in Orca account (same opt-in gate and management surface as Markdown). Shared content is limited to <strong>10 MiB</strong> per file. Relative HTML assets are not uploaded — share a self-contained file or use absolute asset URLs. See <a href="#settings-artifacts">Settings → Artifacts</a> and <a href="#cli-reference-artifacts">CLI reference → Artifacts</a>.</p>
+<h2 id="browser-overview-viewport-size-emulation">Viewport-size emulation</h2>
+<p>Set a custom viewport size on a browser tab to test responsive layouts without resizing the whole pane. Orca uses Chrome DevTools Protocol device emulation under the hood, so the page sees the emulated dimensions in <code>window.innerWidth</code> and media queries.</p>
+<h2 id="browser-overview-automation">Automation</h2>
+<p>The browser is also scriptable by agents via the <a href="#cli-overview">Orca CLI</a> — <code>orca snapshot</code>, <code>orca click</code>, <code>orca fill</code>, and so on. Same browser you interact with, same tabs.</p>
+<figure><img src="https://orca.dev/whats-new/posters/orca-browser-use.jpg" alt="Agent driving Orca&#x27;s built-in browser via the CLI — same tabs, same session" loading="lazy" decoding="async"><figcaption>Agent driving Orca&#x27;s built-in browser via the CLI — same tabs, same session</figcaption></figure>
+<h2 id="browser-overview-next-steps">Next steps</h2>
+<ul>
+<li><a href="#browser-design-mode">Design Mode</a> — turn the browser into a pointer-to-code feedback loop.</li>
+<li><a href="#browser-profiles">Browser-use profiles</a> — run the browser with a specific login, cookie jar, or user agent.</li>
+</ul>

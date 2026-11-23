@@ -1,0 +1,79 @@
+<h1>Orca skills registry &amp; MCP</h1>
+<p>Install Orca agent skills with npx skills add. Hybrid stubs stay thin; orca skills get serves the version-matched guide. Orca can update skills in the background.</p>
+<p>Orca ships <strong>skills</strong> that agents install into their skill directories. Public install packages are <strong>hybrid discovery stubs</strong>: short <code>SKILL.md</code> files that tell the agent <em>when</em> to engage Orca and how to load the full guide from the running CLI. Command flags live in the binary so they cannot drift from the app version.</p>
+<h2 id="cli-skills-installable-orca-skills">Installable Orca skills</h2>
+<p>Use <code>npx skills add</code> with the public Orca repo and the skill name. Default agent setup usually installs <code>orca-cli</code>, <code>computer-use</code>, and <code>orchestration</code>.</p>
+<table><thead><tr><th>Skill</th><th>Install</th><th>Use it for</th></tr></thead><tbody><tr><td><a href="#cli-skills-orca-cli"><code>orca-cli</code></a></td><td><code>npx skills add https://github.com/stablyai/orca --skill orca-cli --global</code></td><td>Worktrees, terminals, files, automations, embedded browser.</td></tr><tr><td><a href="#cli-skills-orchestration"><code>orchestration</code></a></td><td><code>npx skills add https://github.com/stablyai/orca --skill orchestration --global</code></td><td>Multi-agent Runs, tasks, supervised workers, messages, gates.</td></tr><tr><td><a href="#cli-skills-computer-use"><code>computer-use</code></a></td><td><code>npx skills add https://github.com/stablyai/orca --skill computer-use --global</code></td><td>Desktop apps via accessibility trees and safe UI actions.</td></tr><tr><td><a href="#cli-skills-orca-linear"><code>orca-linear</code></a></td><td><code>npx skills add https://github.com/stablyai/orca --skill orca-linear --global</code></td><td>Linear ticket read/write through <code>orca linear</code>.</td></tr><tr><td><a href="#cli-skills-orca-emulator"><code>orca-emulator</code></a></td><td><code>npx skills add https://github.com/stablyai/orca --skill orca-emulator --global</code></td><td>iOS Simulator control.</td></tr><tr><td><a href="#cli-skills-orca-emulator-android"><code>orca-emulator-android</code></a></td><td><code>npx skills add https://github.com/stablyai/orca --skill orca-emulator-android --global</code></td><td>Android emulator/device via adb.</td></tr><tr><td><a href="#cli-skills-orca-per-workspace-env"><code>orca-per-workspace-env</code></a></td><td><code>npx skills add https://github.com/stablyai/orca --skill orca-per-workspace-env --global</code></td><td>Per-workspace environment recipes (<code>orca.yaml</code>).</td></tr></tbody></table>
+<h2 id="cli-skills-hybrid-stubs-vs-the-live-guide">Hybrid stubs vs the live guide</h2>
+<p>After <code>npx skills add</code>, agents see a short stub that says:</p>
+<ol>
+<li>Resolve the CLI executable for this session (<code>ORCA_CLI_COMMAND</code>, <code>orca-dev</code>, Linux <code>orca-ide</code>, else <code>orca</code>).</li>
+<li>Load the full guide: <code>orca skills get &lt;topic&gt;</code> (or <code>--full</code> for the long guide).</li>
+<li>Prefer <code>--json</code> and do not invent flags from memory.</li>
+</ol>
+<pre><code>orca skills list
+orca skills get orca-cli
+orca skills get orchestration --full
+orca skills get orca-linear --json</code></pre>
+<p>Add <code>--json</code> when an agent needs deterministic output for automation. <code>skills show</code> is an alias for <code>skills get</code>.</p>
+<h2 id="cli-skills-keep-skills-up-to-date">Keep skills up to date</h2>
+<p>When Orca ships a newer skill package than the one installed globally, the app can:</p>
+<ul>
+<li>Show an <strong>update available</strong> nudge (and <strong>Needs attention</strong> when a copy is out of date somewhere the updater cannot safely rewrite).</li>
+<li>Open <strong>Update skills</strong> — list of placements and skip reasons, then run <strong><code>npx --yes skills update &lt;names&gt; --global -y</code></strong> headlessly (no embedded terminal).</li>
+<li>Keep the run in the <strong>background</strong>: closing the dialog does not cancel it. A status-bar segment shows progress (spinner while running, brief success check, persistent failure until you act). Click the segment to reopen the dialog.</li>
+<li>Surface freshness on <strong>Settings → Agents</strong> for installed skills (global install rail), including <strong>Details</strong> when a row needs review.</li>
+</ul>
+<p>Manual equivalent (desktop Settings still shows the same <code>npx</code> form):</p>
+<pre><code>npx skills update orca-cli orchestration computer-use --global</code></pre>
+<p>On headless hosts (SSH, containers, CI, <code>orca serve</code>) with no Settings UI, use the local CLI wrappers — they resolve the same <code>npx</code> commands, add non-interactive flags, and do <strong>not</strong> need a running Orca runtime:</p>
+<pre><code>orca skills install                                      # list installable names
+orca skills install --skill orca-cli --skill orchestration
+orca skills install --skill orca-cli --agent claude-code,codex
+orca skills install --all --dry-run
+orca skills update --all
+orca skills update --skill orca-cli --dry-run</code></pre>
+<ul>
+<li>Default scope is <strong>global</strong> (<code>--global</code>); pass <code>--local</code> for the current project only.</li>
+<li><code>install</code> targets agents Orca detects on the host (plus the shared <code>.agents/skills</code> directory). Use <code>--agent &lt;name&gt;[,&lt;name&gt;…]</code> or <code>--agent universal</code> to override; if no agent is detected, <code>--agent</code> is required.</li>
+<li><code>update</code> only refreshes skills that are already installed.</li>
+<li><code>--dry-run</code> prints the resolved command; <code>--json</code> is only valid with listing / <code>--dry-run</code>.</li>
+</ul>
+<p>Prefer the in-app updater when Orca offers it so the same global placements the app scanned get rewritten. Rows marked <strong>Skipped</strong> explain why that skill cannot be updated automatically (for example missing source registration) — fix the placement, then re-check.</p>
+<h2 id="cli-skills-install-and-delete-from-the-skills-page">Install and delete from the Skills page</h2>
+<p>When an in-app install asks for a workspace target, search the picker by workspace name or by kind (<strong>worktree</strong> / <strong>folder</strong>). The agent picker separates directories Orca always includes from additional agent directories you can select, so you can review the exact installation targets before continuing.</p>
+<p>To remove a scanned skill, open its actions menu and choose <strong>Delete…</strong>. For several skills, open the page&#x27;s <strong>More actions</strong> menu, choose <strong>Delete skills…</strong>, and select the eligible results. Orca explains why a copy cannot be deleted—for example because it is bundled, plugin-managed, read-only, or outside a removable skill folder—before you confirm. This is separate from <strong>Manage installs</strong>, which manages copies installed from shared links.</p>
+<h2 id="cli-skills-share-private-skills-between-hosts">Share private skills between hosts</h2>
+<p>Open <strong>Skills → Share skills</strong> to publish one skill or a bundle behind one unlisted, revocable link. Publishing requires your Orca account. Review the included files, scripts, executables, digest, and optional release notes before you publish; each published version is immutable, so later local edits do not silently change what recipients install.</p>
+<p>Anyone with an active link can inspect and install the shared skills without signing in, so treat the link like a credential. A recipient reviews the exact version, chooses all or a subset of its skills, then selects global or workspace scope on this computer, a paired Orca runtime, WSL, or an SSH host. Existing modified skills default to <strong>Keep local</strong>. Use <strong>Skills → Manage installs</strong> to update, roll back, or remove copies Orca installed, and <strong>Settings → Share Skills</strong> to copy or revoke your active links. Revoking a link blocks future access but does not remove copies already installed.</p>
+<p>Agents can publish an explicitly named set from the CLI after you enable the separate, default-off <strong>Settings → Share Skills → Allow agents and the Orca CLI to publish skill links</strong> permission:</p>
+<pre><code>orca skills installed --json
+orca skills share --skill frontend --skill testing --bundle-name &quot;Team Toolkit&quot; --json</code></pre>
+<p><code>skills installed</code> returns safe selectors without exposing local paths. <code>skills share</code> accepts exact discovery IDs or unambiguous names; it does not accept arbitrary paths or <code>--all</code>.</p>
+<h2 id="cli-skills-orca-cli">orca-cli</h2>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill orca-cli --global</code></pre>
+<p>After install, load the version-matched command guide with <code>orca skills get orca-cli</code>. See <a href="#cli-overview">Orca CLI</a>.</p>
+<h2 id="cli-skills-orchestration">orchestration</h2>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill orchestration --global</code></pre>
+<p>Use this when an agent should coordinate other agents through Runs, tasks, supervised workers, and decision gates. See <a href="#cli-orchestration">Orchestration</a>. Always load <code>orca skills get orchestration --full</code> before mutating orchestration state — the legacy <code>orchestration run</code> command is retired.</p>
+<h2 id="cli-skills-computer-use">computer-use</h2>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill computer-use --global</code></pre>
+<p>Use this when an agent needs to inspect and operate local desktop app windows. See <a href="#cli-computer-use">Computer use</a>.</p>
+<h2 id="cli-skills-orca-linear">orca-linear</h2>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill orca-linear --global</code></pre>
+<p>Agents should load <code>orca skills get orca-linear</code> before mutating tickets. Covers <code>issue --full</code>, <code>save-issue</code>, <code>list-issues</code>, relations, completion attach+comment flow, and untrusted-ticket rules. Existing <code>linear-tickets</code> installs still resolve. See <a href="#cli-reference-linear">CLI reference → Linear</a>.</p>
+<h2 id="cli-skills-orca-emulator">orca-emulator</h2>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill orca-emulator --global</code></pre>
+<p>Use this when an agent should control an iOS Simulator from inside Orca through <code>orca emulator</code> commands.</p>
+<h2 id="cli-skills-orca-emulator-android">orca-emulator-android</h2>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill orca-emulator-android --global</code></pre>
+<p>Use for adb-connected Android AVDs/devices: list/boot, tap/swipe/type, hardware buttons, install/launch, permissions, accessibility tree, logcat. Load details with <code>orca skills get orca-emulator-android</code>.</p>
+<h2 id="cli-skills-orca-per-workspace-env">orca-per-workspace-env</h2>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill orca-per-workspace-env --global</code></pre>
+<p>Use when setting up or debugging per-workspace environment recipes in <code>orca.yaml</code>. See <a href="#ways-to-run-4-cloud-vms-per-workspace-environments">Ways to run Orca</a>.</p>
+<h2 id="cli-skills-discovery-sources">Discovery sources</h2>
+<p>Orca&#x27;s skill UI scans installed skill homes for Claude, Codex, Agent Skills, and <strong>OMP</strong> (<code>~/.omp/agent/skills</code>), so skills placed there show up without a manual symlink.</p>
+<h2 id="cli-skills-add-your-own-skills">Add your own skills</h2>
+<p>Any repo with a <code>skills/&lt;name&gt;/SKILL.md</code> file can be installed via <code>npx skills add</code>. Point your agent at internal repos to give it company-specific powers.</p>
+<h2 id="cli-skills-mcp-servers">MCP servers</h2>
+<p>Model Context Protocol (MCP) servers expose external tools to compatible agents. Register MCP endpoints under <a href="#settings">Settings → Integrations → MCP</a>; those tools appear inside agent CLIs that support MCP.</p>

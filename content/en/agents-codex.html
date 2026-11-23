@@ -1,0 +1,35 @@
+<h1>Codex in Orca</h1>
+<p>Codex is OpenAI&#x27;s agentic CLI. Orca&#x27;s Codex integration is one of the deepest in the app — usage, hot-swap, and restart all preserve account identity.</p>
+<h2 id="agents-codex-setup">Setup</h2>
+<ol>
+<li>Install Codex per OpenAI&#x27;s docs.</li>
+<li>Log in from any terminal.</li>
+<li>Orca reads <code>~/.codex</code> for accounts and credentials.</li>
+</ol>
+<h2 id="agents-codex-launching">Launching</h2>
+<p>Pick <strong>Codex</strong> from the agent combobox. Orca launches <code>codex</code> with the worktree as <code>cwd</code> and routes auth through the currently selected account.</p>
+<h2 id="agents-codex-account-hot-swap">Account hot-swap</h2>
+<p>Many Codex users run multiple accounts to stretch rate limits. Orca&#x27;s account switcher swaps the active account without re-login or config edits. See <a href="#agents-codex-hot-swap">Hot-swap Codex accounts</a>.</p>
+<h2 id="agents-codex-system-default-vs-extra-accounts">System default vs extra accounts</h2>
+<p><strong>System default</strong> uses your real <code>~/.codex</code> login (the same home a bare <code>codex</code> outside Orca would use). Extra accounts Orca manages get their own home under Orca&#x27;s account data so credentials and rollouts stay isolated. New Codex launches follow the active account; already-running sessions keep the home they started with until you restart them.</p>
+<h2 id="agents-codex-codex-0157-and-later">Codex 0.157 and later</h2>
+<p>If an Orca-managed account home is too long for Codex&#x27;s background daemon socket, Orca turns off that daemon for the home so Codex can start. This applies whether you launch Codex from the agent picker or type <code>codex</code> in an Orca terminal. Orca keeps the account data in place and does not change your system <code>~/.codex/config.toml</code>.</p>
+<p>In affected homes, <code>codex agents</code> and daemon-backed resume or continuation are unavailable. If Codex still reports <code>path must be shorter than SUN_LEN</code>, see <a href="#troubleshooting">Troubleshooting</a>.</p>
+<h2 id="agents-codex-each-codex-terminal-runs-its-own-server">Each Codex terminal runs its own server</h2>
+<p>On Codex 0.157 and later, each Codex tab in an Orca terminal runs its own background server by default. That keeps agent status accurate for each tab and prevents closing one Codex tab from dropping the others. It applies to new terminals; terminals already open when you update keep their previous behavior until you reopen them.</p>
+<ul>
+<li>The trade-off: with per-tab servers, Codex&#x27;s shared-server features (background runs, <code>codex agents</code>, and sessions opened from the Codex desktop app or an IDE) do not see sessions started in Orca.</li>
+<li>To share Codex&#x27;s server instead, turn off <strong>Settings → Agents → Run each Codex terminal on its own server</strong> before opening new terminals, or set <code>ORCA_CODEX_ISOLATE=0</code> (for example <code>export ORCA_CODEX_ISOLATE=0</code> in your shell startup file). Codex&#x27;s agents overview is available again on the shared server.</li>
+<li>When a Codex you started yourself joins the shared server, Orca shows a notice at the top of that tab. Its <strong>Fix</strong> turns sharing off, and on a tab opened before the update it offers to open a new terminal instead.</li>
+</ul>
+<h2 id="agents-codex-nested-task-subagents">Nested Task subagents</h2>
+<p>When Codex spawns Task subagents, Orca can show them as child rows under the parent agent on the worktree agent list and <a href="#model-agents-sessions-agent-dashboard">Agent Dashboard</a>. Expand the chevron to see each child; click a child to focus the parent terminal (subagents do not own a separate pane).</p>
+<h2 id="agents-codex-hand-off-to-another-agent">Hand off to another agent</h2>
+<p>From an agent terminal&#x27;s header or context menu, choose <strong>Hand Off to Another Agent</strong>. Orca starts a fresh agent session (same or different CLI) and injects a bounded handoff prompt from the prior transcript or captured context. The original session is left alone — this is not <code>codex resume</code>.</p>
+<h2 id="agents-codex-restart-chip">Restart chip</h2>
+<p>When Codex exits, the restart chip relaunches the agent with the same account. If you swapped accounts mid-session and want to restart with the new one, use the account switcher first, then restart.</p>
+<h2 id="agents-codex-usage--rate-limits">Usage &amp; rate limits</h2>
+<p>Orca reads local Codex usage state for the active account and surfaces it in the status bar. See <a href="#agents-usage-tracking">Usage &amp; rate-limit tracking</a>.</p>
+<h2 id="agents-codex-codex-on-windows-wsl">Codex on Windows (WSL)</h2>
+<p>Windows Codex runs on the same real <code>~/.codex</code> home as macOS and Linux. The first time a Codex terminal appears after you update, Orca shows a one-time notice: Codex may ask again to trust folders or approve commands, and any MCP servers you added only inside Orca need to be added again. Codex terminals that were already open keep running on Orca&#x27;s previous home until you reopen them.</p>
+<p>On Windows, Orca can run Codex either from your host install or from a WSL distro. Add a WSL-hosted Codex account from the account switcher — Orca creates an isolated account home inside the distro (under <code>~/.local/share/orca/codex-accounts/&lt;id&gt;/home</code>), maps it back to the host as a <code>\\wsl.localhost\&lt;distro&gt;\...</code> path for auth reads, and routes launches, hot-swap, and rate-limit fetches through the selected distro. If Codex isn&#x27;t installed in the target distro, the <strong>Add account</strong> dialog fails with an actionable message telling you which distro is missing the binary.</p>

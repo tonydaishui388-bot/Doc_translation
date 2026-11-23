@@ -1,0 +1,57 @@
+<h1>Computer use</h1>
+<p>Drive local desktop apps from an agent via accessibility trees, screenshots, and safe UI actions.</p>
+<p>The <code>orca computer</code> CLI lets an agent inspect and control native desktop apps — list running apps, read accessibility trees, click controls, set values, type text, scroll, and take screenshots. Use it when a task needs to operate the OS or a third-party app rather than a terminal or the built-in browser.</p>
+<aside>Beta<p>Computer use ships native helpers per platform and requires Accessibility (and on macOS, Screen Recording) permission. The command surface is stable enough for skills to build against, but flag names may still shift.</p></aside>
+<h2 id="cli-computer-use-first-time-setup">First-time setup</h2>
+<p>Check the runtime and permissions:</p>
+<pre><code>orca status --json
+orca computer permissions --json
+orca computer capabilities --json</code></pre>
+<p>If <code>permissions</code> reports anything missing, grant Accessibility (and Screen Recording on macOS) to <strong>Orca Computer Use</strong> in System Settings, then re-run <code>permissions --json</code> to confirm.</p>
+<h2 id="cli-computer-use-background-use-on-macos">Background use on macOS</h2>
+<p>On macOS, computer use acts in the background by default, so you can keep using your mouse and keyboard while an agent works in another app. Some actions still require the app to come forward. Use <code>--restore-window</code> for foreground mode; dragging in Chromium and Electron apps requires it.</p>
+<h2 id="cli-computer-use-snapshot--act--snapshot">Snapshot → act → snapshot</h2>
+<p>Every interaction follows the same loop: read the app&#x27;s current state, act on a specific element, then re-read state to verify the result.</p>
+<pre><code>orca computer list-apps --json
+orca computer get-app-state --app com.spotify.client --json
+orca computer click --app com.spotify.client --element-index 42 --json</code></pre>
+<p>Element indexes are scoped to the latest <code>get-app-state</code> result and may be <strong>sparse</strong>. In <code>--json</code> output, read the tree from <code>result.snapshot.treeText</code>. Do not invent indexes from <code>elementCount</code>. Refresh state after navigation, focus changes, scrolling, or any app re-render before reusing an index.</p>
+<h2 id="cli-computer-use-multi-window-apps">Multi-window apps</h2>
+<pre><code>orca computer list-windows --app com.microsoft.edgemac --json
+orca computer get-app-state --app com.microsoft.edgemac --window-id &lt;id&gt; --json
+orca computer click --app com.microsoft.edgemac --window-id &lt;id&gt; --element-index 12 --json</code></pre>
+<p>Prefer stable <code>--window-id</code> when the listed id is not <code>none</code>; otherwise use <code>--window-index</code>.</p>
+<h2 id="cli-computer-use-selecting-an-app">Selecting an app</h2>
+<p>Prefer bundle IDs returned by <code>list-apps</code>:</p>
+<pre><code>orca computer get-app-state --app com.microsoft.edgemac --json</code></pre>
+<p>App names work when unambiguous (<code>--app Spotify</code>). Use <code>--app pid:&lt;number&gt;</code> only when bundle ID and name both collide.</p>
+<h2 id="cli-computer-use-available-actions">Available actions</h2>
+<pre><code>orca computer click --app &lt;app&gt; --element-index &lt;i&gt; --json
+orca computer set-value --app &lt;app&gt; --element-index &lt;i&gt; --value &quot;text&quot; --json
+orca computer type-text --app &lt;app&gt; --text &quot;text&quot; --json
+orca computer press-key --app &lt;app&gt; --key Return --json
+orca computer hotkey --app &lt;app&gt; --key CmdOrCtrl+A --json
+orca computer paste-text --app &lt;app&gt; --text &quot;text&quot; --json
+orca computer scroll --app &lt;app&gt; --element-index &lt;i&gt; --direction down --json
+orca computer drag --app &lt;app&gt; --from-x 100 --from-y 100 --to-x 300 --to-y 300 --json
+orca computer perform-secondary-action --app &lt;app&gt; --element-index &lt;i&gt; --action &lt;name&gt; --json</code></pre>
+<p>Prefer semantic actions (<code>click</code>, <code>set-value</code>, <code>perform-secondary-action</code>) over raw <code>type-text</code> or <code>press-key</code> — they target accessibility elements directly and survive focus changes that keyboard input doesn&#x27;t.</p>
+<p>When accessibility targeting fails, fall back carefully to coordinates:</p>
+<pre><code>orca computer click --app com.apple.Safari --x 120 --y 340 --json
+orca computer drag --app &lt;app&gt; --from-element-index 3 --to-element-index 9 --json</code></pre>
+<h2 id="cli-computer-use-sensitive-input">Sensitive input</h2>
+<p>Pass secrets through stdin so they don&#x27;t land in shell history:</p>
+<pre><code>printf &#x27;%s&#x27; &quot;$TEXT&quot; | orca computer set-value \
+  --app com.apple.Safari --element-index 7 --value-stdin --json</code></pre>
+<p><code>--text-stdin</code> works the same way for <code>type-text</code> and <code>paste-text</code>.</p>
+<h2 id="cli-computer-use-screenshots">Screenshots</h2>
+<p><code>get-app-state</code> returns an accessibility tree and, by default, a screenshot. With <code>--json</code>, the image bytes are written to disk and the path is returned in <code>screenshot.path</code> rather than embedded in the response. Pass <code>--no-screenshot</code> when pixels aren&#x27;t needed (faster, smaller payload). Pass <code>--restore-window</code> to bring a hidden or minimized window into view before capture.</p>
+<h2 id="cli-computer-use-use-it-from-an-agent">Use it from an agent</h2>
+<p>The shipped <code>computer-use</code> skill packages the same command surface with safety guidance. Install it into the agent&#x27;s skill directory:</p>
+<pre><code>npx skills add https://github.com/stablyai/orca --skill computer-use</code></pre>
+<p>See <a href="#cli-skills">Skills registry &amp; MCP</a> for how skills are picked up.</p>
+<h2 id="cli-computer-use-next-steps">Next steps</h2>
+<ul>
+<li><a href="#cli-overview">Orca CLI overview</a> — the rest of the CLI surface (worktrees, terminal, browser).</li>
+<li><a href="#cli-skills">Skills registry &amp; MCP</a> — distributing this CLI to agents.</li>
+</ul>

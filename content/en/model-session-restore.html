@@ -1,0 +1,34 @@
+<h1>Session restore</h1>
+<p>Quit Orca, reopen it, and pick up exactly where you left off — worktrees, splits, scrollback, focused tab.</p>
+<p>When you close Orca, the next launch rehydrates the whole workspace: every open worktree, every terminal split, the scrollback in each pane, and the tab you had focused. You shouldn&#x27;t have to remember which agents you had running on which branches — that&#x27;s Orca&#x27;s job.</p>
+<figure><img src="https://orca.dev/whats-new/posters/session-that-survives-restart.jpg" alt="Restart Orca and the session — terminals, splits, scrollback, focused tab — comes back intact." loading="lazy" decoding="async"><figcaption>Restart Orca and the session — terminals, splits, scrollback, focused tab — comes back intact.</figcaption></figure>
+<h2 id="model-session-restore-what-gets-restored">What gets restored</h2>
+<ul>
+<li><strong>Open worktrees</strong> — every worktree you had open in the sidebar.</li>
+<li><strong>Tabs and splits</strong> — pane layout per worktree, including nested splits and which tab was focused.</li>
+<li><strong>Running agent processes</strong> — agents you had running keep running across an Orca quit. A background daemon owns the PTYs, so closing the app window doesn&#x27;t kill Claude Code, Codex, or any other agent CLI mid-task. On next launch, Orca warm-reattaches to the same processes.</li>
+<li><strong>Terminal scrollback</strong> — the buffer in each terminal, including output produced while Orca was closed.</li>
+<li><strong>Focused worktree and tab</strong> — Orca opens to the same view you closed.</li>
+</ul>
+<p>On macOS and Linux, if a terminal&#x27;s shell has stopped, Orca can restore its saved output with a new prompt below it. Panes also remember the last directory you changed to across restarts, including in folder workspaces.</p>
+<h2 id="model-session-restore-what-doesnt-get-restored">What doesn&#x27;t get restored</h2>
+<p>The daemon dies when the host does, so anything that takes the whole machine down — reboot, OS update, kernel panic, hard power-off — ends every running agent. On next launch the worktrees, tabs, splits, and last-known scrollback come back, but the agent processes themselves are gone. Re-run the agent in any tab to keep going.</p>
+<p>A daemon crash while Orca is closed has the same effect for any sessions it was holding, but the layout and scrollback still restore on next launch.</p>
+<h2 id="model-session-restore-when-restore-runs">When restore runs</h2>
+<p>Session restore runs on every launch. The cases divide by whether the <strong>daemon</strong> survived the gap or not:</p>
+<p><strong>Daemon survives → agents keep running:</strong></p>
+<ul>
+<li><strong>Cmd-Q</strong> — the normal way to quit. Agents keep working in the background.</li>
+<li><strong>Auto-updater relaunch</strong> — Orca restarts to install an update; agents are unaffected.</li>
+<li><strong>App crash</strong> — if Orca itself crashes, the daemon keeps your sessions alive for warm reattach on next launch.</li>
+</ul>
+<p><strong>Daemon dies → agents are gone, layout still restores:</strong></p>
+<ul>
+<li><strong>Host reboot</strong> — laptop restart, OS update, kernel panic, hard power-off. Worktrees, tabs, splits, and the last-persisted scrollback still come back on next launch.</li>
+</ul>
+<aside>Starting fresh<p>If you want a clean slate, close worktrees explicitly before quitting. There is no &quot;open in a new session&quot; mode — Orca always restores. Closed worktrees stay closed.</p></aside>
+<h2 id="model-session-restore-next-steps">Next steps</h2>
+<ul>
+<li><a href="#model-agents-sessions">Agents &amp; sessions</a> — state dots and the lifecycle of an agent session.</li>
+<li><a href="#model-tabs-panes-splits">Tabs, panes &amp; split layouts</a> — how the layout you&#x27;ll be restoring is built in the first place.</li>
+</ul>

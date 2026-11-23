@@ -1,0 +1,102 @@
+<h1>Mobile companion</h1>
+<p>Pair the Orca mobile app to your desktop to monitor agents and unstick worktrees from your phone.</p>
+<p>The Orca mobile companion is an iOS/Android app that pairs with your desktop Orca and lets you monitor and work with agents from your phone: reply to prompts, review source control, and switch agent accounts. The paired desktop owns the agent sessions.</p>
+<figure><img src="https://orca.dev/whats-new/posters/orca-mobile.jpg" alt="Orca Mobile — agent status, scrollback, and quick replies from your phone." loading="lazy" decoding="async"><figcaption>Orca Mobile — agent status, scrollback, and quick replies from your phone.</figcaption></figure>
+<aside>Beta<p>The mobile companion is in beta. Install iOS from the <a href="https://apps.apple.com/us/app/orca-ide/id6766130217">App Store</a>, and Android from <a href="https://play.google.com/store/apps/details?id=dev.orca.app">Google Play</a> or the <a href="https://orca.dev/download/android">current APK</a>.</p></aside>
+<p>If you have the legacy Android app, install the new <code>dev.orca.app</code> separately; it cannot update in place to the new package.</p>
+<h2 id="mobile-what-you-can-do-from-mobile">What you can do from mobile</h2>
+<ul>
+<li>Use the <strong>Agents</strong> tab to see agents across connected desktops, mark them read, or clear them from the list. Activity status comes from each desktop.</li>
+<li>See every worktree, its agent, and its current status (working / done / waiting on input). Mobile lists worktrees from every host you&#x27;re connected to (local desktops and remote Orca servers) in a single view, so switching between them doesn&#x27;t need a device change. A workspace on an SSH host shows that host&#x27;s health on its row badge — the same wording the desktop uses — so a machine that dropped is visible at a glance.</li>
+<li>See desktop project groups in the workspace list.</li>
+<li>Browse the workspace&#x27;s full file tree from mobile — including deeply nested paths — so you can jump into any file without waiting for the desktop. Video and music files play in previews on the phone.</li>
+<li>Open supported agent sessions in <strong>Chat UI</strong> (a chat-style transcript) or the raw terminal. Set the device default under Settings → Chat UI, or long-press a session tab to switch that tab only.</li>
+<li>Hydrate recent terminal scrollback so you can read what an agent did or asked. After a terminal stream ends, the view accepts a fresh snapshot instead of staying stale. Markdown in chat-style views can render <strong>Mermaid</strong> diagrams when the message includes them, and native chat shows the same inline visuals and subagent rows as the desktop.</li>
+<li>Select, copy, and paste text from the mobile terminal view — long-press to select, share-sheet to paste back into a reply.</li>
+<li>Use the terminal accessory row for keys that are awkward on a phone keyboard, including <code>Tab</code>, <code>Shift+Tab</code>, and Shift, Ctrl, and Alt latches. You can enable the Smart rail for agent actions, or switch to <strong>Live</strong> when each typed character should go straight to the active terminal.</li>
+<li>Send a short reply (<code>continue</code>, <code>yes</code>, free-text) when an agent is waiting on input, attach a photo or file, or tap the microphone to dictate a response. In <strong>Live</strong> mode, dictated text is inserted into the active terminal without pressing Return for you. In Chat UI, attached images show as thumbnails on your message and can be sent with or without text.</li>
+<li>Run <strong>Quick Commands</strong> from the session tab strip — saved terminal commands or agent prompts that sync with the desktop list.</li>
+<li>Long-press a session tab for bulk close actions (<strong>Close Other Tabs</strong>, <strong>Close Tabs to the Left</strong>, <strong>Close Tabs to the Right</strong>). Unsaved markdown tabs and pinned tabs are skipped.</li>
+<li>Open a browser session in <strong>Web</strong> or <strong>Mobile</strong> view when you need to check a responsive page from your phone. A browser tab you open on the phone keeps loading while the desktop is minimized or in its screen saver.</li>
+<li>Open Source Control for a worktree or folder workspace to review changed files, stage or unstage, and commit from your phone.</li>
+<li>Switch your active agent account and see usage / rate-limit state on the go. When Codex has earned reset credits, spend one from the accounts screen.</li>
+<li>Create a workspace from mobile with the same Smart source modes as desktop: Smart, GitHub, Linear, GitLab, Branch, and Name. With <strong>multiple connected desktops</strong>, <strong>New Workspace</strong> asks which host should create it first (one connected host skips the picker).</li>
+<li>Long-press a workspace and choose <strong>Hand over</strong> to give it to a managed agent, optionally with a goal. Orca opens a new chat with that agent.</li>
+<li>Start an agent on a workspace from the phone; its tab appears on the desktop right away, and starting it does not move the desktop window to that workspace.</li>
+<li>Open a host card&#x27;s <strong>⋯</strong> menu for <strong>Edit</strong>, <strong>Connect</strong>, <strong>Remove</strong>, and related actions (long-press still works as a shortcut).</li>
+<li>Edit a saved host&#x27;s display name or connection address without re-pairing (for example when the desktop moves between home LAN and Tailscale).</li>
+<li>Move between the hosts list and an open session with a slide transition; <strong>Back</strong> slides the page&#x27;s host stack back to where you were.</li>
+<li>On iPad, hosts stay reachable from a single sidebar and chat drafts are kept when you move between the host list and a session.</li>
+<li>Get push notifications when an agent finishes, mirroring <a href="#notifications">desktop notifications</a>. The app also tells you when a newer mobile binary is available to install and links to that release.</li>
+</ul>
+<p>The mobile app is intentionally not a full editor — it&#x27;s a remote control for the desktop you already have running.</p>
+<h2 id="mobile-pairing">Pairing</h2>
+<ol>
+<li>On desktop, open Orca&#x27;s pairing flow from the account / status menu. Orca shows a one-time pairing code.</li>
+<li>On mobile, open the Orca companion app and choose <strong>Pair</strong>, then paste the code. (You can also follow a deep link from the desktop directly into the mobile pairing screen.)</li>
+<li>Prefer <strong>Orca Relay</strong> for pairing when it is available — sign-in is required for Relay only. The local network address picker is optional on Relay (expand it when you want a LAN fast path); LAN pairing still needs an address.</li>
+<li>The pairing exchange establishes a device token for that phone; keep desktop reachable on the path you chose. An unused phone QR code expires after 10 minutes; generate a new one if needed. With updated clients and desktop, the code stops working once the paired device saves its own sign-in. Existing paired devices are unaffected.</li>
+</ol>
+<p>Closing the desktop app drops a direct/LAN session until you reopen it. Relay-backed pairing follows the desktop Relay connection — reopen desktop if the host goes offline.</p>
+<p>After pairing, the phone names the host from the desktop&#x27;s machine name and shows its operating system. You can change the machine name in desktop <a href="#settings">Settings → Remote Orca Servers</a>; the phone picks up the change when it reconnects.</p>
+<h2 id="mobile-chat-ui">Chat UI</h2>
+<p>For supported agents, mobile can open the session in <strong>Chat UI</strong> instead of the raw terminal — the same idea as desktop&#x27;s <a href="#agents-native-chat">Chat UI</a>: a readable transcript, composer, permissions/questions, and image attachments.</p>
+<ul>
+<li><strong>Device default</strong> — on first launch, mobile asks how sessions should open on this phone. Change it later under <strong>Settings → Chat UI → Open sessions in Chat UI</strong>. The default is terminal until you choose Chat UI.</li>
+<li><strong>Per-session</strong> — long-press a session tab and choose <strong>Switch to chat view</strong> or <strong>Switch to terminal view</strong>. That override sticks for that tab without changing the device default.</li>
+<li><strong>Composer</strong> — type a reply, <code>@</code> mention workspace files, use agent-aware <code>/</code> slash commands from the shared catalog (Claude vs Codex sets, with descriptions), attach a photo, or dictate. Attached images appear as removable thumbnails and ride along on send (including image-only sends and multi-image attachments).</li>
+<li><strong>Model and session options</strong> — the composer shows a pill row for the current model and session options. Tap it to pick a model or option (including direct Codex model selection and provider-aware <strong>Fast mode</strong> when the active model supports it) without dropping into the raw terminal.</li>
+<li><strong>Desktop still owns the agent</strong> — Chat UI is a view over the paired desktop session, not a separate cloud agent.</li>
+</ul>
+<p>On an agent’s Home, <strong>Needs you</strong> collects tool approvals and access requests. Open a request there to review it and respond. In the agent’s settings, <strong>Tools</strong> lets you add, check, sign in to, or remove tools; some sign-ins ask you to paste the browser callback address back into Orca.</p>
+<p>When the desktop is unreachable, chat sends queue on the phone and send in order when it reconnects. Recent chat messages appear after a relaunch while the phone reconnects. Chat drafts, attachments, unsent messages, automation drafts, tasks, new-workspace drafts, and commit, PR, and review text survive an app restart. Orca also offers to restore unsaved file and Markdown edits after the app is killed.</p>
+<p>Phone dictation can run on the device on Android and on iPhone with iOS 26 or later, with the computer as fallback. The phone, desktop, and paired web client can dictate at the same time. A floating dictation pill lets you continue speaking as you move to another screen in the app. Update the mobile app as well as the desktop for these features.</p>
+<h2 id="mobile-quick-commands">Quick Commands</h2>
+<p>From a worktree session, open <strong>Quick Commands</strong> from the session tab strip (next to new terminal). Commands are the same saved list as desktop and sync both ways.</p>
+<ul>
+<li><strong>Terminal Command</strong> — paste or run a shell command in a new tab (optionally without pressing Enter so you can edit first).</li>
+<li><strong>Agent Prompt</strong> — open a chosen agent with a saved prompt body.</li>
+<li>Copy a command body to the clipboard from the row&#x27;s copy control (disabled when the body is empty).</li>
+<li>Scope commands globally or to the current project. Add, edit, and delete from the sheet; the desktop host enforces the shared list cap.</li>
+</ul>
+<p>If the paired desktop is too old, the launcher is disabled until you update desktop.</p>
+<h2 id="mobile-session-tabs">Session tabs</h2>
+<p>Long-press a tab in the session strip for tab actions, including <strong>Close</strong>, <strong>Close Other Tabs</strong>, <strong>Close Tabs to the Left</strong>, and <strong>Close Tabs to the Right</strong>. Bulk close skips dirty markdown tabs (mobile has no save prompt on close) and pinned tabs. For chat-capable agent tabs, the same long-press sheet can switch Chat UI ↔ terminal.</p>
+<h2 id="mobile-account-switcher">Account switcher</h2>
+<p>The mobile app exposes the same account switcher as the desktop status bar, including inline usage for inactive accounts. The accounts screen shows reset countdowns when a provider reports reset timestamps for its session or weekly window. Switching here switches on the paired desktop.</p>
+<p>When the active Codex account has earned <strong>rate-limit reset</strong> credits, the accounts screen shows how many are available (and when the next one expires) and a <strong>Use reset</strong> action. Confirming spends one credit for the current Codex target (host or WSL distro) and refreshes eligible rate-limit windows. The phone journals the attempt so a retry after a flaky connection does not double-spend. Outcomes include success, nothing eligible to reset, no credit left, or that a reset was already applied. See also <a href="#agents-usage-tracking">Usage &amp; rate-limit tracking</a>.</p>
+<h2 id="mobile-create-a-workspace">Create a workspace</h2>
+<p>From the mobile home screen, open <strong>Create Workspace</strong> / <strong>New Workspace</strong> and choose a source mode. <strong>Smart</strong> searches across supported task providers and branches; the provider-specific modes narrow creation to GitHub, Linear, GitLab, a branch, or a plain workspace name. After selecting a source, use <strong>Advanced</strong> for naming and branch controls before creating the workspace on the paired desktop. If more than one desktop is connected, pick the host first (the picker shows each endpoint so similar names stay distinguishable). With no connected desktops, the action stays disabled.</p>
+<h2 id="mobile-edit-a-paired-host">Edit a paired host</h2>
+<p>On the hosts list, tap the host card&#x27;s <strong>⋯</strong> button (or long-press the card) and choose <strong>Edit host</strong>.</p>
+<ul>
+<li><strong>Name</strong> — display name on this phone only. This overrides the desktop&#x27;s machine name; clear it to use the desktop name again.</li>
+<li><strong>Address</strong> — IP, <code>host:port</code>, or <code>ws://</code> / <code>wss://</code>. Missing port keeps the current port (or defaults to <code>6768</code>). Address edits only change where this phone connects; they do <strong>not</strong> re-pair. Use this when the same desktop is reachable at a different path (for example home LAN vs Tailscale).</li>
+</ul>
+<p>Saving an address change reconnects to the new endpoint. Pairing token stays the same.</p>
+<h2 id="mobile-source-control-on-mobile">Source control on mobile</h2>
+<p>From a worktree session, tap the branch icon to open Source Control. Use it for small follow-ups: check the branch state, inspect changed paths, stage or unstage files, and commit once the staged set is ready. Browse branch commits and open their changed files in the diff view. In diffs, jump between files, fold context, and read or add pull-request review comments alongside the code. You can also resolve conflicts and complete a merge. If the branch already has a GitHub pull request, use <strong>Link an existing PR</strong> from the empty PR state to attach it instead of creating a new one.</p>
+<h2 id="mobile-browser-links">Browser links</h2>
+<p>Under phone <strong>Settings → Browser → Open links</strong>, choose <strong>Ask each time</strong>, <strong>Orca browser on desktop</strong>, or <strong>Phone browser</strong> for web links in chat and terminal output. Ask each time also offers <strong>Copy link</strong>. If the desktop cannot open a browser tab, Orca falls back to the phone browser. Update both the phone app and desktop for the shared setting.</p>
+<p>When a phone is controlling desktop browser tabs, choose <strong>Take back all</strong> on the desktop banner to return control.</p>
+<h2 id="mobile-browser-view-on-mobile">Browser view on mobile</h2>
+<p>The mobile browser pane has a <strong>Web / Mobile</strong> switch. Use <strong>Web</strong> to see the normal page and <strong>Mobile</strong> to ask the paired desktop browser for a phone-sized responsive viewport.</p>
+<h2 id="mobile-appearance-and-language">Appearance and language</h2>
+<p>In mobile <strong>Settings</strong>, choose <strong>Light</strong>, <strong>Dark</strong>, or <strong>System</strong> under Appearance, and choose a display language under Language. Update Orca Mobile as well as your desktop or server to use the latest mobile settings.</p>
+<h2 id="mobile-terminal-settings">Terminal settings</h2>
+<p>The mobile terminal has a dedicated <strong>Terminal settings</strong> screen (Settings → Terminal):</p>
+<ul>
+<li><strong>Text size</strong> — a 50%–200% baseline zoom the WebView applies on top of fit-to-width. Pinch-to-zoom in the terminal snaps to the same presets and persists. The setting is per-device and doesn&#x27;t change the desktop terminal.</li>
+<li><strong>Autocomplete &amp; autocorrect</strong> — off by default so the OS never rewrites commands, flags, or paths in the command bar. Turn it on for phone-style typing; the live keyboard-capture input still streams raw keystrokes either way.</li>
+</ul>
+<p>The keyboard covers the page the way it does on a native screen, and the page reports its height so the composer and active field stay visible while you type.</p>
+<h2 id="mobile-troubleshooting">Troubleshooting</h2>
+<ul>
+<li><strong>Stuck spinner on a worktree</strong> — the phone tracks a heartbeat from the desktop agent process. If the desktop says idle but the phone shows working, force-refresh the worktree row to sync state.</li>
+<li><strong>Pairing fails</strong> — make sure your desktop and phone are signed into the same Orca account. Pairing codes expire after a few minutes; generate a fresh one if it&#x27;s been sitting on the screen.</li>
+<li><strong>Authentication failed / pairing invalid</strong> — the desktop no longer accepts this device token (for example after desktop cleared paired devices). Try <strong>Retry</strong> on the banner first (transient rejections can recover without re-pairing). If it keeps failing, use <strong>Re-pair</strong> from desktop, or <strong>Remove</strong> the host and pair again.</li>
+<li><strong>Update Orca Mobile / Update Orca on your computer</strong> — the phone and desktop speak a versioned mobile protocol. If either side is too old, mobile blocks that host and points you at the App Store (iOS), <a href="https://github.com/stablyai/orca/releases">GitHub Releases</a> (Android APK or desktop), then back to hosts. After updating, refresh the connection; if the message stays, remove the host and pair again.</li>
+<li><strong>Quick Commands unavailable</strong> — update the paired desktop so it advertises the quick-commands capability.</li>
+<li><strong>Can&#x27;t reach desktop</strong> — phone and desktop must share a network path (LAN, Tailscale, or the pairing path you used). Closing the desktop app drops the connection; reopen desktop and the phone reconnects automatically.</li>
+</ul>
+<aside>Next steps<p>Pair mobile notifications with <a href="#notifications">desktop notifications</a> so agent-finished alerts reach the right device. For headless machines, use <a href="#remote-servers">Remote Orca Server</a> mobile pairing. Track provider usage on desktop and mobile under <a href="#agents-usage-tracking">Usage &amp; rate-limit tracking</a>.</p></aside>

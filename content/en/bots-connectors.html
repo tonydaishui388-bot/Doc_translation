@@ -1,0 +1,68 @@
+<h1>Bot connectors</h1>
+<p>Reach your bot from Slack, GitHub and Linear, start it from events and webhooks, and let it work in your Google account.</p>
+<p>Connectors do three things: let people ask your bot from Slack, GitHub and Linear; start its automations when something happens there, or when a webhook is called; and let it work in your other apps, such as Google.</p>
+<p>To add one, open the bot&#x27;s <strong>Connectors</strong> tab, select <strong>Add a connector</strong> (or <strong>Add</strong> once it has one), and pick the service. Slack, GitHub and Linear cards have a <strong>How to ask</strong> line that shows exactly how to reach that bot.</p>
+<p>You can also ask the bot to connect something. It shows you a <strong>Connect</strong> card in its chat, and nothing connects until you finish it.</p>
+<h2 id="bots-connectors-at-a-glance">At a glance</h2>
+<table><thead><tr><th>Connector</th><th>How people ask the bot</th><th>Who the bot acts as</th><th>Goes through</th></tr></thead><tbody><tr><td>Slack</td><td>Mention <code>@bot-name</code> in a channel, or send it a direct message</td><td>The bot, as its own Slack app (<code>@bot-name</code>)</td><td>Orca Cloud</td></tr><tr><td>GitHub</td><td>Mention the bot on an issue or pull request, as its <strong>How to ask</strong> line shows</td><td>The Orca app, for its replies where it was asked; you, for other GitHub work, and it pushes with your own git login</td><td>Orca Cloud</td></tr><tr><td>Linear</td><td>Mention <code>@Orca &lt;handle&gt;</code> on an issue, or add the label <code>bot:&lt;handle&gt;</code></td><td>The Orca app, for its replies where it was asked; you, for other Linear work</td><td>Orca Cloud</td></tr><tr><td>Google</td><td>Not a place to ask; it can start automations on new mail and upcoming events</td><td>You, in Gmail, Calendar, Drive, Docs and Sheets</td><td>Your computer, straight to Google</td></tr><tr><td>Webhooks</td><td>Any tool or script calls the bot&#x27;s URL</td><td>Starts an automation; no identity of its own</td><td>Orca Cloud</td></tr></tbody></table>
+<p><code>&lt;handle&gt;</code> is the bot&#x27;s short name, shown in its <strong>How to ask</strong> line.</p>
+<aside>Sign in to Orca first<p>Slack, GitHub, Linear and webhooks connect through Orca Cloud, so you need to <strong>Sign in to Orca</strong> before you add them. Signed out, a bot keeps its chat and schedules, and its events pause until you sign in again. Google connects from your computer straight to Google, not through Orca Cloud; see <a href="#bots-connectors-google">Google</a>.</p></aside>
+<h2 id="bots-connectors-who-the-bot-acts-as">Who the bot acts as</h2>
+<p>A bot always works on its own computer, with your files, commands and accounts there. On top of that:</p>
+<ul>
+<li><strong>Slack:</strong> the bot posts and reacts as itself, through its own Slack app.</li>
+<li><strong>GitHub and Linear:</strong> the bot&#x27;s replies and reviews in the issue, pull request or thread where it was asked come from the Orca app. Other work, such as commenting elsewhere, labeling, assigning, reviewing or moving issues, uses your account.</li>
+<li><strong>Google:</strong> the bot uses your Gmail, Calendar, Drive, Docs and Sheets as you.</li>
+</ul>
+<p>When Orca can tell that someone other than you asked for the work, it adds a line such as &quot;asked by Maya via Scout&quot; to the text of new Linear comments, Gmail drafts, new calendar events that have a description, and Docs comments the bot writes through Orca. A draft keeps that line when it&#x27;s sent, unless someone edits it first. Orca also notes who asked in the description of Drive files, folders and Docs the bot creates, and in Drive share emails. If Orca can&#x27;t tell who asked, it adds nothing. Orca doesn&#x27;t add it to edits such as issue changes. To see exactly what a bot can reach, and to change it, see <a href="#bots-security">Security</a>.</p>
+<h2 id="bots-connectors-how-a-request-reaches-your-computer">How a request reaches your computer</h2>
+<p>Your computer connects out to Orca Cloud and picks up new requests; nothing has to reach in. If the computer is asleep or offline, a person&#x27;s request waits up to a day and then runs when it&#x27;s back. A bot answers in the thread, pull request or issue where it was asked.</p>
+<h2 id="bots-connectors-slack">Slack</h2>
+<p>Each bot gets its own Slack app, so people see it as <code>@bot-name</code> and can mention it in a channel or DM it. When they do, the bot starts working on its computer.</p>
+<p>The first time you add a bot to a Slack workspace, Orca asks for a Slack <strong>App Configuration Token</strong>. This is a token Slack gives you so a tool can create apps for you; Orca uses it to make one Slack app per bot, with its own name and picture.</p>
+<ol>
+<li>In Orca, select <strong>Get your configuration token</strong>. In Slack app settings, find <strong>Your App Configuration Tokens</strong> and choose <strong>Generate Token</strong>.</li>
+<li>Select the workspace for your bot.</li>
+<li>Copy the <strong>Refresh Token</strong> (it starts with <code>xoxe-</code>) and paste it into Orca.</li>
+</ol>
+<p>Orca Cloud keeps the token encrypted, for your Orca account and that workspace, so you don&#x27;t paste it again for your next bots there. Then approve the bot&#x27;s app in Slack as yourself. If your workspace needs an admin to approve new apps, the bot joins once they do.</p>
+<p>You can forget a workspace&#x27;s token at any time. Bots already in Slack stay there; new bots need a new token. Removing the Slack connector stops new work from Slack. It does not delete the app in Slack.</p>
+<h2 id="bots-connectors-github">GitHub</h2>
+<ol>
+<li>Sign in to Orca. Then, in the bot&#x27;s <strong>Connectors</strong>, pick GitHub and select <strong>Connect GitHub</strong>. Sign in with GitHub in your browser.</li>
+<li>Select <strong>Install the Orca app</strong> and install it on the repositories the bot may work in. In an organization, an owner may need to approve it.</li>
+<li>Select <strong>Turn on</strong> for your bot.</li>
+</ol>
+<p>Use <strong>Add repositories or organizations</strong> later to give the bot more places to work. People then mention the bot on an issue or pull request, as its <strong>How to ask</strong> line shows.</p>
+<p>The bot answers where it was asked through the Orca app. For other GitHub work, it uses your own <code>gh</code> sign-in on its computer. It is told to approve, request changes or merge only when you ask. Orca doesn&#x27;t enforce this; see <a href="#bots-security-what-orca-enforces-and-what-the-bot-is-told">Security</a>.</p>
+<p>GitHub events can start automations:</p>
+<ul>
+<li>New issues and pull requests, pushes, comments and reviews, review requests, and labels.</li>
+<li>CI failing or passing, merge conflicts, merges, deploys, security alerts and finished workflow runs.</li>
+</ul>
+<p>Things you do yourself on GitHub, such as comments, reviews or pushes, don&#x27;t start the bot, since it works as you there. A rule for pull requests you open, such as &quot;review my new PRs&quot;, is the exception. Changes GitHub reports, such as CI results, merge conflicts, merges, closed pull requests, deploys, security alerts and finished workflow runs, start a matching rule that&#x27;s on, even when you caused them.</p>
+<h2 id="bots-connectors-linear">Linear</h2>
+<ol>
+<li>Sign in to Orca. Then, in the bot&#x27;s <strong>Connectors</strong>, pick Linear and select <strong>Connect Linear</strong>. Sign in to Linear in your browser and pick the workspace.</li>
+<li>If Orca isn&#x27;t installed in that workspace yet, a Linear admin installs it once for everyone.</li>
+<li>Select <strong>Turn on</strong> for your bot.</li>
+</ol>
+<p>People then mention <code>@Orca &lt;handle&gt;</code> on an issue or add the label <code>bot:&lt;handle&gt;</code>, and the bot starts working. Linear events can start automations: an issue assigned, a mention, a new issue, or an issue moved.</p>
+<h2 id="bots-connectors-google">Google</h2>
+<p>Google lets a bot work in your Gmail, Calendar, Drive, Docs and Sheets, and start automations on new mail or an event starting soon. It is off for each bot until you turn it on from that bot&#x27;s <strong>Connectors</strong>.</p>
+<p>To set Google up, you create your own Google Cloud app, and the bot walks you through it in chat. It can do the clicks for you in Orca&#x27;s browser, guide you there, or guide you in your own browser. You tick Google&#x27;s terms box yourself. Because the app is yours, your Google sign-in stays on your computer, and the bot calls Google directly from there. What it reads can still reach its agent&#x27;s model provider, and any answer it posts in Slack, GitHub or Linear. New-mail and calendar rules are checked on your computer about once a minute.</p>
+<p>A bot is told to draft mail rather than send it, unless you asked it to send. Orca doesn&#x27;t enforce this. You can turn Google off for a bot at any time; Google stays connected on the computer for your other bots.</p>
+<h2 id="bots-connectors-webhooks">Webhooks</h2>
+<p>A webhook lets any tool or script start the bot with a web request. Ask the bot to set one up in chat; you copy the URL with <strong>Copy URL</strong> on the automation&#x27;s card in Orca. The call goes to Orca Cloud, which passes it to your computer. Orca hands what the call carries to the bot as information, not instructions.</p>
+<p>Treat a webhook&#x27;s URL like a password: anyone who has it can start the automation. To require more than the URL, add a signing secret. If a URL leaks, use <strong>Rotate key…</strong> or <strong>Delete hook…</strong> on the webhook.</p>
+<h2 id="bots-connectors-other-apps-and-tools">Other apps and tools</h2>
+<ul>
+<li><strong>Composio:</strong> for apps Orca doesn&#x27;t connect itself, such as Outlook, Notion or HubSpot, add your own Composio key. Your app sign-ins are held by Composio, and Orca keeps the key; the bot never sees it.</li>
+<li><strong>MCP servers:</strong> ask the bot to add an MCP server that only it gets. For a server it reaches over the web, Orca stores the keys and sign-ins encrypted and adds them to each call, so the bot doesn&#x27;t hold them. A server that runs as a command gets its keys from its saved settings, which aren&#x27;t encrypted. See <a href="#bots-security-secrets">Security</a>.</li>
+</ul>
+<h2 id="bots-connectors-next-steps">Next steps</h2>
+<ul>
+<li><a href="#bots-use-cases">Use cases</a>: jobs that use these connectors, step by step.</li>
+<li><a href="#bots-security">Security</a>: what each connector lets a bot reach, and how to take it back.</li>
+<li><a href="#bots">Bots quickstart</a>: create a bot and give it its first job.</li>
+</ul>

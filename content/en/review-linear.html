@@ -1,0 +1,29 @@
+<h1>Linear items drawer</h1>
+<p>Linear sits next to hosted review providers in the task drawer. Browse, create, update, and link Linear issues to worktrees the same way you link GitHub issues.</p>
+<h2 id="review-linear-setup">Setup</h2>
+<ol>
+<li>Open <a href="#settings">Settings → Integrations → Linear</a>.</li>
+<li>Paste a personal API token from <a href="https://linear.app/settings/api">Linear → Settings → API</a>.</li>
+<li>Pick the team(s) you want to see.</li>
+</ol>
+<h2 id="review-linear-using-linear">Using Linear</h2>
+<ul>
+<li>The task drawer shows GitHub and Linear issues in one combined view.</li>
+<li>Use <strong>Has Workspace</strong> mode in the Linear task view to list only issues already linked to a local worktree or folder workspace. Rows with an attached workspace open that workspace; you can still start a new one from the same issue when you need a second checkout.</li>
+<li>Creating a worktree from a Linear issue opens the interactive workspace composer (same path as GitHub items) so issue-command automation, SSH, and folder workspaces apply. Orca pre-fills the name and attaches the issue ID. When Linear exposes a branch name for the issue, Orca uses that as the worktree branch (same naming Linear would suggest), not only a slug of the title. The issue detail menu can <strong>Copy suggested branch name</strong>.</li>
+<li>After create, open <strong>Edit Worktree Details</strong> on the workspace card and use the <strong>Issue</strong> field with the <strong>Linear</strong> chip (or paste a Linear URL) to link or change the issue without recreating the worktree. GitHub and Linear share that one field — saving a new link replaces the previous provider link.</li>
+<li>Open an issue detail view to update fields such as status, assignee, priority, labels, and estimate. Priority renders with Linear&#x27;s own priority icons so the drawer matches what you see in Linear itself.</li>
+<li>When you launch an agent from a Linear issue, Orca includes any inline images and media embedded in the issue&#x27;s description, comments, and sub-issues in the prompt context, so the agent can see the mock-up or bug repro without you having to paste screenshots by hand. Private Linear images in an issue description load in the drawer too, instead of showing a broken image.</li>
+<li><strong>New Linear issue</strong> and <strong>New Linear project</strong> keep title/description (and project name, summary, and brief) if you dismiss the dialog by accident — Escape, Cancel, outside click, or close. Text restores when you reopen the dialog in the same app session; drafts clear after a successful create and do not survive an app restart. Team/project pickers still use their usual open-time defaults.</li>
+<li>Long lists paginate with a <strong>Load more</strong> action — useful when a project has more issues than fit in the initial drawer.</li>
+<li>Layout choices stick across restarts: list vs board, group-by, order-by, visible columns, and attribute filters. Attribute filters are stored <strong>per Linear workspace</strong>, so switching workspace does not apply another workspace&#x27;s facets.</li>
+<li>Orca remembers your last-used task source (GitHub, Linear, or Jira) per repo.</li>
+</ul>
+<aside><p>Linear status sync (moving an issue to &quot;In Progress&quot; when a worktree is created) is opt-in per team.</p></aside>
+<h2 id="review-linear-agents-and-cli">Agents and CLI</h2>
+<p>Agents can read and write Linear through <code>orca linear</code> (and the <code>orca-linear</code> skill). That surface includes MCP-compatible create/update and list filters (<code>save-issue</code>, <code>list-issues</code>, relation add/remove) plus issue context flags such as <code>--activity</code> and <code>--full</code>. See <a href="#cli-reference-linear">CLI reference → Linear</a>.</p>
+<h2 id="review-linear-next-steps">Next steps</h2>
+<ul>
+<li><a href="#review-github">Hosted reviews, issues &amp; Actions</a> — connect code review state to the worktree after the task is in progress.</li>
+<li><a href="#review-commit-push">Commit &amp; push from Orca</a> — ship the branch without leaving Orca.</li>
+</ul>

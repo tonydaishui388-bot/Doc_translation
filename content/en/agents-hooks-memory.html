@@ -1,0 +1,13 @@
+<h1>Agent hooks &amp; memory</h1>
+<p>Orca plays nicely with the agent hook and memory conventions Claude Code and Codex already use — it reads them, respects them, and gives you a UI for the ones that make sense in an IDE context.</p>
+<h2 id="agents-hooks-memory-per-repo-hooks">Per-repo hooks</h2>
+<p>Orca reads each repo&#x27;s <code>.claude/</code> and <code>.codex/</code> configuration. Hooks you already have will run when Orca launches the agent in a worktree of that repo.</p>
+<h2 id="agents-hooks-memory-worktree-setup-hooks">Worktree setup hooks</h2>
+<p>Configure commands to run automatically after a worktree is created — e.g. <code>pnpm install</code>, <code>direnv allow</code>, or a script that restores <code>.env</code> files. Set them under <a href="#settings">Settings → Repository → Hooks</a>.</p>
+<h2 id="agents-hooks-memory-memory-files">Memory files</h2>
+<p>Claude&#x27;s <code>CLAUDE.md</code> and Codex&#x27;s <code>AGENTS.md</code> (at repo root or nested) are left alone — they belong to the agent. Orca surfaces them in the file explorer like any other file so you can edit them inline.</p>
+<h2 id="agents-hooks-memory-agent-status-hooks">Agent status hooks</h2>
+<p><strong>Settings → Agents → Agent status hooks</strong> controls the Orca-managed hooks that report working / waiting / done into the UI. Turning the setting off removes those managed hooks and stops reinstalling them; turning it back on restores them <strong>without restarting Orca</strong> (on Windows, the WSL hook relay follows the same live gate). CLI equivalents: <code>orca agent hooks status|on|off --json</code>. Orca writes its Codex hook into <code>~/.codex</code> only when something changed, instead of on every launch, so Codex stops re-prompting to approve it.</p>
+<h2 id="agents-hooks-memory-surviving-a-restart">Surviving a restart</h2>
+<p>Hook endpoints are written to disk (<code>{userData}/agent-hooks/endpoint.env</code> on POSIX, <code>endpoint.cmd</code> on Windows) and re-sourced on every hook invocation, so long-lived agent sessions keep reaching the live Orca server even after an app restart — no more dead-port POSTs from a PTY that outlived the previous session.</p>
+<aside><p>The Orca CLI exposes a commented worktree status field agents can update themselves. See <a href="#cli-worktree-checkpoints">Worktree checkpoints</a>.</p></aside>

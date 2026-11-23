@@ -1,0 +1,29 @@
+<h1>Usage &amp; rate-limit tracking</h1>
+<p>Orca tracks usage for Claude Code, Codex, Muse Code, Gemini, Antigravity, OpenCode, Kimi Code, MiniMax, Cursor, ZCode, and GLM Coding Plans and surfaces it in the status bar, so you know how close you are to a rate limit before an agent stalls.</p>
+<h2 id="agents-usage-tracking-whats-shown">What&#x27;s shown</h2>
+<ul>
+<li>Current usage against the active account&#x27;s plan.</li>
+<li>Time to reset for 5-hour, daily, weekly, and Claude Fable weekly windows (where applicable).</li>
+<li>A warning chip when you cross 80% of a limit.</li>
+<li>Provider credit balances when the provider reports one — Claude usage credits, OpenCode Zen balance, and Codex credits — alongside the usage limits. A provider that returns no balance reads as unavailable rather than zero.</li>
+</ul>
+<h2 id="agents-usage-tracking-how-it-works">How it works</h2>
+<p>The source depends on the provider. Orca reads local agent state where available, including Muse Code&#x27;s local session logs; Muse usage is local token accounting and does not include a price estimate. OpenCode Go usage comes from its console API and needs your full <code>opencode.ai</code> Cookie header, including <code>__Host-console_session</code>, under <strong>Settings → Accounts</strong>. An <code>auth</code> cookie alone can find workspaces but cannot fetch Go usage. Other providers can require their own account setup in Settings.</p>
+<p>For Cursor, Orca reads the existing Cursor sign-in on your computer and shows the plan&#x27;s monthly usage in the status bar, Usage popover, and <strong>Settings → Accounts → Cursor</strong>. It does not sign you in; if the saved session expires, run <code>cursor-agent login</code>. A refused usage request reads as a usage failure, not an expired login.</p>
+<p>For Antigravity, Orca reads the quota from Antigravity&#x27;s own CLI — including its model-group pools — so you do not need a signed-in Gemini CLI, and checking does not spend quota. For ZCode, the <strong>Coding Plan</strong> quota appears alongside the session history it reads from on-disk transcripts.</p>
+<p>You can also link a GLM Coding Plan directly under <strong>Settings → Accounts → GLM Coding Plan</strong>: pick the plan site (Z.AI or Zhipu BigModel) and save the plan API key. No ZCode CLI sign-in is required, and a saved key takes priority over the ZCode CLI sign-in. The plan appears in the usage roster like any other provider.</p>
+<h2 id="agents-usage-tracking-multi-account-accounting">Multi-account accounting</h2>
+<p>The status bar always reflects the <em>active</em> account. Other configured accounts are visible in the account switcher with their own usage.</p>
+<h2 id="agents-usage-tracking-usage-roster">Usage roster</h2>
+<p>Click the usage segment in the status bar to open the <strong>Usage</strong> popover. It lists every tracked provider (icon · name · plan · soonest reset · per-window bars), sorted so the tightest limit is first. Use the header refresh control to re-read local usage state.</p>
+<p>In a narrow window, the status bar keeps one line by hiding mini bars and labels, then showing one percentage per provider. If space is still tight, some provider chips become a <strong>+N</strong> chip. Click it to see every provider in the <strong>Usage</strong> popover. Providers at 80% usage or higher are collapsed last. When a provider reports a balance, it shows next to that provider&#x27;s limits; in the narrow <strong>Compact</strong> segment, a provider that has hit a plan cap reveals its spendable balance.</p>
+<ul>
+<li><strong>Detailed</strong> — full bars, labels, and percentages for every window</li>
+<li><strong>Compact</strong> — only the tightest window per provider</li>
+</ul>
+<p>Under <a href="#settings">Settings → Appearance</a>, choose <strong>% used</strong> vs <strong>% remaining</strong> for how those numbers read.</p>
+<p>Rows without live numbers show a short status instead: <strong>Loading usage…</strong>, <strong>not signed in</strong>, <strong>Usage unavailable</strong>, <strong>No usage data</strong>, or a provider-specific error. Claude and Codex rows can drill into account switching; <strong>Manage accounts</strong> opens Settings.</p>
+<h3 id="agents-usage-tracking-mobile">Mobile</h3>
+<p>On the companion app, open the host <strong>Accounts</strong> screen for the same switcher/usage readout. When Codex has earned <strong>rate-limit reset</strong> credits, spend one from that screen (see <a href="#mobile">Mobile companion</a>).</p>
+<h2 id="agents-usage-tracking-estimated-cost-stats">Estimated cost (Stats)</h2>
+<p>The Stats breakdown may show <strong>estimated cost</strong> for known model families, including Claude Opus 5.5, Fable 5.1, and Codex GPT-5.6 and GPT-6 Astra, Sol, and Luna. Orca uses a local price table, not a live bill from the provider. <strong>• inferred pricing</strong> marks an estimate where Orca inferred the model. A Codex cost marked <strong>• excludes unpriced models</strong> leaves those models out of the estimate; the Overview also flags a partial total. Prefer the provider console for authoritative spend.</p>

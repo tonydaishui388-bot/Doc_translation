@@ -1,0 +1,572 @@
+{
+  "errors": [],
+  "pages": [
+    {
+      "source": "/docs",
+      "slug": "what-is-orca",
+      "navTitle": "What is Orca?",
+      "h1": "What is Orca?",
+      "textLength": 1868,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/install",
+      "slug": "install",
+      "navTitle": "Install",
+      "h1": "Install",
+      "textLength": 2721,
+      "codes": 1,
+      "images": 0
+    },
+    {
+      "source": "/docs/first-session",
+      "slug": "first-session",
+      "navTitle": "Your first 3-agent session",
+      "h1": "Your first 3-agent session",
+      "textLength": 2627,
+      "codes": 0,
+      "images": 2
+    },
+    {
+      "source": "/docs/migrate-from-conductor",
+      "slug": "migrate-from-conductor",
+      "navTitle": "Migrate from Conductor",
+      "h1": "Migrate from Conductor",
+      "textLength": 10810,
+      "codes": 3,
+      "images": 0
+    },
+    {
+      "source": "/docs/model/worktrees",
+      "slug": "model-worktrees",
+      "navTitle": "Worktrees",
+      "h1": "Worktrees",
+      "textLength": 17658,
+      "codes": 2,
+      "images": 0
+    },
+    {
+      "source": "/docs/model/tabs-panes-splits",
+      "slug": "model-tabs-panes-splits",
+      "navTitle": "Tabs, panes & split layouts",
+      "h1": "Tabs, panes & split layouts",
+      "textLength": 2636,
+      "codes": 0,
+      "images": 2
+    },
+    {
+      "source": "/docs/model/agents-sessions",
+      "slug": "model-agents-sessions",
+      "navTitle": "Agents & sessions",
+      "h1": "Agents & sessions",
+      "textLength": 4752,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/model/session-restore",
+      "slug": "model-session-restore",
+      "navTitle": "Session restore",
+      "h1": "Session restore",
+      "textLength": 2850,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/model/quick-open",
+      "slug": "model-quick-open",
+      "navTitle": "Quick Open & Jump Palette",
+      "h1": "Quick Open & Jump Palette",
+      "textLength": 4928,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/supported",
+      "slug": "agents-supported",
+      "navTitle": "Supported agents",
+      "h1": "Supported agents",
+      "textLength": 3744,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/claude-code",
+      "slug": "agents-claude-code",
+      "navTitle": "Claude Code in Orca",
+      "h1": "Claude Code in Orca",
+      "textLength": 1912,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/glm-agent",
+      "slug": "agents-glm-agent",
+      "navTitle": "How to use GLM-5.2 in Orca ADE",
+      "h1": "How to use GLM-5.2 in Orca ADE",
+      "textLength": 3739,
+      "codes": 5,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/codex",
+      "slug": "agents-codex",
+      "navTitle": "Codex in Orca",
+      "h1": "Codex in Orca",
+      "textLength": 4578,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/cursor-cli",
+      "slug": "agents-cursor-cli",
+      "navTitle": "Cursor CLI in Orca",
+      "h1": "Cursor CLI in Orca",
+      "textLength": 848,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/codex-hot-swap",
+      "slug": "agents-codex-hot-swap",
+      "navTitle": "Hot-swap Codex accounts",
+      "h1": "Hot-swap Codex accounts",
+      "textLength": 1899,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/agents/native-chat",
+      "slug": "agents-native-chat",
+      "navTitle": "Chat UI (native chat)",
+      "h1": "Chat UI (native chat)",
+      "textLength": 22349,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/session-history",
+      "slug": "agents-session-history",
+      "navTitle": "Agent session history",
+      "h1": "Agent session history",
+      "textLength": 6262,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/hibernation",
+      "slug": "agents-hibernation",
+      "navTitle": "Agent hibernation",
+      "h1": "Agent hibernation",
+      "textLength": 3882,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/usage-tracking",
+      "slug": "agents-usage-tracking",
+      "navTitle": "Usage & rate-limit tracking",
+      "h1": "Usage & rate-limit tracking",
+      "textLength": 4143,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/agents/hooks-memory",
+      "slug": "agents-hooks-memory",
+      "navTitle": "Agent hooks & memory",
+      "h1": "Agent hooks & memory",
+      "textLength": 1768,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/review/diff-viewer",
+      "slug": "review-diff-viewer",
+      "navTitle": "Diff viewer",
+      "h1": "Diff viewer",
+      "textLength": 2276,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/review/annotate-ai-diff",
+      "slug": "review-annotate-ai-diff",
+      "navTitle": "Annotate AI Diff",
+      "h1": "Annotate AI Diff",
+      "textLength": 1770,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/review/attribution",
+      "slug": "review-attribution",
+      "navTitle": "Attribution",
+      "h1": "Attribution",
+      "textLength": 788,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/review/commit-push",
+      "slug": "review-commit-push",
+      "navTitle": "Commit & push from Orca",
+      "h1": "Commit & push from Orca",
+      "textLength": 7209,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/review/github",
+      "slug": "review-github",
+      "navTitle": "Hosted reviews, issues & Actions",
+      "h1": "Hosted reviews, issues & Actions",
+      "textLength": 7621,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/review/linear",
+      "slug": "review-linear",
+      "navTitle": "Linear items drawer",
+      "h1": "Linear items drawer",
+      "textLength": 3356,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/review/jira",
+      "slug": "review-jira",
+      "navTitle": "Jira items drawer",
+      "h1": "Jira items drawer",
+      "textLength": 3791,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/editing/monaco",
+      "slug": "editing-monaco",
+      "navTitle": "Monaco editor & autosave",
+      "h1": "Monaco editor & autosave",
+      "textLength": 3402,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/editing/markdown",
+      "slug": "editing-markdown",
+      "navTitle": "Rich markdown editor",
+      "h1": "Rich markdown editor",
+      "textLength": 4336,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/editing/viewers",
+      "slug": "editing-viewers",
+      "navTitle": "HTML, Mermaid, PDF & image viewers",
+      "h1": "HTML, Mermaid, PDF & image viewers",
+      "textLength": 5093,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/editing/file-explorer",
+      "slug": "editing-file-explorer",
+      "navTitle": "File explorer & external drag-drop",
+      "h1": "File explorer & external drag-drop",
+      "textLength": 3059,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/browser/overview",
+      "slug": "browser-overview",
+      "navTitle": "Per-worktree browser",
+      "h1": "Per-worktree browser",
+      "textLength": 7851,
+      "codes": 0,
+      "images": 3
+    },
+    {
+      "source": "/docs/browser/design-mode",
+      "slug": "browser-design-mode",
+      "navTitle": "Design Mode",
+      "h1": "Design Mode",
+      "textLength": 1886,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/browser/profiles",
+      "slug": "browser-profiles",
+      "navTitle": "Browser-use profiles",
+      "h1": "Browser-use profiles",
+      "textLength": 2651,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/bots",
+      "slug": "bots",
+      "navTitle": "Bots quickstart",
+      "h1": "Bots quickstart",
+      "textLength": 7493,
+      "codes": 0,
+      "images": 2
+    },
+    {
+      "source": "/docs/bots/use-cases",
+      "slug": "bots-use-cases",
+      "navTitle": "Bot use cases",
+      "h1": "Bot use cases",
+      "textLength": 10555,
+      "codes": 0,
+      "images": 2
+    },
+    {
+      "source": "/docs/bots/connectors",
+      "slug": "bots-connectors",
+      "navTitle": "Bot connectors",
+      "h1": "Bot connectors",
+      "textLength": 8623,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/bots/import",
+      "slug": "bots-import",
+      "navTitle": "Import a bot",
+      "h1": "Import a bot",
+      "textLength": 3787,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/bots/security",
+      "slug": "bots-security",
+      "navTitle": "Bot security",
+      "h1": "Bot security",
+      "textLength": 10158,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/terminal",
+      "slug": "terminal",
+      "navTitle": "Terminal",
+      "h1": "Terminal",
+      "textLength": 11365,
+      "codes": 0,
+      "images": 2
+    },
+    {
+      "source": "/docs/ways-to-run",
+      "slug": "ways-to-run",
+      "navTitle": "Ways to run Orca",
+      "h1": "Ways to run Orca",
+      "textLength": 6607,
+      "codes": 2,
+      "images": 3
+    },
+    {
+      "source": "/docs/ssh",
+      "slug": "ssh",
+      "navTitle": "SSH worktrees",
+      "h1": "SSH worktrees",
+      "textLength": 12344,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/remote-servers",
+      "slug": "remote-servers",
+      "navTitle": "Remote Orca Servers",
+      "h1": "Remote Orca Servers",
+      "textLength": 9904,
+      "codes": 9,
+      "images": 2
+    },
+    {
+      "source": "/docs/cli/overview",
+      "slug": "cli-overview",
+      "navTitle": "Orca CLI overview",
+      "h1": "Orca CLI overview",
+      "textLength": 4826,
+      "codes": 8,
+      "images": 1
+    },
+    {
+      "source": "/docs/cli/reference",
+      "slug": "cli-reference",
+      "navTitle": "Orca CLI reference",
+      "h1": "Orca CLI reference",
+      "textLength": 23301,
+      "codes": 30,
+      "images": 0
+    },
+    {
+      "source": "/docs/cli/orchestration",
+      "slug": "cli-orchestration",
+      "navTitle": "Orchestration",
+      "h1": "Orchestration",
+      "textLength": 10460,
+      "codes": 12,
+      "images": 0
+    },
+    {
+      "source": "/docs/cli/automations",
+      "slug": "cli-automations",
+      "navTitle": "Scheduled automations",
+      "h1": "Scheduled automations",
+      "textLength": 7429,
+      "codes": 9,
+      "images": 0
+    },
+    {
+      "source": "/docs/cli/computer-use",
+      "slug": "cli-computer-use",
+      "navTitle": "Computer use",
+      "h1": "Computer use",
+      "textLength": 4749,
+      "codes": 8,
+      "images": 0
+    },
+    {
+      "source": "/docs/cli/worktree-checkpoints",
+      "slug": "cli-worktree-checkpoints",
+      "navTitle": "Worktree checkpoints",
+      "h1": "Worktree checkpoints",
+      "textLength": 1550,
+      "codes": 4,
+      "images": 0
+    },
+    {
+      "source": "/docs/cli/skills",
+      "slug": "cli-skills",
+      "navTitle": "Orca skills registry & MCP",
+      "h1": "Orca skills registry & MCP",
+      "textLength": 8845,
+      "codes": 11,
+      "images": 0
+    },
+    {
+      "source": "/docs/mobile",
+      "slug": "mobile",
+      "navTitle": "Mobile companion",
+      "h1": "Mobile companion",
+      "textLength": 15414,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/android-apk",
+      "slug": "android-apk",
+      "navTitle": "Install Orca Mobile on Android",
+      "h1": "Install Orca Mobile on Android",
+      "textLength": 1162,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/notifications",
+      "slug": "notifications",
+      "navTitle": "Notifications & Inbox",
+      "h1": "Notifications & Inbox",
+      "textLength": 2666,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/activity",
+      "slug": "activity",
+      "navTitle": "Agents feed",
+      "h1": "Agents feed",
+      "textLength": 1960,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/recipes/parallel-agents",
+      "slug": "recipes-parallel-agents",
+      "navTitle": "Race three agents on the same task",
+      "h1": "Race three agents on the same task",
+      "textLength": 856,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/recipes/review-ai-diff",
+      "slug": "recipes-review-ai-diff",
+      "navTitle": "Review an AI diff line-by-line",
+      "h1": "Review an AI diff line-by-line",
+      "textLength": 722,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/recipes/jump-worktrees",
+      "slug": "recipes-jump-worktrees",
+      "navTitle": "Jump between 10 worktrees",
+      "h1": "Jump between 10 worktrees",
+      "textLength": 827,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/recipes/design-mode-fix",
+      "slug": "recipes-design-mode-fix",
+      "navTitle": "Fix a UI bug with Design Mode",
+      "h1": "Fix a UI bug with Design Mode",
+      "textLength": 756,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/recipes/remote-worktrees",
+      "slug": "recipes-remote-worktrees",
+      "navTitle": "Work on a remote machine over SSH",
+      "h1": "Work on a remote machine over SSH",
+      "textLength": 963,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/settings",
+      "slug": "settings",
+      "navTitle": "Settings reference",
+      "h1": "Settings reference",
+      "textLength": 22808,
+      "codes": 0,
+      "images": 0
+    },
+    {
+      "source": "/docs/telemetry",
+      "slug": "telemetry",
+      "navTitle": "Privacy & Telemetry",
+      "h1": "Privacy & Telemetry",
+      "textLength": 5755,
+      "codes": 0,
+      "images": 1
+    },
+    {
+      "source": "/docs/troubleshooting",
+      "slug": "troubleshooting",
+      "navTitle": "Troubleshooting & FAQ",
+      "h1": "Troubleshooting & FAQ",
+      "textLength": 4432,
+      "codes": 1,
+      "images": 0
+    },
+    {
+      "source": "/docs/github-errors",
+      "slug": "github-errors",
+      "navTitle": "Troubleshooting GitHub errors",
+      "h1": "Troubleshooting GitHub errors",
+      "textLength": 7494,
+      "codes": 3,
+      "images": 0
+    }
+  ]
+}

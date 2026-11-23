@@ -1,0 +1,18 @@
+<h1>Claude Code in Orca</h1>
+<p>Claude Code is Anthropic&#x27;s agentic CLI. Orca runs it as a first-class terminal agent, with account-aware session start, usage tracking, and account hot-swapping.</p>
+<h2 id="agents-claude-code-setup">Setup</h2>
+<ol>
+<li>Install Claude Code (<code>npm i -g @anthropic-ai/claude-code</code> or follow Anthropic&#x27;s docs).</li>
+<li>Log in once from any terminal.</li>
+<li>Orca picks up <code>~/.claude</code> automatically — no extra config needed.</li>
+</ol>
+<h2 id="agents-claude-code-launching">Launching</h2>
+<p>In any worktree, open a terminal and pick <strong>Claude Code</strong> from the agent combobox. Orca launches it with the worktree as the working directory and a status-line hook that emits OSC title events Orca uses for state dots.</p>
+<h2 id="agents-claude-code-usage--rate-limits">Usage &amp; rate limits</h2>
+<p>Orca reads your local <code>~/.claude</code> usage state and shows current usage plus rate-limit proximity in the status bar. See <a href="#agents-usage-tracking">Usage &amp; rate-limit tracking</a>.</p>
+<h2 id="agents-claude-code-account-hot-swap">Account hot-swap</h2>
+<p>Orca supports multiple Claude accounts and can swap between them in one click, matching the Codex flow. Switching accounts works even with live Claude sessions running — Orca holds the in-progress switch behind a guard so you don&#x27;t trigger overlapping auth refreshes. A swap keeps your shared MCP server sign-ins, so you don&#x27;t have to re-authenticate MCP servers after switching. See <a href="#agents-codex-hot-swap">Hot-swap Codex accounts</a> — the Claude flow is identical in shape.</p>
+<h2 id="agents-claude-code-subagents-and-teams">Subagents and teams</h2>
+<p>Background subagents and Agent Teams teammates can show as expandable child rows under the lead agent in the worktree agent list and <a href="#model-agents-sessions-agent-dashboard">Agent Dashboard</a>. Select a child to view its transcript in the lead terminal, then select the parent to return; an eye marks the transcript currently shown. This navigation is on by default when Claude status hooks are available. Turn it off under <strong>Settings → Agents → Claude subagent navigation</strong> if you prefer the lead terminal to stay in view. Start a fresh Claude session after changing this setting.</p>
+<h2 id="agents-claude-code-hooks--memory">Hooks &amp; memory</h2>
+<p>Claude Code supports per-repo hooks and memory files. Orca surfaces these under <a href="#agents-hooks-memory">Agent hooks &amp; memory</a>.</p>

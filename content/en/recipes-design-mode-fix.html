@@ -1,0 +1,14 @@
+<h1>Fix a UI bug with Design Mode</h1>
+<p>Design Mode collapses the &quot;that button looks wrong&quot; → &quot;fixed commit&quot; loop to under a minute.</p>
+<h2 id="recipes-design-mode-fix-steps">Steps</h2>
+<ol>
+<li>Open the worktree&#x27;s browser pane. Navigate to the page with the bug.</li>
+<li>Toggle <a href="#browser-design-mode">Design Mode</a> on.</li>
+<li>Click the broken element. It lands in the agent chat as a rich attachment.</li>
+<li>Type what you want fixed: &quot;this padding is too tight, increase to match the cards above.&quot;</li>
+<li>The agent edits the source. Hot reload refreshes the browser.</li>
+<li>Click the element again to verify — if still wrong, repeat.</li>
+<li>When it&#x27;s right, commit.</li>
+</ol>
+<h2 id="recipes-design-mode-fix-why-its-fast">Why it&#x27;s fast</h2>
+<p>No screenshot, no DOM hunting, no selector copying. The agent gets the HTML, computed CSS, and a cropped image of the exact element you pointed at — the same context a human reviewer would want.</p>

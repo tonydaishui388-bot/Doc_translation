@@ -1,0 +1,46 @@
+<h1>Privacy &amp; Telemetry</h1>
+<p>What Orca product telemetry contains, how to opt out, and how it differs from hosted features.</p>
+<p>This page describes optional product-usage telemetry in packaged Orca desktop builds. Accounts, mobile connections, notifications and other online features have separate data flows, described below and in our <a href="https://orca.dev/privacy">Privacy Policy</a>.</p>
+<h2 id="telemetry-summary">Summary</h2>
+<ul>
+<li><strong>Pseudonymous identifiers.</strong> Product telemetry uses random installation and session identifiers. Some usage summaries use a pseudonymous conversation identifier. These identifiers can link events from the same installation, session or conversation, so they are pseudonymous rather than anonymous. Accounts and other hosted features keep their own records.</li>
+<li><strong>Content boundaries.</strong> Product telemetry is designed to exclude file contents, prompts, agent responses, terminal output and free-form local paths. This does not describe content you send through an enabled hosted feature or to an AI provider you configure.</li>
+<li><strong>Opt-out controls.</strong> <code>DO_NOT_TRACK=1</code> or <code>ORCA_TELEMETRY_DISABLED=1</code> disables product telemetry for supported launches. You can also turn it off in Settings → Privacy.</li>
+</ul>
+<h2 id="telemetry-what-product-telemetry-contains">What product telemetry contains</h2>
+<p>Events include the Orca version, operating system (for example, <code>darwin</code>, <code>win32</code> or <code>linux</code>), CPU architecture, coarse OS release, release channel (<code>stable</code> or <code>rc</code>), and random installation and session identifiers. The telemetry event schema restricts accepted fields and bounds their values.</p>
+<p>The categories include:</p>
+<ul>
+<li><strong>Lifecycle and feature use</strong> — app launches, onboarding (including system and selected interface language), feature interactions, and how repositories or workspaces are added or created. These events describe the action rather than the repository name, URL, path or contents. Actions from a paired mobile app that reach your desktop host, such as sending a chat message, can be recorded in that host&#x27;s product telemetry.</li>
+<li><strong>Agents</strong> — agent kind, launch surface, bounded activity and usage summaries, and coarse error categories. Token-usage summaries include provider, input/output/cache token counts, a pseudonymous conversation identifier and a revision number; they do not include the conversation text.</li>
+<li><strong>Public plugin use</strong> — identifiers and versions of plugins installed from the official or community catalogs, with installation/update and trigger information. Private catalogs, local folders and development plugins are excluded from this event.</li>
+<li><strong>Settings and privacy controls</strong> — changes to an allowlisted set of preferences and telemetry consent choices. Free-form setting values are not part of these events.</li>
+</ul>
+<p>The desktop PostHog transport does not add your account name or email to these events and disables SDK GeoIP enrichment. PostHog and network providers still receive request information, such as the source IP address, when events are sent. A random event identifier does not remove that request-level processing.</p>
+<h2 id="telemetry-what-is-separate-from-product-telemetry">What is separate from product telemetry</h2>
+<ul>
+<li><strong>Accounts and sign-ins</strong> process identity, organization, authentication and security records when you use those features. These records are separate from product-usage events.</li>
+<li><strong>Mobile and Relay</strong> process pairing, device, host, routing and connection metadata. Paired-runtime payload encryption does not conceal all service metadata.</li>
+<li><strong>Push notifications</strong> process device tokens and delivery information and can include notification titles, bodies and identifiers. Apple Push Notification service or Firebase Cloud Messaging receives information needed for delivery. Your device&#x27;s notification-preview settings change what is shown on the device, not what those services receive.</li>
+<li><strong>Sharing, plugins and connectors</strong> process the uploaded content, package files, integration credentials, messages or events needed for the features you enable. Publicly shared content can be accessible to anyone with its public link.</li>
+<li><strong>Cloud Sandboxes</strong> process the hosted workspace, files, credentials and agent activity you choose to run there.</li>
+<li><strong>Support and diagnostics</strong> process material you submit, which can contain project or personal information. Review diagnostic bundles, screenshots and other attachments before sharing them.</li>
+<li><strong>Customer-selected AI providers and agents</strong> receive the context needed for your requested inference under their own terms and your configuration. We do not use customer code or prompts to train our own models; Orca telemetry settings do not change another provider&#x27;s training or retention settings.</li>
+</ul>
+<p>Turning off optional product telemetry does not turn off processing needed for separately enabled features, erase historical records or disable your configured AI providers. Website analytics also has a separate scope; see the <a href="https://orca.dev/privacy">Privacy Policy</a>.</p>
+<h2 id="telemetry-how-to-opt-out">How to opt out</h2>
+<p>Any one of these controls is sufficient to disable product telemetry for the applicable desktop launch. Common CI environment markers, such as <code>CI</code>, also disable it:</p>
+<ol>
+<li><strong>In the app.</strong> Settings → Privacy → turn &quot;Share anonymous usage data&quot; off. The stored preference persists across launches. Turning it off in the app can send one final event recording the opt-out before transmission stops.</li>
+</ol>
+<figure><img src="https://orca.dev/docs/privacy-toggle.png" alt="Settings → Privacy — turn usage-data sharing off to disable product telemetry." loading="lazy" decoding="async"><figcaption>Settings → Privacy — turn usage-data sharing off to disable product telemetry.</figcaption></figure>
+<ol>
+<li><strong><code>DO_NOT_TRACK=1</code></strong> — disables product telemetry for that launch. Removing it restores your stored preference on the next launch.</li>
+<li><strong><code>ORCA_TELEMETRY_DISABLED=1</code></strong> — has the same override behavior as <code>DO_NOT_TRACK</code>.</li>
+</ol>
+<h2 id="telemetry-where-product-telemetry-goes">Where product telemetry goes</h2>
+<ul>
+<li><strong>Provider:</strong> PostHog Cloud&#x27;s <strong>United States</strong> ingestion endpoint.</li>
+<li><strong>Retention and deletion:</strong> the PostHog project settings and applicable service arrangements determine retention; this page does not state a maximum retention period. Disabling telemetry does not erase events already sent.</li>
+<li><strong>Requests:</strong> contact <a href="https://orca.dev/cdn-cgi/l/email-protection#2d4548415d6d5e594c4f4154034c44">[email protected]</a> or <a href="https://orca.dev/cdn-cgi/l/email-protection#2b454e42476b585f4a494752054a42">[email protected]</a> for privacy requests or questions about this page.</li>
+</ul>

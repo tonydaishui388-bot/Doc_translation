@@ -1,0 +1,47 @@
+<h1>Hosted reviews, issues &amp; Actions</h1>
+<p>Hosted code review is a first-class part of the worktree. Orca links worktrees to their pull requests or merge requests, surfaces review state inline, and lets you triage issues without leaving the app.</p>
+<figure><img src="https://orca.dev/whats-new/posters/orca-github.jpg" alt="GitHub integration — open PRs, watch checks, and triage issues without leaving the worktree." loading="lazy" decoding="async"><figcaption>GitHub integration — open PRs, watch checks, and triage issues without leaving the worktree.</figcaption></figure>
+<h2 id="review-github-connecting-a-provider">Connecting a provider</h2>
+<p>Connect the provider your repository uses from <a href="#settings">Settings → Integrations</a>. GitHub has the deepest Actions and issue support; GitLab merge requests and issues use the same worktree review flow.</p>
+<p>Bitbucket Cloud connects in-app from the same pane — <strong>Connect</strong> with <strong>Email &amp; API token</strong> or an <strong>Access token</strong>. Orca verifies the credential before saving and can create pull requests from Source Control. Bitbucket Cloud has no draft PRs, so the composer hides the Draft toggle. <code>ORCA_BITBUCKET_*</code> environment variables still win over a saved credential. Azure DevOps and Gitea pull requests appear in the worktree sidebar and the Checks panel alongside GitHub, GitLab, and Bitbucket — the worktree creation flow checks them for remote conflicts before pushing.</p>
+<h2 id="review-github-reviews">Reviews</h2>
+<ul>
+<li>Open a hosted review from the Source Control panel once a worktree has been pushed — confirm the base branch, title, description, and draft state before creating it.</li>
+<li>Source Control keeps the current branch visible in the branch context row while you create or open a hosted review, so the Create PR action never replaces the branch label.</li>
+<li>Linked reviews show up in the sidebar with status so you can tell whether the branch is still open, merged, or closed.</li>
+<li>The branch context row shows a compact <strong>Open review page in browser</strong> link when Orca has a URL for the linked PR / MR — one click jumps to the review on GitHub, GitLab, Bitbucket, Azure DevOps, or Gitea without opening the internal PR view.</li>
+<li>From a linked review or issue&#x27;s overflow menu, choose <strong>Open in Orca browser</strong> to open its URL in the current worktree&#x27;s browser tab without leaving your terminal or task view.</li>
+<li>For GitHub pull requests, use the PR actions menu in the sidebar to copy the review link, close the review, or reopen it after confirming the state change.</li>
+<li>For draft GitHub pull requests and GitLab merge requests, use the sidebar actions to <strong>Mark ready for review</strong> or <strong>Close</strong>. GitLab&#x27;s action removes its Draft/WIP state; merge and auto-merge remain unavailable while the review is still a draft.</li>
+<li>For a linked GitLab merge request, open the review-link menu in the Checks sidebar to <strong>Unlink MR</strong> or <strong>Link another MR</strong>.</li>
+<li>In SSH workspaces, GitLab merge request and issue actions route through the workspace host&#x27;s <code>GITLAB_HOST</code>, so writes reach the right server.</li>
+<li>GitHub checks, reviews, and comments open inline in a PR tab; GitLab merge requests and issues open in the same review surface.</li>
+<li>For GitLab pipelines, the <strong>Checks</strong> side panel includes bridge and child pipeline jobs (not only top-level jobs). Expanding a job loads that job&#x27;s trace (log) when available — same place GitHub check details open — so failed jobs are not a dead-end &quot;no inline details&quot; stub.</li>
+<li>In the Checks panel, you can reply to any comment in a review thread, not only the root comment.</li>
+<li>GitHub PR conversation comments and inline review-thread comments have a reaction picker matching GitHub&#x27;s eight reactions (👍 👎 😄 😕 ❤️ 🎉 🚀 👀). Existing chips are toggles. GitLab comments stay unchanged.</li>
+<li>Grouped PR comment sections sort newest-first so a fresh reply bubbles its thread to the top. The Timeline tab stays oldest-first.</li>
+<li>When a GitHub pull request has failing checks, use <strong>Fix broken checks</strong> from the PR view to hand the failed check names and links to an agent.</li>
+</ul>
+<h3 id="review-github-auto-merge">Auto-merge</h3>
+<p>For open GitHub PRs, the PR view&#x27;s merge button offers <strong>Enable auto-merge</strong> so GitHub merges the branch automatically once its requirements (checks, required reviews) pass. The merge method follows the repository&#x27;s default and is one of <strong>Squash and merge</strong>, <strong>Create merge commit</strong>, or <strong>Rebase and merge</strong> — methods the repo disallows aren&#x27;t shown. Use <strong>Disable auto-merge</strong> from the same control to cancel a pending auto-merge. When the base branch uses GitHub&#x27;s merge queue, the same control reads <strong>Merge when ready</strong> and adds the PR to the queue instead. The auto-merge control is hidden for PRs GitHub reports as draft, closed, conflicting, or unstable, and for repos that don&#x27;t allow auto-merge — in those cases you&#x27;ll only see the manual merge action.</p>
+<h3 id="review-github-stacked-pull-requests">Stacked pull requests</h3>
+<p>When you create a GitHub pull request whose selected base already has an open PR, the composer offers <strong>Stack this PR above #N</strong>. Checking it creates a GitHub Stack (or extends the parent&#x27;s existing stack) and changes the submit label to <strong>Create PR in stack</strong> (or <strong>Create draft PR in stack</strong> / <strong>Push &amp; Create PR in stack</strong>). A small preview shows the parent PR and the new branch. The option is GitHub-only and appears only when the executing host supports stacked creation. GitLab merge requests and Bitbucket pull requests stay single-PR create.</p>
+<p>When GitHub registers a pull request as part of a <strong>stack</strong>, the PR sidebar shows a collapsible <strong>Stack #N</strong> map: your position in the stack, stack size, and the stack base branch. Expand it to see the ordered layers with status (open, draft, checks pending/failed, review needed, conflicts, merged, closed). Click a layer to open that PR in Orca.</p>
+<p>Stack-aware merge replaces the single-PR merge label with <strong>Merge through #N · M PRs</strong> (or <strong>Queue through #N · M PRs</strong> when the repo uses a merge queue). That action covers the current PR and every PR below it in the stack. Confirmation lists the included numbers when stack metadata is complete. Atomic stack merge fails closed — if any layer cannot merge, none merge. Ordinary dependent PR chains without GitHub-registered stack metadata keep the normal single-PR merge flow. GitLab merge requests are unchanged.</p>
+<h2 id="review-github-issues">Issues</h2>
+<p>The issue drawer lets you browse, filter, and edit GitHub and GitLab issues from within Orca. Creating a worktree from a GitHub issue or PR opens the interactive workspace composer (not a silent background create) so issue-command automation, SSH targets, and folder workspaces work the same as other create paths. The composer pre-fills the task name and links the issue so the review stays attached to the task.</p>
+<p>For GitHub issues, the details dialog has an <strong>Activity</strong> section that interleaves comments with timeline events — assignments, mentions, cross-references, state changes, and project column moves — so you can see the full history without leaving Orca.</p>
+<p>Use the linked issue menu in the workspace sidebar to copy an issue link without opening the drawer.</p>
+<p>For GitLab repositories, the drawer lists open issues from the selected project and can narrow the list to issues assigned to you.</p>
+<h2 id="review-github-actions">Actions</h2>
+<p>Failed GitHub Actions checks show up as a red chip on the worktree. Click through to see the failing job logs inline.</p>
+<h2 id="review-github-tasks">Tasks</h2>
+<p>Orca surfaces a full GitHub Projects view under the <strong>Tasks</strong> sidebar entry — browse project cards across repos, filter by source repo, see draft pull request status, and create a worktree from any card. Board project views render as a kanban you can drag cards across, and the drop writes the card&#x27;s status field back to the project; table and other project views keep their list layout.</p>
+<h2 id="review-github-troubleshooting">Troubleshooting</h2>
+<p>If PR status, checks, or Tasks fail to refresh — rate limits, <code>gh</code> auth, permissions, or network — see <strong><a href="#github-errors">Troubleshooting GitHub errors</a></strong>.</p>
+<h2 id="review-github-next-steps">Next steps</h2>
+<ul>
+<li><a href="#review-commit-push">Commit &amp; push from Orca</a> — stage changes, push the branch, then create the hosted review.</li>
+<li><a href="#review-linear">Linear items drawer</a> — use Linear when the task source is outside your git provider.</li>
+<li><a href="#github-errors">Troubleshooting GitHub errors</a> — rate limits, auth, and <code>gh</code> failures.</li>
+</ul>

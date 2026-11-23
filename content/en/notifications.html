@@ -1,0 +1,21 @@
+<h1>Notifications &amp; Inbox</h1>
+<p>Orca runs agents, not just terminals, so it knows when an agent actually finishes versus when it&#x27;s just paused. Notifications lean on that signal so you can queue three agents, walk away, and come back when the first one is done.</p>
+<h2 id="notifications-agent-finished-pings">Agent-finished pings</h2>
+<p>When an agent transitions from working to idle, Orca fires a notification — system notification, sound, and a chip on the worktree. A completion sound still plays when one agent finishes right after another instead of being dropped.</p>
+<p>For an <a href="#agents-native-chat">updated structured chat</a>, a successful turn instead marks its tab and workspace unread. It does not send a system notification or play a sound. Failed or canceled turns do not add an unread mark.</p>
+<h2 id="notifications-persistent-bell">Persistent bell</h2>
+<p>The header bell shows unread notifications across all worktrees. Clicking a notification jumps to the matching worktree and pane.</p>
+<p>On macOS, the same unread count is mirrored as a badge on the Dock icon, so you can spot pending agent pings without bringing Orca to the foreground. The badge clears when you visit the workspace.</p>
+<h2 id="notifications-mark-unread">Mark unread</h2>
+<p>Right-click a notification to mark unread — useful when you&#x27;ve triaged something but want to come back to it later.</p>
+<h2 id="notifications-tuning">Tuning</h2>
+<p>Turn off specific categories (system, sound, chip-only) under <a href="#settings">Settings → Notifications</a>.</p>
+<h2 id="notifications-per-workspace-mute">Per-workspace mute</h2>
+<p>Right-click a workspace and mute its notifications when you want fewer interruptions. The workspace still shows its unread dot.</p>
+<h2 id="notifications-per-machine">Per-machine</h2>
+<p>Under <strong>Settings → Notifications → Machines</strong>, choose which machines can show notifications on this computer — this computer, SSH targets, and paired Orca Servers. A paired server&#x27;s switch also covers the work you reach through it. Muted machines are stored as an opt-out list, so a machine you add later still notifies. These switches only affect desktop notifications on this computer; phone push is unchanged.</p>
+<p>To change the alerts a paired server itself sends, including phone pushes, select that server in the Settings host picker and open <strong>Notifications</strong>. You can change its overall notifications, agent completion, agent input, and terminal bell switches. Update an older server if those controls are unavailable. These server settings are separate from the per-machine switches on your desktop.</p>
+<h2 id="notifications-custom-sounds">Custom sounds</h2>
+<p>Pick a custom desktop notification sound per category under <a href="#settings">Settings → Notifications</a> — point at any audio file on disk, or pick from Orca&#x27;s built-in set. Useful when you want agent-finished pings to stand out from system mail and Slack.</p>
+<p>Supported formats: MP3, WAV, OGG, M4A, AAC, FLAC. One file applies to all delivered desktop notifications.</p>
+<p>When you use a custom sound, set its playback volume from the same settings pane.</p>

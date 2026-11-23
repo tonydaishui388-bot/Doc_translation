@@ -1,0 +1,29 @@
+<h1>Your first 3-agent session</h1>
+<p>From empty app to three agents running in parallel in under five minutes.</p>
+<p>This is the single most important page in the docs. By the end you&#x27;ll have three agents running in parallel on three different approaches to the same task, with one PR shipped.</p>
+<figure><img src="https://orca.dev/whats-new/posters/orca-split-screen.jpg" alt="Hero walkthrough — split pane with three agents, one per worktree" loading="lazy" decoding="async"><figcaption>Hero walkthrough — split pane with three agents, one per worktree</figcaption></figure>
+<h2 id="first-session-1-add-a-repository">1. Add a repository</h2>
+<p>Click <strong>Add Repo</strong> on the sidebar and point Orca at a local checkout. Orca reads the repo&#x27;s git state and picks up your default branch as its <strong>base ref</strong> — the ref every new worktree branches from.</p>
+<p>You can change the base ref later under the repo&#x27;s settings.</p>
+<h2 id="first-session-2-create-a-worktree">2. Create a worktree</h2>
+<p>Click the <strong>+</strong> next to the repo name. Type a task name (&quot;fix-login-race&quot; is fine — if you leave it blank, Orca names it after a marine creature).</p>
+<figure><img src="https://orca.dev/whats-new/posters/default-agent-opening.jpg" alt="One-click workspace launcher — pick an agent or open an empty terminal. Customize the default in Settings." loading="lazy" decoding="async"><figcaption>One-click workspace launcher — pick an agent or open an empty terminal. Customize the default in Settings.</figcaption></figure>
+<p>The launcher opens with your <strong>default agent</strong> preselected (configurable under <a href="#settings">Settings → Agents</a>) or an empty terminal if you&#x27;d rather start cold. Pinned worktrees stand out in the sidebar so the ones you actually live in stay visible.</p>
+<p>Pick a <strong>start-from</strong> ref. Most of the time this is your base ref (<code>origin/main</code>), but you can start from any branch or commit.</p>
+<p>Orca creates a real git worktree under its managed directory, checks out the branch, and opens it.</p>
+<h2 id="first-session-3-pick-an-agent">3. Pick an agent</h2>
+<p>Choose an agent in the workspace launcher, or open a terminal and use its <strong>agent combobox</strong>. Pick Claude Code, Codex, Cursor CLI, or any of the <a href="#agents-supported">supported agents</a>. Orca launches the agent in the worktree; supported agents can use <a href="#agents-native-chat">Chat UI</a> when you choose Chat during setup or in Settings.</p>
+<h2 id="first-session-4-race-three-agents-on-the-same-task">4. Race three agents on the same task</h2>
+<p>Now repeat steps 2–3 twice more. You now have three worktrees:</p>
+<ul>
+<li><code>fix-login-race</code> → Claude Code</li>
+<li><code>fix-login-race-2</code> → Codex</li>
+<li><code>fix-login-race-3</code> → Cursor CLI</li>
+</ul>
+<p>Paste the same prompt into each. Three branches. Three diffs. Same prompt. Let them work.</p>
+<h2 id="first-session-5-split-panes-so-you-can-watch-them-all">5. Split panes so you can watch them all</h2>
+<p>Drag a worktree&#x27;s tab to the right or bottom edge of a pane to split. You can watch all three agents at once. See <a href="#model-tabs-panes-splits">Tabs, panes &amp; split layouts</a>.</p>
+<h2 id="first-session-6-pick-a-winner-review-the-diff-ship-it">6. Pick a winner, review the diff, ship it</h2>
+<p>Once agents settle, open each worktree&#x27;s diff view. Use <a href="#review-annotate-ai-diff">Annotate AI Diff</a> to leave inline comments and send them back to whichever agent got closest.</p>
+<p>Commit and push directly from Orca — see <a href="#review-commit-push">Commit &amp; push from Orca</a>. The other two worktrees can be deleted with one click; their branches go with them.</p>
+<aside>That&#x27;s it<p>This flow — add → worktree → agent → split → diff → ship — is the whole of Orca. Every other page in these docs is a deeper look at one of those steps.</p></aside>

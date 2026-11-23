@@ -1,0 +1,64 @@
+<h1>Troubleshooting &amp; FAQ</h1>
+<h2 id="troubleshooting-agent-wont-start">Agent won&#x27;t start</h2>
+<ul>
+<li>Run the agent&#x27;s CLI in a regular terminal outside Orca. If it fails there too, check the CLI installation and login. If it fails only in Orca, check the guidance below.</li>
+<li>Make sure the CLI is on the <code>PATH</code> Orca sees (check <a href="#settings">Settings → Agents</a>).</li>
+<li>Try the <strong>Restart</strong> chip on the tab.</li>
+</ul>
+<h2 id="troubleshooting-codex-reports-path-must-be-shorter-than-sun_len">Codex reports <code>path must be shorter than SUN_LEN</code></h2>
+<p>Update Orca to v1.4.212 or later. Codex 0.157 and later can hit this error when the background daemon&#x27;s socket path is too long in an Orca-managed account home. Orca now adjusts affected homes automatically; you do not need to move the account or edit your system <code>~/.codex/config.toml</code>. See <a href="#agents-codex">Codex in Orca</a>.</p>
+<h2 id="troubleshooting-orca-asks-which-profile-copy-to-use">Orca asks which profile copy to use</h2>
+<p>If both the JSON and SQLite copies of your profile are readable but disagree, Orca shows when each was last saved. Choose <strong>Use SQLite (Recommended)</strong> or <strong>Use JSON</strong> to keep that copy; Orca applies your choice and restarts. Choose <strong>Quit</strong> if you need to inspect the copies first. Other profile recovery errors can still show separate command guidance.</p>
+<h2 id="troubleshooting-diff-view-looks-wrong--stuck">Diff view looks wrong / stuck</h2>
+<ul>
+<li>Click the refresh icon on the diff toolbar — Orca re-reads the worktree.</li>
+<li>External <code>git</code> operations (rebase, reset) can land between refreshes.</li>
+</ul>
+<h2 id="troubleshooting-worktree-creation-fails">Worktree creation fails</h2>
+<ul>
+<li>The start-from ref may not be fetched. Open a terminal in the repo and run <code>git fetch origin</code>.</li>
+<li>The target directory may already have a worktree for that branch — delete it or pick a new branch name.</li>
+</ul>
+<h2 id="troubleshooting-orca-cli-says-command-not-found">Orca CLI says &quot;command not found&quot;</h2>
+<p>Register the CLI under <a href="#settings">Settings → General → Orca CLI</a>. On macOS it installs a shim into <code>~/.local/bin</code>; make sure that&#x27;s on your shell&#x27;s <code>PATH</code>. On Windows, <code>orca</code> is a native program the installer adds to your <code>PATH</code>.</p>
+<h2 id="troubleshooting-ssh-connects-but-remote-terminals-fail">SSH connects but remote terminals fail</h2>
+<ul>
+<li>Orca sets up its own managed server on the host, so a wrong Node version or missing build tools no longer blocks the connection. <strong>Settings → SSH Hosts</strong> says which server a host runs, and <strong>Settings → Managed servers</strong> can update, roll back, or recover it. See <a href="#ssh-managed-orca-server">SSH worktrees → Managed Orca server</a>.</li>
+<li>A host the managed server cannot run on no longer falls back to the old SSH runtime: <strong>Settings → SSH Hosts</strong> explains why, and the connect fails with that reason. Use an older Orca version to keep connecting to that host.</li>
+<li>Terminals carried over from v1.4.224 keep accepting input and output, but they do not have the <code>orca</code> CLI. Open a new terminal on the same host for <code>orca</code> commands.</li>
+</ul>
+<h2 id="troubleshooting-ssh-works-for-files-but-not-download-folder">SSH works for files but not “Download Folder”</h2>
+<p>Folder download needs recursive SFTP transfer. File download may still work on system-SSH-only connections. Use a terminal <code>tar</code>/<code>scp</code> as a fallback.</p>
+<h2 id="troubleshooting-open-in-vs-code-is-disabled-or-local-only">“Open in VS Code” is disabled or Local only</h2>
+<ul>
+<li>Use an SSH worktree (not a Remote Orca Server active runtime).</li>
+<li>Set the Open-in command to VS Code / Insiders, not Cursor or a multi-arg shell command.</li>
+<li>Refresh SSH targets if the host was removed.</li>
+</ul>
+<h2 id="troubleshooting-kerberos-login-fails">Kerberos login fails</h2>
+<ul>
+<li>Ensure <code>klist</code> shows a valid ticket for the host realm.</li>
+<li>Confirm <code>GSSAPIAuthentication yes</code> for that Host in OpenSSH config, then re-import or re-test the target in Settings → SSH.</li>
+</ul>
+<h2 id="troubleshooting-browser-says-browser_no_tab">Browser says <code>browser_no_tab</code></h2>
+<p>No tab is open in the current worktree. Open one with <code>orca tab create --url ...</code> or open the browser pane manually and navigate.</p>
+<h2 id="troubleshooting-performance--memory">Performance &amp; memory</h2>
+<ul>
+<li>Close worktrees you&#x27;re not actively using. Each worktree keeps file watchers alive.</li>
+<li>Split layouts with many browser tabs are the biggest RAM users — close browsers you don&#x27;t need.</li>
+</ul>
+<h2 id="troubleshooting-github-pr-panel--checks--tasks-errors">GitHub PR panel / checks / Tasks errors</h2>
+<p>Rate limits, bad <code>gh</code> auth, missing scopes, and repo access issues all show up in Source Control and the PR Checks panel. See <strong><a href="#github-errors">Troubleshooting GitHub errors</a></strong> for the full matrix (including why <strong>GitHub API Budget</strong> in Settings can look fine while REST is still blocked).</p>
+<p>If Orca says the GitHub CLI is not installed even though <code>gh</code> works in your terminal, a <code>gh</code> launcher on your <code>PATH</code> is likely hanging. Orca keeps looking past a stuck launcher and uses the copy that passes its version check, instead of reporting the CLI as missing.</p>
+<p>Quick checks:</p>
+<pre><code>gh auth status -h github.com
+gh api user
+gh api rate_limit --jq &#x27;.resources.core&#x27;</code></pre>
+<h2 id="troubleshooting-logs">Logs</h2>
+<p><strong>Help → Open Logs</strong> opens the directory with Orca&#x27;s logs. Attach these when filing a bug.</p>
+<h2 id="troubleshooting-reporting-issues">Reporting issues</h2>
+<ul>
+<li><strong>Help → Send Feedback</strong> (in-app) — paste or drag screenshots into the dialog, or pick image files; thumbnails show before you submit. Attach <a href="#troubleshooting-logs">logs</a> when the bug is hard to reproduce.</li>
+<li><a href="https://github.com/stablyai/orca/issues">GitHub Issues</a> — bugs and feature requests.</li>
+<li><a href="https://discord.gg/fzjDKHxv8Q">Discord</a> — real-time help.</li>
+</ul>

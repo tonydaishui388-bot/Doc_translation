@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Build the ORCA Chinese docs site from the translated Markdown.
+"""Build the bilingual ORCA docs site.
 
-Sidebar labels match https://orca.dev/docs in English. Page headings stay
-Chinese. Autoplay clips use the official mp4 plus poster, same as AutoplayClip.
-Translator notes (选页说明 / 术语候选) are not published.
+Sidebar labels stay the English names from https://orca.dev/docs. Each chapter
+embeds the Chinese translation and the official English article. A header
+control switches the chapter body and remembers the choice. Autoplay clips use
+the official mp4 plus poster. Translator notes are not published.
 """
 
-from html import escape
+from html import escape, unescape
 from pathlib import Path
 import re
 
@@ -14,6 +15,7 @@ import mistune
 
 ROOT = Path(__file__).resolve().parents[1]
 ZH_DIR = Path("/cursor/stores/bc-7f62f27b-3e33-4cb9-a277-10330258c79e/docs/zh")
+EN_DIR = ROOT / "content" / "en"
 PLACEHOLDER = "这一章的译文尚未放入。"
 ORIGIN = "https://orca.dev"
 NOTE_KEYS = ("原文：", "英文标题：", "页面导语：", "选页说明", "入门样章")
@@ -177,6 +179,17 @@ def cut_glossary(text: str) -> str:
     return "\n".join(kept).strip()
 
 
+def load_english(slug: str):
+    path = EN_DIR / f"{slug}.html"
+    if not path.is_file():
+        raise SystemExit(f"缺少英文正文 {path}")
+    text = path.read_text(encoding="utf-8").lstrip()
+    match = re.match(r"<h1>(.*?)</h1>\s*", text, flags=re.S)
+    if not match:
+        raise SystemExit(f"{path} 缺少英文标题")
+    return unescape(match.group(1)).strip(), text[match.end():].strip()
+
+
 def load_translation(source: str):
     path = zh_path(source)
     if not path.is_file():
@@ -209,15 +222,21 @@ def collect_pages():
         elif kind == "page":
             source, nav_title = item[1], item[2]
             loaded = load_translation(source)
+            slug = slug_for(source)
+            en_title, en_html = load_english(slug)
+            if en_title != nav_title:
+                raise SystemExit(f"{source} 英文标题 {en_title!r} 和目录 {nav_title!r} 不一致")
             pages.append(
                 {
-                    "slug": slug_for(source),
+                    "slug": slug,
                     "source": source,
                     "section": section,
                     "group": group,
                     "nav_title": nav_title,
                     "title": loaded["title"] if loaded else nav_title,
                     "html": loaded["html"] if loaded else "",
+                    "en_title": en_title,
+                    "en_html": en_html,
                     "body": loaded["body"] if loaded else "",
                     "path": loaded["path"] if loaded else None,
                     "missing": loaded is None or not (loaded and loaded["html"]),
@@ -281,14 +300,17 @@ def chapter_html(pages, index):
     page = pages[index]
     url = ORIGIN + page["source"]
     if page["missing"]:
-        body = f'      <p class="placeholder">{escape(PLACEHOLDER)}</p>'
+        zh_body = f'      <p class="placeholder lang-zh">{escape(PLACEHOLDER)}</p>'
     else:
-        body = f'      <div class="doc-body">\n{page["html"]}\n      </div>'
+        zh_body = f'      <div class="doc-body lang-zh">\n{page["html"]}\n      </div>'
+    en_body = f'      <div class="doc-body lang-en">\n{page["en_html"]}\n      </div>'
     return f"""    <article id="{page["slug"]}" class="doc" data-source="{escape(page["source"])}">
       <p class="kicker">{escape(kicker(page))}</p>
-      <h1>{escape(page["title"])}</h1>
-{body}
-      <p class="meta">英文原文：<a href="{escape(url)}">{escape(url.removeprefix("https://"))}</a></p>
+      <h1 class="lang-zh">{escape(page["title"])}</h1>
+      <h1 class="lang-en">{escape(page["en_title"])}</h1>
+{zh_body}
+{en_body}
+      <p class="meta"><span class="lang-zh">英文原文：</span><span class="lang-en">English source: </span><a href="{escape(url)}">{escape(url.removeprefix("https://"))}</a></p>
 {pager(pages, index)}
     </article>"""
 
@@ -317,31 +339,71 @@ SCRIPT = """
     (function () {
       var toggle = document.getElementById("nav-toggle");
       var sidebar = document.getElementById("sidebar");
+      var langKey = "orca-docs-lang";
+
+      function chapterArticle() {
+        var id = (location.hash || "#what-is-orca").slice(1);
+        var el = document.getElementById(id);
+        var article = el
+          ? (el.classList.contains("doc") ? el : el.closest(".doc"))
+          : null;
+        if (!article) article = document.getElementById("what-is-orca");
+        var docs = document.querySelectorAll(".doc");
+        for (var i = 0; i < docs.length; i++) docs[i].classList.remove("is-current");
+        article.classList.add("is-current");
+        return article;
+      }
 
       function sync() {
-        var id = (location.hash || "#what-is-orca").slice(1);
-        if (!document.getElementById(id)) id = "what-is-orca";
+        var article = chapterArticle();
+        var id = article.id;
         var links = sidebar.querySelectorAll("a[href^='#']");
         for (var i = 0; i < links.length; i++) {
           var on = links[i].getAttribute("href") === "#" + id;
           if (on) links[i].setAttribute("aria-current", "page");
           else links[i].removeAttribute("aria-current");
         }
-        var heading = document.querySelector("#" + id + " h1");
+        var lang = document.documentElement.getAttribute("data-lang") === "en" ? "en" : "zh";
+        var heading = article.querySelector("h1.lang-" + lang);
         document.title = !heading || id === "what-is-orca"
           ? "ORCA 说明文档"
           : heading.textContent + " · ORCA 说明文档";
         var current = sidebar.querySelector('[aria-current="page"]');
-        if (!current) return;
-        var linkTop = current.getBoundingClientRect().top - sidebar.getBoundingClientRect().top;
-        sidebar.scrollTop += linkTop - sidebar.clientHeight / 2 + current.clientHeight / 2;
+        if (current) {
+          var linkTop = current.getBoundingClientRect().top - sidebar.getBoundingClientRect().top;
+          sidebar.scrollTop += linkTop - sidebar.clientHeight / 2 + current.clientHeight / 2;
+        }
+        var hashId = (location.hash || "").slice(1);
+        var target = hashId && document.getElementById(hashId);
+        if (target && target !== article) target.scrollIntoView();
       }
+
+      function applyLang(lang, persist) {
+        if (lang !== "en") lang = "zh";
+        document.documentElement.setAttribute("data-lang", lang);
+        document.documentElement.lang = lang === "en" ? "en" : "zh-CN";
+        var zh = document.getElementById("lang-zh");
+        var en = document.getElementById("lang-en");
+        if (zh) zh.setAttribute("aria-pressed", lang === "zh" ? "true" : "false");
+        if (en) en.setAttribute("aria-pressed", lang === "en" ? "true" : "false");
+        if (persist) {
+          try { localStorage.setItem(langKey, lang); } catch (e) {}
+        }
+        sync();
+      }
+
+      document.getElementById("lang-zh").addEventListener("click", function () {
+        applyLang("zh", true);
+      });
+      document.getElementById("lang-en").addEventListener("click", function () {
+        applyLang("en", true);
+      });
 
       sidebar.addEventListener("click", function (event) {
         if (event.target.closest("a")) toggle.checked = false;
       });
       window.addEventListener("hashchange", sync);
-      sync();
+      applyLang(document.documentElement.getAttribute("data-lang"), false);
 
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
       var clips = document.querySelectorAll(".clip");
@@ -390,12 +452,22 @@ def render(pages):
     by_source = {page["source"]: page for page in pages}
     chapters = "\n".join(chapter_html(pages, index) for index in range(len(pages)))
     return f"""<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-lang="zh">
 <head>
   <meta charset="utf-8">
+  <script>
+    (function () {{
+      try {{
+        if (localStorage.getItem("orca-docs-lang") === "en") {{
+          document.documentElement.setAttribute("data-lang", "en");
+          document.documentElement.lang = "en";
+        }}
+      }} catch (e) {{}}
+    }})();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ORCA 说明文档</title>
-  <meta name="description" content="ORCA 中文说明文档。栏目与英文文档站对应。">
+  <meta name="description" content="ORCA docs in Chinese and English. The sidebar matches orca.dev/docs.">
   <link rel="stylesheet" href="styles.css">
   <style>
     {current_css(pages)}
@@ -405,7 +477,10 @@ def render(pages):
   <a class="skip" href="#content">跳到正文</a>
   <header class="topbar">
     <a class="brand" href="#what-is-orca">ORCA 说明文档</a>
-    <p class="brand-note">中文</p>
+    <div class="lang-switch" role="group" aria-label="语言">
+      <button type="button" id="lang-zh" aria-pressed="true">中文</button>
+      <button type="button" id="lang-en" aria-pressed="false">English</button>
+    </div>
     <label class="menu-button" for="nav-toggle">目录</label>
   </header>
   <input class="nav-toggle" id="nav-toggle" type="checkbox">
@@ -448,7 +523,7 @@ def upgrade_clips(html: str) -> str:
         )
 
     return re.sub(
-        r'<p><img src="(https://orca.dev/whats-new/posters/[^"]+)" alt="([^"]*)" /></p>',
+        r'<img src="(https://orca.dev/whats-new/posters/[^"]+\.jpg)" alt="([^"]*)"[^>]*>',
         repl,
         html,
     )
@@ -492,10 +567,17 @@ def check(pages, html):
         raise SystemExit("首页动图没有换成官网 mp4")
     if "https://orca.dev/whats-new/posters/orca-split-screen.jpg" not in html:
         raise SystemExit("首页海报静帧不在页面里")
-    if html.count('class="clip"') != 19:
+    if html.count('class="clip"') != 38:
         raise SystemExit(f"动图数量不对: {html.count('class=\"clip\"')}")
-    if "brew install --cask stablyai/orca/orca" not in html:
-        raise SystemExit("安装页代码块不在页面里")
+    if html.count("brew install --cask stablyai/orca/orca") < 2:
+        raise SystemExit("安装页中英文代码块不齐")
+    if 'id="lang-zh"' not in html or 'id="lang-en"' not in html:
+        raise SystemExit("缺少语言开关")
+    if "orca-docs-lang" not in html:
+        raise SystemExit("没有记住语言的 localStorage 键")
+    install = html.split('id="install"', 1)[1].split("</article>", 1)[0]
+    if "安装" not in install or ">Install<" not in install:
+        raise SystemExit("安装页没有中英两个标题")
 
 
 def main():

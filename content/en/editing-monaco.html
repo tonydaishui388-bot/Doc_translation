@@ -1,0 +1,28 @@
+<h1>Monaco editor &amp; autosave</h1>
+<p>Orca&#x27;s code editor is Monaco — the same editor VS Code uses — with a few Orca-specific tweaks.</p>
+<h2 id="editing-monaco-autosave">Autosave</h2>
+<p>Files save on blur and after short idle periods. There is no &quot;dirty&quot; dot because there are no unsaved changes in normal flow.</p>
+<p>Before each save, Orca checks that the file has not changed on disk since the tab last read or wrote it. If it has, autosave pauses and the changed-on-disk banner lets you compare, reload, keep your edits, or explicitly overwrite the disk version. Your edits stay in the tab until you choose.</p>
+<h2 id="editing-monaco-format-on-save">Format on save</h2>
+<p>Turn on <strong>Settings → General → Editor → Format on Save</strong>, then configure a formatter command and include patterns for each project and choose <strong>Save formatter</strong>. The formatter reads the file text from standard input and writes the formatted text to standard output; do not use a write-to-file flag. You can use <code>${file}</code> or <code>${relativeFile}</code> in its arguments. Formatting runs on manual saves and autosave for matching files.</p>
+<p>If the formatter fails, Orca shows a notice and saves the original text. Formatters do not run on SSH-hosted files yet; a configured SSH formatter shows a notice and saves the original text. Only configure commands you trust.</p>
+<h2 id="editing-monaco-per-host-editor-state">Per-host editor state</h2>
+<p>Files with the same path on different hosts keep separate editor text and Undo history, so opening a remote file that shares a path with a local one can&#x27;t expose the other&#x27;s Undo stack. Tabs for the same local file still share one model.</p>
+<h2 id="editing-monaco-multi-cursor-go-to-find">Multi-cursor, go-to, find</h2>
+<ul>
+<li><code>Cmd-D</code> — select next occurrence.</li>
+<li><code>Cmd-F</code> / <code>Cmd-Shift-F</code> — file find / worktree find. File find seeds the search box from the current selection when text is selected.</li>
+<li><code>Cmd-Click</code> — go to definition (where supported by language extensions).</li>
+</ul>
+<h2 id="editing-monaco-git-blame">Git blame</h2>
+<p>The Git blame status item shows the author and date for the line at your cursor. In a repository workspace, select it to open the commit. Turn on <strong>Inline git blame</strong> under <strong>Settings → Editor</strong> to show annotations beside your code.</p>
+<h2 id="editing-monaco-changes-view-mode">Changes view mode</h2>
+<p>Toggle <strong>Changes view mode</strong> in any editor tab to flip the file into an in-tab HEAD-vs-working-tree diff without leaving your cursor position. Same shortcuts as the <a href="#review-diff-viewer">Diff viewer</a> — <code>n</code>/<code>p</code> to walk hunks, <code>s</code> to stage. Toggle again to return to the regular file view.</p>
+<h2 id="editing-monaco-word-wrap">Word wrap</h2>
+<p>File editors wrap long lines by default. Toggle <strong>Word Wrap</strong> from the editor tab&#x27;s <strong>⋯</strong> menu, press <code>Alt+Z</code> (same as VS Code; remappable under <a href="#settings">Settings → Shortcuts</a>), or set the default under <a href="#settings">Settings → General → Editor Word Wrap</a>. This setting is separate from <strong>Diff Word Wrap</strong>, which only affects diff editors.</p>
+<h2 id="editing-monaco-minimap">Minimap</h2>
+<p>A minimap is available in the file editor under <a href="#settings">Settings → Appearance</a>. It&#x27;s off by default; turn it on if you prefer the VS Code-style overview rail.</p>
+<h2 id="editing-monaco-custom-editor-font">Custom editor font</h2>
+<p>By default the editor and diff views use the same font as the terminal. Leave <strong>Editor Font Family</strong> empty under <a href="#settings">Settings → Appearance</a> to keep that link; set a font to override editors only (UI font stays separate).</p>
+<h2 id="editing-monaco-language-support">Language support</h2>
+<p>Syntax highlighting ships for the languages Monaco supports out of the box, plus extras such as Solidity, Twig templates, Quarto (<code>.qmd</code>), R Markdown (<code>.Rmd</code>), and shell startup dotfiles such as <code>.bashrc</code> and <code>.zshrc</code>. Nim and Typst are highlighted through Orca&#x27;s shared TextMate grammar layer, so a single very long line cannot freeze the window. Orca is intentionally editor-first, not IDE-first — run type-checkers and linters in a terminal pane.</p>
