@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ORCA 说明文档</title>
+  <meta name="description" content="ORCA 中文说明文档骨架。栏目已按英文文档站排好，各章译文尚未放入。">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body:not(:has(.doc:target)) a.nav-link[href="#home"],
+    body:has(#home:target) a.nav-link[href="#home"],
+    body:has(#what-is-orca:target) a.nav-link[href="#what-is-orca"],
+    body:has(#install:target) a.nav-link[href="#install"],
+    body:has(#first-session:target) a.nav-link[href="#first-session"],
+    body:has(#migrate-from-conductor:target) a.nav-link[href="#migrate-from-conductor"],
+    body:has(#model-worktrees:target) a.nav-link[href="#model-worktrees"],
+    body:has(#model-tabs-panes-splits:target) a.nav-link[href="#model-tabs-panes-splits"],
+    body:has(#model-agents-sessions:target) a.nav-link[href="#model-agents-sessions"],
+    body:has(#model-session-restore:target) a.nav-link[href="#model-session-restore"],
+    body:has(#model-quick-open:target) a.nav-link[href="#model-quick-open"],
+    body:has(#agents-supported:target) a.nav-link[href="#agents-supported"],
+    body:has(#agents-claude-code:target) a.nav-link[href="#agents-claude-code"],
+    body:has(#agents-glm-agent:target) a.nav-link[href="#agents-glm-agent"],
+    body:has(#agents-codex:target) a.nav-link[href="#agents-codex"],
+    body:has(#agents-cursor-cli:target) a.nav-link[href="#agents-cursor-cli"],
+    body:has(#agents-codex-hot-swap:target) a.nav-link[href="#agents-codex-hot-swap"],
+    body:has(#agents-native-chat:target) a.nav-link[href="#agents-native-chat"],
+    body:has(#agents-session-history:target) a.nav-link[href="#agents-session-history"],
+    body:has(#agents-hibernation:target) a.nav-link[href="#agents-hibernation"],
+    body:has(#agents-usage-tracking:target) a.nav-link[href="#agents-usage-tracking"],
+    body:has(#agents-hooks-memory:target) a.nav-link[href="#agents-hooks-memory"],
+    body:has(#review-diff-viewer:target) a.nav-link[href="#review-diff-viewer"],
+    body:has(#review-annotate-ai-diff:target) a.nav-link[href="#review-annotate-ai-diff"],
+    body:has(#review-attribution:target) a.nav-link[href="#review-attribution"],
+    body:has(#review-commit-push:target) a.nav-link[href="#review-commit-push"],
+    body:has(#review-github:target) a.nav-link[href="#review-github"],
+    body:has(#review-linear:target) a.nav-link[href="#review-linear"],
+    body:has(#review-jira:target) a.nav-link[href="#review-jira"],
+    body:has(#editing-monaco:target) a.nav-link[href="#editing-monaco"],
+    body:has(#editing-markdown:target) a.nav-link[href="#editing-markdown"],
+    body:has(#editing-viewers:target) a.nav-link[href="#editing-viewers"],
+    body:has(#editing-file-explorer:target) a.nav-link[href="#editing-file-explorer"],
+    body:has(#browser-overview:target) a.nav-link[href="#browser-overview"],
+    body:has(#browser-design-mode:target) a.nav-link[href="#browser-design-mode"],
+    body:has(#browser-profiles:target) a.nav-link[href="#browser-profiles"],
+    body:has(#bots:target) a.nav-link[href="#bots"],
+    body:has(#bots-use-cases:target) a.nav-link[href="#bots-use-cases"],
+    body:has(#bots-connectors:target) a.nav-link[href="#bots-connectors"],
+    body:has(#bots-import:target) a.nav-link[href="#bots-import"],
+    body:has(#bots-security:target) a.nav-link[href="#bots-security"],
+    body:has(#terminal:target) a.nav-link[href="#terminal"],
+    body:has(#ways-to-run:target) a.nav-link[href="#ways-to-run"],
+    body:has(#ssh:target) a.nav-link[href="#ssh"],
+    body:has(#remote-servers:target) a.nav-link[href="#remote-servers"],
+    body:has(#cli-overview:target) a.nav-link[href="#cli-overview"],
+    body:has(#cli-reference:target) a.nav-link[href="#cli-reference"],
+    body:has(#cli-orchestration:target) a.nav-link[href="#cli-orchestration"],
+    body:has(#cli-automations:target) a.nav-link[href="#cli-automations"],
+    body:has(#cli-computer-use:target) a.nav-link[href="#cli-computer-use"],
+    body:has(#cli-worktree-checkpoints:target) a.nav-link[href="#cli-worktree-checkpoints"],
+    body:has(#cli-skills:target) a.nav-link[href="#cli-skills"],
+    body:has(#mobile:target) a.nav-link[href="#mobile"],
+    body:has(#android-apk:target) a.nav-link[href="#android-apk"],
+    body:has(#notifications:target) a.nav-link[href="#notifications"],
+    body:has(#activity:target) a.nav-link[href="#activity"],
+    body:has(#recipes-parallel-agents:target) a.nav-link[href="#recipes-parallel-agents"],
+    body:has(#recipes-review-ai-diff:target) a.nav-link[href="#recipes-review-ai-diff"],
+    body:has(#recipes-jump-worktrees:target) a.nav-link[href="#recipes-jump-worktrees"],
+    body:has(#recipes-design-mode-fix:target) a.nav-link[href="#recipes-design-mode-fix"],
+    body:has(#recipes-remote-worktrees:target) a.nav-link[href="#recipes-remote-worktrees"],
+    body:has(#settings:target) a.nav-link[href="#settings"],
+    body:has(#telemetry:target) a.nav-link[href="#telemetry"],
+    body:has(#troubleshooting:target) a.nav-link[href="#troubleshooting"],
+    body:has(#github-errors:target) a.nav-link[href="#github-errors"] {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 650;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">跳到正文</a>
+  <header class="topbar">
+    <a class="brand" href="#home">ORCA 说明文档</a>
+    <p class="brand-note">中文骨架</p>
+    <label class="menu-button" for="nav-toggle">目录</label>
+  </header>
+  <input class="nav-toggle" id="nav-toggle" type="checkbox">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <nav aria-label="文档目录">
+        <a class="nav-link" href="#home">文档骨架</a>
+        <p class="nav-section">从这里开始</p>
+        <a class="nav-link" href="#what-is-orca">Orca 是什么</a>
+        <a class="nav-link" href="#install">安装</a>
+        <a class="nav-link" href="#first-session">第一次三个智能体一起干活</a>
+        <a class="nav-link" href="#migrate-from-conductor">从 Conductor 迁移</a>
+        <p class="nav-group">工作区的组织方式</p>
+        <a class="nav-link sub" href="#model-worktrees">工作树</a>
+        <a class="nav-link sub" href="#model-tabs-panes-splits">标签页、窗格与分栏</a>
+        <a class="nav-link sub" href="#model-agents-sessions">智能体与会话</a>
+        <a class="nav-link sub" href="#model-session-restore">恢复会话</a>
+        <a class="nav-link sub" href="#model-quick-open">快速打开与跳转面板</a>
+        <p class="nav-group">使用智能体</p>
+        <a class="nav-link sub" href="#agents-supported">支持的智能体</a>
+        <a class="nav-link sub" href="#agents-claude-code">在 Orca 里使用 Claude Code</a>
+        <a class="nav-link sub" href="#agents-glm-agent">在 Orca ADE 里使用 GLM-5.2</a>
+        <a class="nav-link sub" href="#agents-codex">在 Orca 里使用 Codex</a>
+        <a class="nav-link sub" href="#agents-cursor-cli">在 Orca 里使用 Cursor CLI</a>
+        <a class="nav-link sub" href="#agents-codex-hot-swap">快速切换 Codex 账号</a>
+        <a class="nav-link sub" href="#agents-native-chat">聊天界面（原生对话）</a>
+        <a class="nav-link sub" href="#agents-session-history">智能体会话记录</a>
+        <a class="nav-link sub" href="#agents-hibernation">智能体休眠</a>
+        <a class="nav-link sub" href="#agents-usage-tracking">用量与速率上限</a>
+        <a class="nav-link sub" href="#agents-hooks-memory">智能体钩子与记忆</a>
+        <p class="nav-group">审阅并交付代码</p>
+        <a class="nav-link sub" href="#review-diff-viewer">查看代码改动</a>
+        <a class="nav-link sub" href="#review-annotate-ai-diff">给 AI 改动加批注</a>
+        <a class="nav-link sub" href="#review-attribution">标明改动出处</a>
+        <a class="nav-link sub" href="#review-commit-push">在 Orca 里提交并推送</a>
+        <a class="nav-link sub" href="#review-github">托管的评审、议题与 Actions</a>
+        <a class="nav-link sub" href="#review-linear">Linear 事项抽屉</a>
+        <a class="nav-link sub" href="#review-jira">Jira 事项抽屉</a>
+        <p class="nav-group">在 Orca 里编辑</p>
+        <a class="nav-link sub" href="#editing-monaco">Monaco 编辑器与自动保存</a>
+        <a class="nav-link sub" href="#editing-markdown">Markdown 富文本编辑</a>
+        <a class="nav-link sub" href="#editing-viewers">HTML、Mermaid、PDF 与图片查看</a>
+        <a class="nav-link sub" href="#editing-file-explorer">文件浏览器与外部拖放</a>
+        <p class="nav-group">浏览器与设计模式</p>
+        <a class="nav-link sub" href="#browser-overview">每个工作树各自的浏览器</a>
+        <a class="nav-link sub" href="#browser-design-mode">设计模式</a>
+        <a class="nav-link sub" href="#browser-profiles">供智能体使用的浏览器配置</a>
+        <p class="nav-section">机器人</p>
+        <a class="nav-link" href="#bots">机器人快速上手</a>
+        <a class="nav-link" href="#bots-use-cases">机器人能做什么</a>
+        <a class="nav-link" href="#bots-connectors">机器人的外部连接</a>
+        <a class="nav-link" href="#bots-import">导入机器人</a>
+        <a class="nav-link" href="#bots-security">机器人安全</a>
+        <p class="nav-section">终端</p>
+        <a class="nav-link" href="#terminal">终端</a>
+        <p class="nav-section">远程与 SSH</p>
+        <a class="nav-link" href="#ways-to-run">运行 Orca 的方式</a>
+        <a class="nav-link" href="#ssh">SSH 工作树</a>
+        <a class="nav-link" href="#remote-servers">远程 Orca 服务器</a>
+        <p class="nav-section">命令行与自动化</p>
+        <p class="nav-group">Orca 命令行与技能</p>
+        <a class="nav-link sub" href="#cli-overview">Orca 命令行概览</a>
+        <a class="nav-link sub" href="#cli-reference">Orca 命令行参考</a>
+        <a class="nav-link sub" href="#cli-orchestration">编排</a>
+        <a class="nav-link sub" href="#cli-automations">定时任务</a>
+        <a class="nav-link sub" href="#cli-computer-use">让智能体操作电脑</a>
+        <a class="nav-link sub" href="#cli-worktree-checkpoints">工作树检查点</a>
+        <a class="nav-link sub" href="#cli-skills">Orca 技能注册与 MCP</a>
+        <p class="nav-section">移动端</p>
+        <a class="nav-link" href="#mobile">手机伴侣</a>
+        <a class="nav-link" href="#android-apk">在 Android 上安装 Orca Mobile</a>
+        <p class="nav-section">通知与收件箱</p>
+        <a class="nav-link" href="#notifications">通知与收件箱</a>
+        <a class="nav-link" href="#activity">智能体动态</a>
+        <p class="nav-group">场景示例</p>
+        <a class="nav-link sub" href="#recipes-parallel-agents">让三个智能体同时做一件事</a>
+        <a class="nav-link sub" href="#recipes-review-ai-diff">逐行审阅 AI 改动</a>
+        <a class="nav-link sub" href="#recipes-jump-worktrees">在 10 个工作树之间跳转</a>
+        <a class="nav-link sub" href="#recipes-design-mode-fix">用设计模式修界面问题</a>
+        <a class="nav-link sub" href="#recipes-remote-worktrees">通过 SSH 在远程机器上工作</a>
+        <p class="nav-section">设置说明</p>
+        <a class="nav-link" href="#settings">设置说明</a>
+        <p class="nav-section">隐私与遥测</p>
+        <a class="nav-link" href="#telemetry">隐私与遥测</a>
+        <p class="nav-section">故障排查与常见问题</p>
+        <a class="nav-link" href="#troubleshooting">故障排查与常见问题</a>
+        <a class="nav-link" href="#github-errors">排查 GitHub 错误</a>
+      </nav>
+    </aside>
+    <label class="backdrop" for="nav-toggle"></label>
+    <main class="content" id="content">
+    <article id="home" class="doc">
+      <p class="kicker">文档骨架</p>
+      <h1>ORCA 说明文档</h1>
+      <p class="lead">这是 ORCA 中文说明文档的骨架。左侧目录按照英文文档站的真实栏目排好，先把站点立起来。各章正文的译文还没有放入。</p>
+      <h2>现在能看什么</h2>
+      <ul>
+        <li>目录与 <a href="https://orca.dev/docs">orca.dev/docs</a> 的侧栏一致，名称是临时的中文意译。</li>
+        <li>点开任意一章，会看到统一的占位句。</li>
+        <li>版式按长文来排：正文有最大宽度，标题分层，代码单独成块。</li>
+      </ul>
+      <h2>版式预览</h2>
+      <p>下面用一段命令确认代码块和行内代码的样式。命令和标识符保持原文。</p>
+      <h3>代码块</h3>
+      <pre><code>git worktree list</code></pre>
+      <p>行内命令写成 <code>orca</code>，与正文分开。</p>
+      <h2>接下来</h2>
+      <p>从目录进入 <a href="#what-is-orca">Orca 是什么</a>。译文写好后，会替换各章里的占位，目录仍与英文站对应。</p>
+    </article>
+    <article id="what-is-orca" class="doc" data-source="/docs">
+      <p class="kicker">从这里开始</p>
+      <h1>Orca 是什么</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs">orca.dev/docs</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#home"><span>返回</span><strong>文档骨架首页</strong></a>
+        <a class="next" href="#install"><span>下一章</span><strong>安装</strong></a>
+      </nav>
+    </article>
+    <article id="install" class="doc" data-source="/docs/install">
+      <p class="kicker">从这里开始</p>
+      <h1>安装</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/install">orca.dev/docs/install</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#what-is-orca"><span>上一章</span><strong>Orca 是什么</strong></a>
+        <a class="next" href="#first-session"><span>下一章</span><strong>第一次三个智能体一起干活</strong></a>
+      </nav>
+    </article>
+    <article id="first-session" class="doc" data-source="/docs/first-session">
+      <p class="kicker">从这里开始</p>
+      <h1>第一次三个智能体一起干活</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/first-session">orca.dev/docs/first-session</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#install"><span>上一章</span><strong>安装</strong></a>
+        <a class="next" href="#migrate-from-conductor"><span>下一章</span><strong>从 Conductor 迁移</strong></a>
+      </nav>
+    </article>
+    <article id="migrate-from-conductor" class="doc" data-source="/docs/migrate-from-conductor">
+      <p class="kicker">从这里开始</p>
+      <h1>从 Conductor 迁移</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/migrate-from-conductor">orca.dev/docs/migrate-from-conductor</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#first-session"><span>上一章</span><strong>第一次三个智能体一起干活</strong></a>
+        <a class="next" href="#model-worktrees"><span>下一章</span><strong>工作树</strong></a>
+      </nav>
+    </article>
+    <article id="model-worktrees" class="doc" data-source="/docs/model/worktrees">
+      <p class="kicker">从这里开始 · 工作区的组织方式</p>
+      <h1>工作树</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/model/worktrees">orca.dev/docs/model/worktrees</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#migrate-from-conductor"><span>上一章</span><strong>从 Conductor 迁移</strong></a>
+        <a class="next" href="#model-tabs-panes-splits"><span>下一章</span><strong>标签页、窗格与分栏</strong></a>
+      </nav>
+    </article>
+    <article id="model-tabs-panes-splits" class="doc" data-source="/docs/model/tabs-panes-splits">
+      <p class="kicker">从这里开始 · 工作区的组织方式</p>
+      <h1>标签页、窗格与分栏</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/model/tabs-panes-splits">orca.dev/docs/model/tabs-panes-splits</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#model-worktrees"><span>上一章</span><strong>工作树</strong></a>
+        <a class="next" href="#model-agents-sessions"><span>下一章</span><strong>智能体与会话</strong></a>
+      </nav>
+    </article>
+    <article id="model-agents-sessions" class="doc" data-source="/docs/model/agents-sessions">
+      <p class="kicker">从这里开始 · 工作区的组织方式</p>
+      <h1>智能体与会话</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/model/agents-sessions">orca.dev/docs/model/agents-sessions</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#model-tabs-panes-splits"><span>上一章</span><strong>标签页、窗格与分栏</strong></a>
+        <a class="next" href="#model-session-restore"><span>下一章</span><strong>恢复会话</strong></a>
+      </nav>
+    </article>
+    <article id="model-session-restore" class="doc" data-source="/docs/model/session-restore">
+      <p class="kicker">从这里开始 · 工作区的组织方式</p>
+      <h1>恢复会话</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/model/session-restore">orca.dev/docs/model/session-restore</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#model-agents-sessions"><span>上一章</span><strong>智能体与会话</strong></a>
+        <a class="next" href="#model-quick-open"><span>下一章</span><strong>快速打开与跳转面板</strong></a>
+      </nav>
+    </article>
+    <article id="model-quick-open" class="doc" data-source="/docs/model/quick-open">
+      <p class="kicker">从这里开始 · 工作区的组织方式</p>
+      <h1>快速打开与跳转面板</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/model/quick-open">orca.dev/docs/model/quick-open</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#model-session-restore"><span>上一章</span><strong>恢复会话</strong></a>
+        <a class="next" href="#agents-supported"><span>下一章</span><strong>支持的智能体</strong></a>
+      </nav>
+    </article>
+    <article id="agents-supported" class="doc" data-source="/docs/agents/supported">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>支持的智能体</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/supported">orca.dev/docs/agents/supported</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#model-quick-open"><span>上一章</span><strong>快速打开与跳转面板</strong></a>
+        <a class="next" href="#agents-claude-code"><span>下一章</span><strong>在 Orca 里使用 Claude Code</strong></a>
+      </nav>
+    </article>
+    <article id="agents-claude-code" class="doc" data-source="/docs/agents/claude-code">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>在 Orca 里使用 Claude Code</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/claude-code">orca.dev/docs/agents/claude-code</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-supported"><span>上一章</span><strong>支持的智能体</strong></a>
+        <a class="next" href="#agents-glm-agent"><span>下一章</span><strong>在 Orca ADE 里使用 GLM-5.2</strong></a>
+      </nav>
+    </article>
+    <article id="agents-glm-agent" class="doc" data-source="/docs/agents/glm-agent">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>在 Orca ADE 里使用 GLM-5.2</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/glm-agent">orca.dev/docs/agents/glm-agent</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-claude-code"><span>上一章</span><strong>在 Orca 里使用 Claude Code</strong></a>
+        <a class="next" href="#agents-codex"><span>下一章</span><strong>在 Orca 里使用 Codex</strong></a>
+      </nav>
+    </article>
+    <article id="agents-codex" class="doc" data-source="/docs/agents/codex">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>在 Orca 里使用 Codex</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/codex">orca.dev/docs/agents/codex</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-glm-agent"><span>上一章</span><strong>在 Orca ADE 里使用 GLM-5.2</strong></a>
+        <a class="next" href="#agents-cursor-cli"><span>下一章</span><strong>在 Orca 里使用 Cursor CLI</strong></a>
+      </nav>
+    </article>
+    <article id="agents-cursor-cli" class="doc" data-source="/docs/agents/cursor-cli">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>在 Orca 里使用 Cursor CLI</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/cursor-cli">orca.dev/docs/agents/cursor-cli</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-codex"><span>上一章</span><strong>在 Orca 里使用 Codex</strong></a>
+        <a class="next" href="#agents-codex-hot-swap"><span>下一章</span><strong>快速切换 Codex 账号</strong></a>
+      </nav>
+    </article>
+    <article id="agents-codex-hot-swap" class="doc" data-source="/docs/agents/codex-hot-swap">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>快速切换 Codex 账号</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/codex-hot-swap">orca.dev/docs/agents/codex-hot-swap</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-cursor-cli"><span>上一章</span><strong>在 Orca 里使用 Cursor CLI</strong></a>
+        <a class="next" href="#agents-native-chat"><span>下一章</span><strong>聊天界面（原生对话）</strong></a>
+      </nav>
+    </article>
+    <article id="agents-native-chat" class="doc" data-source="/docs/agents/native-chat">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>聊天界面（原生对话）</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/native-chat">orca.dev/docs/agents/native-chat</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-codex-hot-swap"><span>上一章</span><strong>快速切换 Codex 账号</strong></a>
+        <a class="next" href="#agents-session-history"><span>下一章</span><strong>智能体会话记录</strong></a>
+      </nav>
+    </article>
+    <article id="agents-session-history" class="doc" data-source="/docs/agents/session-history">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>智能体会话记录</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/session-history">orca.dev/docs/agents/session-history</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-native-chat"><span>上一章</span><strong>聊天界面（原生对话）</strong></a>
+        <a class="next" href="#agents-hibernation"><span>下一章</span><strong>智能体休眠</strong></a>
+      </nav>
+    </article>
+    <article id="agents-hibernation" class="doc" data-source="/docs/agents/hibernation">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>智能体休眠</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/hibernation">orca.dev/docs/agents/hibernation</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-session-history"><span>上一章</span><strong>智能体会话记录</strong></a>
+        <a class="next" href="#agents-usage-tracking"><span>下一章</span><strong>用量与速率上限</strong></a>
+      </nav>
+    </article>
+    <article id="agents-usage-tracking" class="doc" data-source="/docs/agents/usage-tracking">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>用量与速率上限</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/usage-tracking">orca.dev/docs/agents/usage-tracking</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-hibernation"><span>上一章</span><strong>智能体休眠</strong></a>
+        <a class="next" href="#agents-hooks-memory"><span>下一章</span><strong>智能体钩子与记忆</strong></a>
+      </nav>
+    </article>
+    <article id="agents-hooks-memory" class="doc" data-source="/docs/agents/hooks-memory">
+      <p class="kicker">从这里开始 · 使用智能体</p>
+      <h1>智能体钩子与记忆</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/agents/hooks-memory">orca.dev/docs/agents/hooks-memory</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-usage-tracking"><span>上一章</span><strong>用量与速率上限</strong></a>
+        <a class="next" href="#review-diff-viewer"><span>下一章</span><strong>查看代码改动</strong></a>
+      </nav>
+    </article>
+    <article id="review-diff-viewer" class="doc" data-source="/docs/review/diff-viewer">
+      <p class="kicker">从这里开始 · 审阅并交付代码</p>
+      <h1>查看代码改动</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/review/diff-viewer">orca.dev/docs/review/diff-viewer</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#agents-hooks-memory"><span>上一章</span><strong>智能体钩子与记忆</strong></a>
+        <a class="next" href="#review-annotate-ai-diff"><span>下一章</span><strong>给 AI 改动加批注</strong></a>
+      </nav>
+    </article>
+    <article id="review-annotate-ai-diff" class="doc" data-source="/docs/review/annotate-ai-diff">
+      <p class="kicker">从这里开始 · 审阅并交付代码</p>
+      <h1>给 AI 改动加批注</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/review/annotate-ai-diff">orca.dev/docs/review/annotate-ai-diff</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#review-diff-viewer"><span>上一章</span><strong>查看代码改动</strong></a>
+        <a class="next" href="#review-attribution"><span>下一章</span><strong>标明改动出处</strong></a>
+      </nav>
+    </article>
+    <article id="review-attribution" class="doc" data-source="/docs/review/attribution">
+      <p class="kicker">从这里开始 · 审阅并交付代码</p>
+      <h1>标明改动出处</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/review/attribution">orca.dev/docs/review/attribution</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#review-annotate-ai-diff"><span>上一章</span><strong>给 AI 改动加批注</strong></a>
+        <a class="next" href="#review-commit-push"><span>下一章</span><strong>在 Orca 里提交并推送</strong></a>
+      </nav>
+    </article>
+    <article id="review-commit-push" class="doc" data-source="/docs/review/commit-push">
+      <p class="kicker">从这里开始 · 审阅并交付代码</p>
+      <h1>在 Orca 里提交并推送</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/review/commit-push">orca.dev/docs/review/commit-push</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#review-attribution"><span>上一章</span><strong>标明改动出处</strong></a>
+        <a class="next" href="#review-github"><span>下一章</span><strong>托管的评审、议题与 Actions</strong></a>
+      </nav>
+    </article>
+    <article id="review-github" class="doc" data-source="/docs/review/github">
+      <p class="kicker">从这里开始 · 审阅并交付代码</p>
+      <h1>托管的评审、议题与 Actions</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/review/github">orca.dev/docs/review/github</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#review-commit-push"><span>上一章</span><strong>在 Orca 里提交并推送</strong></a>
+        <a class="next" href="#review-linear"><span>下一章</span><strong>Linear 事项抽屉</strong></a>
+      </nav>
+    </article>
+    <article id="review-linear" class="doc" data-source="/docs/review/linear">
+      <p class="kicker">从这里开始 · 审阅并交付代码</p>
+      <h1>Linear 事项抽屉</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/review/linear">orca.dev/docs/review/linear</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#review-github"><span>上一章</span><strong>托管的评审、议题与 Actions</strong></a>
+        <a class="next" href="#review-jira"><span>下一章</span><strong>Jira 事项抽屉</strong></a>
+      </nav>
+    </article>
+    <article id="review-jira" class="doc" data-source="/docs/review/jira">
+      <p class="kicker">从这里开始 · 审阅并交付代码</p>
+      <h1>Jira 事项抽屉</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/review/jira">orca.dev/docs/review/jira</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#review-linear"><span>上一章</span><strong>Linear 事项抽屉</strong></a>
+        <a class="next" href="#editing-monaco"><span>下一章</span><strong>Monaco 编辑器与自动保存</strong></a>
+      </nav>
+    </article>
+    <article id="editing-monaco" class="doc" data-source="/docs/editing/monaco">
+      <p class="kicker">从这里开始 · 在 Orca 里编辑</p>
+      <h1>Monaco 编辑器与自动保存</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/editing/monaco">orca.dev/docs/editing/monaco</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#review-jira"><span>上一章</span><strong>Jira 事项抽屉</strong></a>
+        <a class="next" href="#editing-markdown"><span>下一章</span><strong>Markdown 富文本编辑</strong></a>
+      </nav>
+    </article>
+    <article id="editing-markdown" class="doc" data-source="/docs/editing/markdown">
+      <p class="kicker">从这里开始 · 在 Orca 里编辑</p>
+      <h1>Markdown 富文本编辑</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/editing/markdown">orca.dev/docs/editing/markdown</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#editing-monaco"><span>上一章</span><strong>Monaco 编辑器与自动保存</strong></a>
+        <a class="next" href="#editing-viewers"><span>下一章</span><strong>HTML、Mermaid、PDF 与图片查看</strong></a>
+      </nav>
+    </article>
+    <article id="editing-viewers" class="doc" data-source="/docs/editing/viewers">
+      <p class="kicker">从这里开始 · 在 Orca 里编辑</p>
+      <h1>HTML、Mermaid、PDF 与图片查看</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/editing/viewers">orca.dev/docs/editing/viewers</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#editing-markdown"><span>上一章</span><strong>Markdown 富文本编辑</strong></a>
+        <a class="next" href="#editing-file-explorer"><span>下一章</span><strong>文件浏览器与外部拖放</strong></a>
+      </nav>
+    </article>
+    <article id="editing-file-explorer" class="doc" data-source="/docs/editing/file-explorer">
+      <p class="kicker">从这里开始 · 在 Orca 里编辑</p>
+      <h1>文件浏览器与外部拖放</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/editing/file-explorer">orca.dev/docs/editing/file-explorer</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#editing-viewers"><span>上一章</span><strong>HTML、Mermaid、PDF 与图片查看</strong></a>
+        <a class="next" href="#browser-overview"><span>下一章</span><strong>每个工作树各自的浏览器</strong></a>
+      </nav>
+    </article>
+    <article id="browser-overview" class="doc" data-source="/docs/browser/overview">
+      <p class="kicker">从这里开始 · 浏览器与设计模式</p>
+      <h1>每个工作树各自的浏览器</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/browser/overview">orca.dev/docs/browser/overview</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#editing-file-explorer"><span>上一章</span><strong>文件浏览器与外部拖放</strong></a>
+        <a class="next" href="#browser-design-mode"><span>下一章</span><strong>设计模式</strong></a>
+      </nav>
+    </article>
+    <article id="browser-design-mode" class="doc" data-source="/docs/browser/design-mode">
+      <p class="kicker">从这里开始 · 浏览器与设计模式</p>
+      <h1>设计模式</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/browser/design-mode">orca.dev/docs/browser/design-mode</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#browser-overview"><span>上一章</span><strong>每个工作树各自的浏览器</strong></a>
+        <a class="next" href="#browser-profiles"><span>下一章</span><strong>供智能体使用的浏览器配置</strong></a>
+      </nav>
+    </article>
+    <article id="browser-profiles" class="doc" data-source="/docs/browser/profiles">
+      <p class="kicker">从这里开始 · 浏览器与设计模式</p>
+      <h1>供智能体使用的浏览器配置</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/browser/profiles">orca.dev/docs/browser/profiles</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#browser-design-mode"><span>上一章</span><strong>设计模式</strong></a>
+        <a class="next" href="#bots"><span>下一章</span><strong>机器人快速上手</strong></a>
+      </nav>
+    </article>
+    <article id="bots" class="doc" data-source="/docs/bots">
+      <p class="kicker">机器人</p>
+      <h1>机器人快速上手</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/bots">orca.dev/docs/bots</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#browser-profiles"><span>上一章</span><strong>供智能体使用的浏览器配置</strong></a>
+        <a class="next" href="#bots-use-cases"><span>下一章</span><strong>机器人能做什么</strong></a>
+      </nav>
+    </article>
+    <article id="bots-use-cases" class="doc" data-source="/docs/bots/use-cases">
+      <p class="kicker">机器人</p>
+      <h1>机器人能做什么</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/bots/use-cases">orca.dev/docs/bots/use-cases</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#bots"><span>上一章</span><strong>机器人快速上手</strong></a>
+        <a class="next" href="#bots-connectors"><span>下一章</span><strong>机器人的外部连接</strong></a>
+      </nav>
+    </article>
+    <article id="bots-connectors" class="doc" data-source="/docs/bots/connectors">
+      <p class="kicker">机器人</p>
+      <h1>机器人的外部连接</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/bots/connectors">orca.dev/docs/bots/connectors</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#bots-use-cases"><span>上一章</span><strong>机器人能做什么</strong></a>
+        <a class="next" href="#bots-import"><span>下一章</span><strong>导入机器人</strong></a>
+      </nav>
+    </article>
+    <article id="bots-import" class="doc" data-source="/docs/bots/import">
+      <p class="kicker">机器人</p>
+      <h1>导入机器人</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/bots/import">orca.dev/docs/bots/import</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#bots-connectors"><span>上一章</span><strong>机器人的外部连接</strong></a>
+        <a class="next" href="#bots-security"><span>下一章</span><strong>机器人安全</strong></a>
+      </nav>
+    </article>
+    <article id="bots-security" class="doc" data-source="/docs/bots/security">
+      <p class="kicker">机器人</p>
+      <h1>机器人安全</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/bots/security">orca.dev/docs/bots/security</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#bots-import"><span>上一章</span><strong>导入机器人</strong></a>
+        <a class="next" href="#terminal"><span>下一章</span><strong>终端</strong></a>
+      </nav>
+    </article>
+    <article id="terminal" class="doc" data-source="/docs/terminal">
+      <p class="kicker">终端</p>
+      <h1>终端</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/terminal">orca.dev/docs/terminal</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#bots-security"><span>上一章</span><strong>机器人安全</strong></a>
+        <a class="next" href="#ways-to-run"><span>下一章</span><strong>运行 Orca 的方式</strong></a>
+      </nav>
+    </article>
+    <article id="ways-to-run" class="doc" data-source="/docs/ways-to-run">
+      <p class="kicker">远程与 SSH</p>
+      <h1>运行 Orca 的方式</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/ways-to-run">orca.dev/docs/ways-to-run</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#terminal"><span>上一章</span><strong>终端</strong></a>
+        <a class="next" href="#ssh"><span>下一章</span><strong>SSH 工作树</strong></a>
+      </nav>
+    </article>
+    <article id="ssh" class="doc" data-source="/docs/ssh">
+      <p class="kicker">远程与 SSH</p>
+      <h1>SSH 工作树</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/ssh">orca.dev/docs/ssh</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#ways-to-run"><span>上一章</span><strong>运行 Orca 的方式</strong></a>
+        <a class="next" href="#remote-servers"><span>下一章</span><strong>远程 Orca 服务器</strong></a>
+      </nav>
+    </article>
+    <article id="remote-servers" class="doc" data-source="/docs/remote-servers">
+      <p class="kicker">远程与 SSH</p>
+      <h1>远程 Orca 服务器</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/remote-servers">orca.dev/docs/remote-servers</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#ssh"><span>上一章</span><strong>SSH 工作树</strong></a>
+        <a class="next" href="#cli-overview"><span>下一章</span><strong>Orca 命令行概览</strong></a>
+      </nav>
+    </article>
+    <article id="cli-overview" class="doc" data-source="/docs/cli/overview">
+      <p class="kicker">命令行与自动化 · Orca 命令行与技能</p>
+      <h1>Orca 命令行概览</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/cli/overview">orca.dev/docs/cli/overview</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#remote-servers"><span>上一章</span><strong>远程 Orca 服务器</strong></a>
+        <a class="next" href="#cli-reference"><span>下一章</span><strong>Orca 命令行参考</strong></a>
+      </nav>
+    </article>
+    <article id="cli-reference" class="doc" data-source="/docs/cli/reference">
+      <p class="kicker">命令行与自动化 · Orca 命令行与技能</p>
+      <h1>Orca 命令行参考</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/cli/reference">orca.dev/docs/cli/reference</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#cli-overview"><span>上一章</span><strong>Orca 命令行概览</strong></a>
+        <a class="next" href="#cli-orchestration"><span>下一章</span><strong>编排</strong></a>
+      </nav>
+    </article>
+    <article id="cli-orchestration" class="doc" data-source="/docs/cli/orchestration">
+      <p class="kicker">命令行与自动化 · Orca 命令行与技能</p>
+      <h1>编排</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/cli/orchestration">orca.dev/docs/cli/orchestration</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#cli-reference"><span>上一章</span><strong>Orca 命令行参考</strong></a>
+        <a class="next" href="#cli-automations"><span>下一章</span><strong>定时任务</strong></a>
+      </nav>
+    </article>
+    <article id="cli-automations" class="doc" data-source="/docs/cli/automations">
+      <p class="kicker">命令行与自动化 · Orca 命令行与技能</p>
+      <h1>定时任务</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/cli/automations">orca.dev/docs/cli/automations</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#cli-orchestration"><span>上一章</span><strong>编排</strong></a>
+        <a class="next" href="#cli-computer-use"><span>下一章</span><strong>让智能体操作电脑</strong></a>
+      </nav>
+    </article>
+    <article id="cli-computer-use" class="doc" data-source="/docs/cli/computer-use">
+      <p class="kicker">命令行与自动化 · Orca 命令行与技能</p>
+      <h1>让智能体操作电脑</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/cli/computer-use">orca.dev/docs/cli/computer-use</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#cli-automations"><span>上一章</span><strong>定时任务</strong></a>
+        <a class="next" href="#cli-worktree-checkpoints"><span>下一章</span><strong>工作树检查点</strong></a>
+      </nav>
+    </article>
+    <article id="cli-worktree-checkpoints" class="doc" data-source="/docs/cli/worktree-checkpoints">
+      <p class="kicker">命令行与自动化 · Orca 命令行与技能</p>
+      <h1>工作树检查点</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/cli/worktree-checkpoints">orca.dev/docs/cli/worktree-checkpoints</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#cli-computer-use"><span>上一章</span><strong>让智能体操作电脑</strong></a>
+        <a class="next" href="#cli-skills"><span>下一章</span><strong>Orca 技能注册与 MCP</strong></a>
+      </nav>
+    </article>
+    <article id="cli-skills" class="doc" data-source="/docs/cli/skills">
+      <p class="kicker">命令行与自动化 · Orca 命令行与技能</p>
+      <h1>Orca 技能注册与 MCP</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/cli/skills">orca.dev/docs/cli/skills</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#cli-worktree-checkpoints"><span>上一章</span><strong>工作树检查点</strong></a>
+        <a class="next" href="#mobile"><span>下一章</span><strong>手机伴侣</strong></a>
+      </nav>
+    </article>
+    <article id="mobile" class="doc" data-source="/docs/mobile">
+      <p class="kicker">移动端</p>
+      <h1>手机伴侣</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/mobile">orca.dev/docs/mobile</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#cli-skills"><span>上一章</span><strong>Orca 技能注册与 MCP</strong></a>
+        <a class="next" href="#android-apk"><span>下一章</span><strong>在 Android 上安装 Orca Mobile</strong></a>
+      </nav>
+    </article>
+    <article id="android-apk" class="doc" data-source="/docs/android-apk">
+      <p class="kicker">移动端</p>
+      <h1>在 Android 上安装 Orca Mobile</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/android-apk">orca.dev/docs/android-apk</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#mobile"><span>上一章</span><strong>手机伴侣</strong></a>
+        <a class="next" href="#notifications"><span>下一章</span><strong>通知与收件箱</strong></a>
+      </nav>
+    </article>
+    <article id="notifications" class="doc" data-source="/docs/notifications">
+      <p class="kicker">通知与收件箱</p>
+      <h1>通知与收件箱</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/notifications">orca.dev/docs/notifications</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#android-apk"><span>上一章</span><strong>在 Android 上安装 Orca Mobile</strong></a>
+        <a class="next" href="#activity"><span>下一章</span><strong>智能体动态</strong></a>
+      </nav>
+    </article>
+    <article id="activity" class="doc" data-source="/docs/activity">
+      <p class="kicker">通知与收件箱</p>
+      <h1>智能体动态</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/activity">orca.dev/docs/activity</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#notifications"><span>上一章</span><strong>通知与收件箱</strong></a>
+        <a class="next" href="#recipes-parallel-agents"><span>下一章</span><strong>让三个智能体同时做一件事</strong></a>
+      </nav>
+    </article>
+    <article id="recipes-parallel-agents" class="doc" data-source="/docs/recipes/parallel-agents">
+      <p class="kicker">通知与收件箱 · 场景示例</p>
+      <h1>让三个智能体同时做一件事</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/recipes/parallel-agents">orca.dev/docs/recipes/parallel-agents</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#activity"><span>上一章</span><strong>智能体动态</strong></a>
+        <a class="next" href="#recipes-review-ai-diff"><span>下一章</span><strong>逐行审阅 AI 改动</strong></a>
+      </nav>
+    </article>
+    <article id="recipes-review-ai-diff" class="doc" data-source="/docs/recipes/review-ai-diff">
+      <p class="kicker">通知与收件箱 · 场景示例</p>
+      <h1>逐行审阅 AI 改动</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/recipes/review-ai-diff">orca.dev/docs/recipes/review-ai-diff</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#recipes-parallel-agents"><span>上一章</span><strong>让三个智能体同时做一件事</strong></a>
+        <a class="next" href="#recipes-jump-worktrees"><span>下一章</span><strong>在 10 个工作树之间跳转</strong></a>
+      </nav>
+    </article>
+    <article id="recipes-jump-worktrees" class="doc" data-source="/docs/recipes/jump-worktrees">
+      <p class="kicker">通知与收件箱 · 场景示例</p>
+      <h1>在 10 个工作树之间跳转</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/recipes/jump-worktrees">orca.dev/docs/recipes/jump-worktrees</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#recipes-review-ai-diff"><span>上一章</span><strong>逐行审阅 AI 改动</strong></a>
+        <a class="next" href="#recipes-design-mode-fix"><span>下一章</span><strong>用设计模式修界面问题</strong></a>
+      </nav>
+    </article>
+    <article id="recipes-design-mode-fix" class="doc" data-source="/docs/recipes/design-mode-fix">
+      <p class="kicker">通知与收件箱 · 场景示例</p>
+      <h1>用设计模式修界面问题</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/recipes/design-mode-fix">orca.dev/docs/recipes/design-mode-fix</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#recipes-jump-worktrees"><span>上一章</span><strong>在 10 个工作树之间跳转</strong></a>
+        <a class="next" href="#recipes-remote-worktrees"><span>下一章</span><strong>通过 SSH 在远程机器上工作</strong></a>
+      </nav>
+    </article>
+    <article id="recipes-remote-worktrees" class="doc" data-source="/docs/recipes/remote-worktrees">
+      <p class="kicker">通知与收件箱 · 场景示例</p>
+      <h1>通过 SSH 在远程机器上工作</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/recipes/remote-worktrees">orca.dev/docs/recipes/remote-worktrees</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#recipes-design-mode-fix"><span>上一章</span><strong>用设计模式修界面问题</strong></a>
+        <a class="next" href="#settings"><span>下一章</span><strong>设置说明</strong></a>
+      </nav>
+    </article>
+    <article id="settings" class="doc" data-source="/docs/settings">
+      <p class="kicker">设置说明</p>
+      <h1>设置说明</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/settings">orca.dev/docs/settings</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#recipes-remote-worktrees"><span>上一章</span><strong>通过 SSH 在远程机器上工作</strong></a>
+        <a class="next" href="#telemetry"><span>下一章</span><strong>隐私与遥测</strong></a>
+      </nav>
+    </article>
+    <article id="telemetry" class="doc" data-source="/docs/telemetry">
+      <p class="kicker">隐私与遥测</p>
+      <h1>隐私与遥测</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/telemetry">orca.dev/docs/telemetry</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#settings"><span>上一章</span><strong>设置说明</strong></a>
+        <a class="next" href="#troubleshooting"><span>下一章</span><strong>故障排查与常见问题</strong></a>
+      </nav>
+    </article>
+    <article id="troubleshooting" class="doc" data-source="/docs/troubleshooting">
+      <p class="kicker">故障排查与常见问题</p>
+      <h1>故障排查与常见问题</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/troubleshooting">orca.dev/docs/troubleshooting</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#telemetry"><span>上一章</span><strong>隐私与遥测</strong></a>
+        <a class="next" href="#github-errors"><span>下一章</span><strong>排查 GitHub 错误</strong></a>
+      </nav>
+    </article>
+    <article id="github-errors" class="doc" data-source="/docs/github-errors">
+      <p class="kicker">故障排查与常见问题</p>
+      <h1>排查 GitHub 错误</h1>
+      <p class="placeholder">这一章的译文尚未放入。</p>
+      <p class="meta">英文原文：<a href="https://orca.dev/docs/github-errors">orca.dev/docs/github-errors</a></p>
+      <nav class="pager" aria-label="章节">
+        <a class="prev" href="#troubleshooting"><span>上一章</span><strong>故障排查与常见问题</strong></a>
+      </nav>
+    </article>
+    </main>
+  </div>
+  <script>
+
+    (function () {
+      var toggle = document.getElementById("nav-toggle");
+      var sidebar = document.getElementById("sidebar");
+
+      function sync() {
+        var id = (location.hash || "#home").slice(1);
+        if (!document.getElementById(id)) id = "home";
+        var links = sidebar.querySelectorAll("a[href^='#']");
+        for (var i = 0; i < links.length; i++) {
+          var on = links[i].getAttribute("href") === "#" + id;
+          if (on) links[i].setAttribute("aria-current", "page");
+          else links[i].removeAttribute("aria-current");
+        }
+        var heading = document.querySelector("#" + id + " h1");
+        document.title = !heading || id === "home"
+          ? "ORCA 说明文档"
+          : heading.textContent + " · ORCA 说明文档";
+        var current = sidebar.querySelector('[aria-current="page"]');
+        if (!current) return;
+        var linkTop = current.getBoundingClientRect().top - sidebar.getBoundingClientRect().top;
+        sidebar.scrollTop += linkTop - sidebar.clientHeight / 2 + current.clientHeight / 2;
+      }
+
+      sidebar.addEventListener("click", function (event) {
+        if (event.target.closest("a")) toggle.checked = false;
+      });
+      window.addEventListener("hashchange", sync);
+      sync();
+    })();
+
+  </script>
+</body>
+</html>
